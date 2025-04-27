@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Categories - Blackmoon Admin', 'none')">
+</head>
+<body>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu">
+        </div>
+        
+        <!-- Main Content Container with improved spacing and styling -->
+        <div class="container py-4">
+            <!-- Page Header with Blackmoon Style -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0" style="color: #512DA8; font-weight: 600;">
+                    <i class="fas fa-folder-open me-2"></i>Manage Categories
+                </h2>
+                
+                <!-- Actions buttons styled to match theme -->
+                <div class="d-flex align-items-center">
+                    <a th:href="@{/categories/new}" class="btn btn-sm" 
+                       style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-radius: 6px; margin-right: 10px;">
+                        <i class="fas fa-plus-circle me-1"></i> Create New Category
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-file-export me-1"></i> Export
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdown" style="border-radius: 8px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+                            <li><a class="dropdown-item" th:href="@{/categories/export/csv}"><i class="far fa-file-alt me-2"></i> Export To CSV</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Success Message with improved styling -->
+            <div th:if="${message!=null}" class="alert alert-success text-center" style="border-radius: 8px; border-left: 5px solid #198754;">
+                <i class="fas fa-check-circle me-2"></i>[[${message}]]
+            </div>
+
+            <!-- Search Form with better styling -->
+            <div class="card mb-4" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div class="card-body">
+                    <form th:action="@{/categories/page/1}" class="d-flex flex-wrap align-items-center">
+                        <input type="hidden" name="sortField" th:value="${sortField}">
+                        <input type="hidden" name="sortDir" th:value="${sortDir}">
+                        
+                        <div class="input-group" style="max-width: 400px;">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="search" name="keyword" th:value="${keyword}" class="form-control" 
+                                   placeholder="Search categories..." required style="border-color: #e0d0ff;"/>
+                        </div>
+                        
+                        <div class="ms-auto mt-2 mt-sm-0">
+                            <button type="submit" class="btn btn-primary me-2" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); border: none;">
+                                <i class="fas fa-search me-1"></i> Search
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearFilter()">
+                                <i class="fas fa-times me-1"></i> Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Categories Table with enhanced styling -->
+            <div class="card" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Category Image</th>
+                                    <th> Category Name
+                                    </th>
+                                    <th>Alias</th>
+                                    <th>Enabled</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="category :${listCategories}">
+                                    <td>[[${category.id}]]</td>
+                                    <td class="text-center">
+                                        <img th:src="@{${category.imagePath}}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid #e0d0ff;" class="img-fluid">
+                                    </td>
+                                    <td>[[${category.name}]]</td>
+                                    <td>[[${category.alias}]]</td>
+                                    <td class="text-center">
+                                        <a th:if="${category.enabled == true}" class="fa-regular fa-circle-check fs-5"
+                                           style="color: #198754; transition: transform 0.2s;" 
+                                           onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+                                           th:href="@{'categories/' + ${category.id} +'/enabled/false'}" 
+                                           title="Disable this category"></a>
+                                        <a th:if="${category.enabled == false}" class="fa-regular fa-circle-xmark fs-5"
+                                           style="color: #6c757d; transition: transform 0.2s;" 
+                                           onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+                                           th:href="@{'categories/' + ${category.id} +'/enabled/true'}" 
+                                           title="Enable this category"></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-sm" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
+                                           th:href="@{'/categories/edit/' + ${category.id}}" title="Edit this category">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <th:block th:if="${category.hasChildren == false}">
+                                            <a class="btn btn-sm btn-outline-danger ms-1 link-delete"
+                                               th:href="@{'/categories/delete/' + ${category.id}}" th:categoryId="${category.id}" 
+                                               title="Delete this category">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </th:block>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination info with better styling -->
+            <div class="mt-3">
+                <div class="text-center m-1" th:if="${totalItems > 0}">
+                    <span class="text-muted">Showing Categories [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+                </div>
+                <div class="text-center m-1" th:if="${totalItems == 0}">
+                    <span class="text-muted">No categories found</span>
+                </div>
+                
+                <!-- Enhanced Pagination -->
+                <div th:if="${totalItems > 0}" class="mt-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <!-- First page -->
+                            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                                <a th:replace="fragments :: page_link1(1, 'First')"></a>
+                            </li>
+                            <!-- Previous page -->
+                            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                                <a th:replace="fragments :: page_link1(${currentPage-1}, 'Previous')"></a>
+                            </li>
+                            <!-- Page numbers -->
+                            <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                                th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                                th:style="${currentPage == i ? 'background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);' : ''}">
+                                <a th:replace="fragments :: page_link1(${i}, ${i})"></a>
+                            </li>
+                            <!-- Next page -->
+                            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">
+                                <a th:replace="fragments :: page_link1(${currentPage+1}, 'Next')"></a>
+                            </li>
+                            <!-- Last page -->
+                            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">
+                                <a th:replace="fragments :: page_link1(${totalPage}, 'Last')"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                    <h5 class="modal-title" id="modalTitle">Delete Confirmation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <p class="text-center fs-5" id="confirmText"></p>
+                </div>
+                <div class="modal-footer justify-content-center border-0">
+                    <a id="yesButton" href="#" class="btn btn-success px-4" style="border-radius: 6px;">
+                        <i class="fas fa-check me-1"></i> Yes
+                    </a>
+                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal" style="border-radius: 6px;">
+                        <i class="fas fa-times me-1"></i> No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragments :: footer"></div>
+    
+    <script th:src="@{/js/common_list.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".link-delete").on("click", function(e) {
+                e.preventDefault();
+                link = $(this);
+                categoryId = link.attr("categoryId");
+                $("#yesButton").attr("href", link.attr("href"));
+                $("#confirmText").text("Are you sure you want to delete category with ID: " + categoryId);
+                var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                modal.show();
+            });
+        });
+        
+        function clearFilter() {
+            window.location = "[[@{/categories}]]";
+        }
+    </script>
+    
+    <!-- Add additional styling -->
+    <style>
+        body {
+            background-color: #f9f7ff;
+        }
+        
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);
+            border-color: #512DA8;
+        }
+        
+        .page-link {
+            color: #512DA8;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7D3C98 0%, #5E35B1 100%);
+        }
+        
+        /* Animation for hover effects */
+        .btn, .nav-link, .page-link {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover, .page-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</body>
+</html>

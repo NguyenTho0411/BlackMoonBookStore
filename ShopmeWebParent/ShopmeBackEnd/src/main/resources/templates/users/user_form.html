@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head(${pageTitle}, 'none')">
+</head>
+<body>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu"></div>
+        
+        <!-- Updated page header with gradient background -->
+        <div class="text-center my-4">
+            <h2 class="fw-bold" style="color: #512DA8;">
+                <i class="fas fa-user-cog me-2"></i>Manage Users | [[${pageTitle}]]
+            </h2>
+            <hr class="mx-auto" style="width: 50%; border-color: #6C3483; opacity: 0.5;">
+        </div>
+        
+        <form th:action="@{/users/save}" method="post"
+            onsubmit="return checkEmailUnique(this);"
+            style="max-width: 800px; margin: 0 auto" 
+            enctype="multipart/form-data"
+            th:object="${user}">
+            <input type="hidden" th:field="*{id}" />
+            
+            <!-- Improved form with shadow and rounded corners -->
+            <div class="border rounded p-4 bg-white shadow-sm" 
+                 style="border-radius: 12px !important; border-color: #e0e0e0 !important;">
+                
+                <!-- Email field -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-envelope me-2"></i>Email:
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="email" class="form-control" required
+                            th:field="*{email}" minlength="8" maxlength="128"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                    </div>
+                </div>
+                
+                <!-- First Name field -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-user me-2"></i>First Name:
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" required
+                            th:field="*{firstName}" minlength="2" maxlength="45"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                    </div>
+                </div>
+                
+                <!-- Last Name field -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-user me-2"></i>Last Name:
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" required
+                            th:field="*{lastName}" minlength="2" maxlength="45"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                    </div>
+                </div>
+                
+                <!-- Password field -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-key me-2"></i>Password:
+                    </label>
+                    <div class="col-sm-8">
+                        <input th:if="${user.id == null}" type="password"
+                            class="form-control" required th:field="*{password}"
+                            minlength="8" maxlength="20"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                        <input th:if="${user.id != null}" type="password" class="form-control"
+                            th:field="*{password}" minlength="8" maxlength="20"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                        <small class="form-text text-muted">Password must be 8-20 characters</small>
+                    </div>
+                </div>
+                
+                <!-- Roles field -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-user-tag me-2"></i>Roles:
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="role-container" style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px;">
+                            <th:block th:each="role: ${listRole}">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" 
+                                           th:field="*{roles}" th:value="${role.id}"
+                                           style="cursor: pointer;">
+                                    <label class="form-check-label fw-medium" th:for="${#ids.prev('roles')}" 
+                                           th:text="${role.name}"
+                                           style="cursor: pointer;">
+                                    </label>
+                                    <small class="d-block text-muted ms-4">[[${role.description}]]</small>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enabled field -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-toggle-on me-2"></i>Enabled:
+                    </label>
+                    <div class="col-sm-8 d-flex align-items-center">
+                        <div class="form-switch">
+                            <input class="form-check-input" type="checkbox" th:field="*{enabled}"
+                                   style="cursor: pointer; width: 40px; height: 20px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Photos field -->
+                <div class="form-group row mb-4">
+                    <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                        <i class="fas fa-image me-2"></i>Photo:
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="hidden" th:field="*{photos}">
+                        <div class="custom-file mb-2">
+                            <input type="file" id="fileImage" name="image" 
+                                   accept="image/png, image/jpeg" class="form-control"
+                                   style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                            <small class="form-text text-muted">Max file size: 100KB</small>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <img id="thumbnail" th:src="@{${user.photosImagePath}}" 
+                                 alt="Photo Preview" class="img-fluid img-thumbnail"
+                                 style="max-height: 150px; border-radius: 8px; border: 2px solid #6C3483;">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form buttons -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-lg px-4 me-2" 
+                            style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-radius: 8px;">
+                        <i class="fas fa-save me-2"></i>Save
+                    </button>
+                    <a th:href="@{/users}" class="btn btn-lg btn-secondary px-4"
+                       style="border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Modal dialog for warnings -->
+<div class="modal fade text-center" id="modalDialog" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius: 12px; border: none;">
+                <div class="modal-header" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+                    <h4 class="modal-title" id="modalTitle">Warning</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="background-color: white;"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-exclamation-triangle fa-3x" style="color: #FFA500;"></i>
+                    </div>
+                    <span id="modalBody" class="d-block text-center"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger"
+                        data-bs-dismiss="modal" style="border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragments :: footer">
+    </div>
+    
+    <!-- Custom styles for this page -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            border-color: #6C3483;
+            box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);
+        }
+        
+        /* Animation effect for save button */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    
+	<script type="text/javascript">
+		MAX_FILE_SIZE = 102400; // 100KB
+
+		moduleURL = "[[@{/users}]]";
+
+		function checkEmailUnique(form) {
+			url = "[[@{/users/check_email}]]";
+			userEmail = $("#email").val();
+			userId = $("#id").val();
+			csrfValue = $("input[name='_csrf']").val();
+
+			params = {id: userId, email: userEmail, _csrf: csrfValue};
+
+			$.post(url, params, function (response) {
+				if (response == "OK") {
+					form.submit();
+				} else if (response == "Duplicated") {
+					showWarningModal("There is another user having the email " + userEmail);
+				} else {
+					showErrorModal("Unknown response from server");
+				}
+			}).fail(function () {
+				showErrorModal("Could not connect to the server");
+			});
+
+			return false;
+		}
+		function showModalDialog(title, message) {
+			document.getElementById("modalTitle").innerText = title;
+			document.getElementById("modalBody").innerText = message;
+
+			const modalElement = document.getElementById("modalDialog");
+			const modal = new bootstrap.Modal(modalElement);
+			modal.show();
+		}
+
+
+		function showErrorModal(message) {
+			showModalDialog("Error", message);
+		}
+
+		function showWarningModal(message) {
+			showModalDialog("Warning", message);
+		}
+	</script>
+
+</body>
+</html>

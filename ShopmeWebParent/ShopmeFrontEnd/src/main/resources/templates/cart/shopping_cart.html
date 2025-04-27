@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Blackmoon Books</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap CSS & JS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet">
+	
+	 <style>
+    /* Base styles with enhanced visuals */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f5ff;
+    }
+    
+    .main-container {
+      min-height: 80vh;
+      padding: 20px 0;
+    }
+    
+    .welcome-section {
+      padding: 30px 0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .welcome-section h1 {
+      color: #512DA8;
+      font-weight: 700;
+      font-size: 2.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    
+    .welcome-subtitle {
+      color: #673AB7;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+    
+    .category-card {
+      transition: all 0.3s ease;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .category-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    .category-card img {
+      max-width: 100%;
+      height: auto;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+    
+    .category-card:hover img {
+      transform: scale(1.05);
+    }
+    
+    .category-name {
+      font-weight: 600;
+      color: #512DA8;
+      margin-top: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .category-card a {
+      text-decoration: none;
+      color: #512DA8;
+      transition: all 0.3s ease;
+    }
+    
+    .category-card a:hover {
+      color: #9C27B0;
+    }
+    
+    /* Navigation styles */
+    .navbar {
+      padding: 12px 0;
+      transition: all 0.4s ease;
+    }
+    
+    .navbar .nav-link {
+      position: relative;
+      padding: 8px 18px;
+      margin: 0 2px;
+      transition: all 0.4s ease;
+      border-radius: 8px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    
+    .navbar .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Pulse animation for icons */
+    .pulse-icon {
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover .pulse-icon {
+      transform: scale(1.2);
+      color: #FEC3A6;
+    }
+    
+    /* Enhanced dropdown styling */
+    .dropdown-item {
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+      border-radius: 6px;
+      margin: 2px 6px;
+    }
+    
+    .dropdown-item:hover {
+      background-color: #f0e6ff;
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* User icon glow effect */
+    .user-icon-glow {
+      filter: drop-shadow(0 0 3px rgba(254, 195, 166, 0.5));
+      transition: all 0.3s ease;
+    }
+    
+    /* Shopping cart button styling */
+    .cart-button {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 8px;
+      padding: 8px 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cart-button:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+    
+    .cart-badge {
+      background-color: #FF5252;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      animation: pulse 2s infinite;
+    }
+    
+    /* Enhanced search bar */
+    .search-form {
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      width: 100%;
+    }
+    
+    .search-input {
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: none;
+      flex-grow: 1;
+    }
+    
+    .search-input:focus {
+      box-shadow: none;
+      border: none;
+      outline: none;
+    }
+    
+    .search-button {
+      background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+      color: white;
+      border: none;
+      width: 60px;
+      min-width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .search-button:hover {
+      background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
+      transform: scale(1.05);
+      color: white;
+    }
+    
+    /* Shine effect for important buttons */
+    .shine-effect {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .shine-effect::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(30deg);
+      transition: all 1.5s ease;
+      opacity: 0;
+    }
+    
+    .shine-effect:hover::after {
+      opacity: 1;
+      left: 100%;
+      top: 100%;
+    }
+    
+    /* Animation keyframes */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .navbar-nav {
+        padding: 10px 0;
+      }
+      
+      .navbar .nav-link {
+        padding: 12px 15px;
+        margin: 3px 0;
+      }
+      
+      .search-form {
+        margin-top: 10px;
+      }
+      
+      .welcome-section h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+<body>
+		<div class="container-fluid p-0">
+		<!-- Header Menu -->
+		<nav class="navbar navbar-expand-lg navbar-dark"
+			style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+			<div class="container">
+				<!-- Logo with enhanced animation -->
+				<a class="navbar-brand" th:href="@{/}" style="padding: 5px 0;">
+					<img th:src="@{/images/blackmoonsmall.png}" alt="Blackmoon Books"
+					style="height: 45px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); transition: all 0.3s ease;"
+					onmouseover="this.style.transform='scale(1.08)'; this.style.filter='drop-shadow(0 4px 8px rgba(0,0,0,0.4))'"
+					onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 2px 4px rgba(0,0,0,0.3))'" />
+				</a>
+
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#topNavbar"
+					style="border: none; padding: 8px;">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="topNavbar">
+					<!-- Menu items with enhanced visual styling -->
+					<ul class="navbar-nav mx-auto" style="gap: 5px;">
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-briefcase me-1 pulse-icon"></i> Careers
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-credit-card me-1 pulse-icon"></i> Payments
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-truck me-1 pulse-icon"></i> Shipping &amp;
+								Delivery
+						</a></li>
+
+						<th:block sec:authorize="!isAuthenticated()">
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/login}">
+									<i class="fas fa-sign-in-alt me-1 pulse-icon"></i> Login
+							</a></li>
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/register}">
+									<i class="fas fa-user-plus me-1 pulse-icon"></i> Register
+							</a></li>
+						</th:block>
+
+						<th:block sec:authorize="isAuthenticated()">
+							<li class="nav-item dropdown"><a
+								class="nav-link dropdown-toggle d-flex align-items-center"
+								href="#" id="navbarDropdown" data-bs-toggle="dropdown"
+								role="button" aria-expanded="false"> <span
+									class="fas fa-user-circle me-2 user-icon-glow"
+									style="font-size: 1.5rem; color: #FEC3A6;"></span> <span
+									sec:authentication="principal.fullName" class="fw-medium"></span>
+							</a>
+								<div class="dropdown-menu dropdown-menu-end"
+									aria-labelledby="navbarDropdown"
+									style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); padding: 10px 5px;">
+									<a class="dropdown-item" th:href="@{/account_details}"> <i
+										class="fas fa-user-cog me-2"></i> Tài khoản
+									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
+									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Reviews
+									</a> <a class="dropdown-item" th:href="@{/cart}"> <i
+										class="fas fa-shopping-bag me-2"></i> Cart
+									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Questions
+									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Addresses
+									</a>
+									<div class="dropdown-divider"></div>
+									<form th:action="@{/logout}" method="post">
+										<button type="submit" class="dropdown-item"
+											style="border: none; background: none;">
+											<i class="fas fa-sign-out-alt me-2"></i> Logout
+										</button>
+									</form></li>
+						</th:block>
+
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-envelope me-1 pulse-icon"></i> Contact
+						</a></li>
+					</ul>
+
+					<!-- Enhanced shopping cart icon with animation -->
+					<div class="ms-auto">
+						<a th:href="@{/cart}" class="btn position-relative cart-button">
+							<i class="fas fa-shopping-cart"></i> <span
+							class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge"
+							th:if="${cartItemCount != null && cartItemCount > 0}"
+							th:text="${cartItemCount}"> </span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Search Navigation -->
+		<div class="container mt-3 mb-3">
+			<div class="row">
+				<div class="col-md">
+					<form class="d-flex search-form" th:action="@{/search}"
+						method="get">
+						<input type="search" name="keyword"
+							class="form-control search-input" required
+							placeholder="Tìm kiếm sách..." th:value="${keyword}">
+						<button type="submit" class="btn search-button">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center">
+			<h2>Your Shopping Cart</h2>
+		</div>
+
+		<div class="row m-1">
+			<div class="col-sm-8">
+				<th:block th:each="item, status : ${cartItems}">
+					<div class="row border rounded p-1"
+						th:with="book = ${item.book}"
+						th:id="'row' + ${status.count}">
+						<div class="col-1">
+							<div class="divCount">[[${status.count}]]</div>
+							<div>
+								<a class="fas fa-trash icon-dark linkRemove"
+									th:rowNumber="${status.count}"
+									th:href="@{'/cart/remove/' + ${book.id}}"></a>
+							</div>
+						</div>
+						<div class="col-3">
+							<img th:src="@{${book.mainImagePath}}" class="img-fluid" />
+						</div>
+						<div class="col-6">
+							<div>
+								<a th:href="@{'/b/' + ${book.alias}}" target="_blank"
+									th:title="${book.name}"> <b>[[${book.shortName}]]</b>
+								</a>
+							</div>
+							<div
+								th:replace="cart/quantity_control :: quantity_control(${item.quantity}, ${book.id})">
+							</div>
+
+							<div>
+								<span>X&nbsp;</span>
+								<div th:replace="book_fragment :: book_price"></div>
+							</div>
+							<div>
+								<span>=&nbsp;</span> <span
+									th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}"
+									th:remove="tag">[[${CURRENCY_SYMBOL}]]</span><span
+									th:id="'subtotal' + ${book.id}" class="h4 subtotal">[[${#numbers.formatDecimal(item.subtotal,
+									1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]</span><span
+									th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}"
+									th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+							</div>
+						</div>
+					</div>
+					<div class="row m-1" th:id="'blankLine' + ${status.count}">&nbsp;</div>
+				</th:block>
+			</div>
+
+		
+      <div class="col-sm-4" th:unless="${#lists.isEmpty(cartItems)}" id="sectionTotal">
+        <div><span class="h3">Estimated Total:</span></div>
+        <div class="mt-2">
+          <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+          <span id="total" class="h2">
+            [[${#numbers.formatDecimal(estimatedTotal, 1,
+                 THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+          </span>
+          <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+        </div>
+        <!-- … nút Checkout hoặc thông báo không hỗ trợ shipping … -->
+      </div>
+    </div>
+
+    <div id="sectionEmptyCartMessage"
+         th:class="'text-center' + ${#lists.isEmpty(cartItems) ? '' : ' d-none'}">
+      <h3>You have not chosen any products yet.</h3>
+    </div>
+
+    <div th:replace="fragments :: modal_dialog"></div>
+    <div th:replace="navigation :: footer_menu"></div>
+  </div>
+
+  <!-- 1. Server-side params -->
+  <script type="text/javascript">
+    const contextPath        = "[[@{/}]]";
+    const csrfHeaderName     = "[[${_csrf.headerName}]]";
+    const csrfValue          = "[[${_csrf.token}]]";
+    const decimalDigits      = parseInt("[[${DECIMAL_DIGITS}]]", 10);
+    const decimalPointType   = "[[${DECIMAL_POINT_TYPE}]]";
+    const thousandsPointType = "[[${THOUSANDS_POINT_TYPE}]]";
+    const decimalSeparator   = decimalPointType   === 'COMMA' ? ',' : '.';
+    const thousandsSeparator = thousandsPointType === 'COMMA' ? ',' : '.';
+  </script>
+
+  <!-- 2. jQuery core (phải load trước plugin & cart.js) -->
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+
+  <!-- 3. Plugin format số -->
+  <script th:src="@{/js/jquery.number.min.js}"></script>
+
+  <!-- 4. Shopping cart logic -->
+  <script th:src="@{/js/shopping_cart.js}"></script>
+
+  <!-- 5. Common modal/dialogs -->
+  <script th:src="@{/js/common_modal.js}"></script>
+
+  <!-- 6. Bootstrap JS bundle -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    defer></script>
+</body>
+</html>

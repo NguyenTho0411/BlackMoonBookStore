@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" class="modal fade" id="carouselModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content bg-dark" style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+      <!-- Close button on top corner -->
+      <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-3 z-index-3" data-bs-dismiss="modal" aria-label="Close" 
+              style="opacity: 0.8; transition: all 0.3s ease; background-color: rgba(0,0,0,0.6); padding: 10px; border-radius: 50%;"></button>
+              
+      <!-- Carousel Component -->
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <!-- Enhanced carousel indicators -->
+        <div class="carousel-indicators" style="margin-bottom: 1.5rem;">
+          <button type="button" data-bs-target="#carouselExampleIndicators"
+                  data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"
+                  style="width: 12px; height: 12px; border-radius: 50%; background-color: #8E44AD; opacity: 0.7; transition: all 0.3s ease;"></button>
+
+          <th:block th:each="extraImage, status : ${book.images}">
+            <button type="button" data-bs-target="#carouselExampleIndicators"
+                    th:data-bs-slide-to="${status.count}"
+                    th:aria-label="'Slide ' + ${status.count + 1}"
+                    style="width: 12px; height: 12px; border-radius: 50%; background-color: #8E44AD; opacity: 0.7; transition: all 0.3s ease;"></button>
+          </th:block>
+        </div>
+
+        <!-- Enhanced carousel items -->
+        <div class="carousel-inner" style="border-radius: 10px; overflow: hidden;">
+          <div class="carousel-item active" style="padding: 40px;">
+            <img th:src="@{${book.mainImagePath}}" class="d-block mx-auto img-fluid" alt="Main image"
+                 style="max-height: 80vh; object-fit: contain; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
+            <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0,0,0,0.6); border-radius: 10px; bottom: 60px;">
+              <h5 style="color: #fff; font-weight: 600;">Main Image</h5>
+            </div>
+          </div>
+
+          <th:block th:each="extraImage, status : ${book.images}">
+            <div class="carousel-item" style="padding: 40px;">
+              <img th:src="@{${extraImage.imagePath}}" class="d-block mx-auto img-fluid" alt="Extra image"
+                   style="max-height: 80vh; object-fit: contain; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
+              <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0,0,0,0.6); border-radius: 10px; bottom: 60px;">
+                <h5 style="color: #fff; font-weight: 600;">Image [[${status.count}]]</h5>
+              </div>
+            </div>
+          </th:block>
+        </div>
+
+        <!-- Enhanced control buttons -->
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#carouselExampleIndicators" data-bs-slide="prev"
+                style="width: 10%; opacity: 0.8;">
+          <span class="carousel-control-prev-icon" aria-hidden="true"
+                style="background-color: rgba(103, 58, 183, 0.5); padding: 20px; border-radius: 50%; backdrop-filter: blur(2px); transition: all 0.3s ease;"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#carouselExampleIndicators" data-bs-slide="next"
+                style="width: 10%; opacity: 0.8;">
+          <span class="carousel-control-next-icon" aria-hidden="true"
+                style="background-color: rgba(103, 58, 183, 0.5); padding: 20px; border-radius: 50%; backdrop-filter: blur(2px); transition: all 0.3s ease;"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      
+      <!-- Image counter at the bottom -->
+      <div class="image-counter text-white text-center pb-3" style="font-size: 14px; font-weight: 500;">
+        <span id="current-slide">1</span>/<span id="total-slides">[[${book.images.size() + 1}]]</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script to update the image counter -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('carouselExampleIndicators');
+    const currentSlide = document.getElementById('current-slide');
+    
+    if (carousel && currentSlide) {
+      carousel.addEventListener('slid.bs.carousel', function (e) {
+        currentSlide.textContent = e.to + 1;
+      });
+    }
+  });
+</script>
+</body>
+</html>

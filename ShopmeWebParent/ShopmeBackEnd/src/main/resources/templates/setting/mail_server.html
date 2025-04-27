@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+    <!-- Container with matching styles from the previous documents -->
+    <div style="max-width: 800px; margin: 0 auto">
+        <!-- Improved form with shadow and rounded corners -->
+        <form th:action="@{/settings/save_mail_server}" method="post"
+              class="border rounded p-4 bg-white shadow-sm" 
+              style="border-radius: 12px !important; border-color: #e0e0e0 !important;">
+            
+            <!-- Page Title -->
+            <div class="mb-4 text-center">
+                <h4 style="color: #512DA8; font-weight: 600;">
+                    <i class="fas fa-envelope me-2"></i>Mail Server Settings
+                </h4>
+            </div>
+            
+            <!-- SMTP Server Host Name field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-server me-2"></i>SMTP Server Host Name:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="MAIL_HOST"
+                        th:value="${MAIL_HOST}" required
+                        style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                </div>
+            </div>
+            
+            <!-- Port Number field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-plug me-2"></i>Port Number:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="MAIL_PORT"
+                        th:value="${MAIL_PORT}" required
+                        style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                </div>
+            </div>
+            
+            <!-- Username field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-user me-2"></i>Username:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="MAIL_USERNAME"
+                        th:value="${MAIL_USERNAME}" required
+                        style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                </div>
+            </div>
+            
+            <!-- Password field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-lock me-2"></i>Password:
+                </label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" name="MAIL_PASSWORD"
+                        th:value="${MAIL_PASSWORD}" required
+                        style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                </div>
+            </div>
+            
+            <!-- Server Authentication Required field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-shield-alt me-2"></i>Server Authentication Required:
+                </label>
+                <div class="col-sm-8">
+                    <select name="SMTP_AUTH" class="form-control"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                        <option value="true" th:selected="(${SMTP_AUTH} == 'true')">True</option>
+                        <option value="false" th:selected="(${SMTP_AUTH} == 'false')">False</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Server Requires Secured Connection field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-lock me-2"></i>Server Requires Secured Connection (TLS):
+                </label>
+                <div class="col-sm-8">
+                    <select name="SMTP_SECURED" class="form-control"
+                            style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                        <option value="true" th:selected="(${SMTP_SECURED} == 'true')">True</option>
+                        <option value="false" th:selected="(${SMTP_SECURED} == 'false')">False</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- From E-mail Address field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-at me-2"></i>From E-mail Address:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="MAIL_FROM"
+                        th:value="${MAIL_FROM}" required
+                        style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                </div>
+            </div>
+            
+            <!-- Sender Name field -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-4 col-form-label fw-medium" style="color: #512DA8;">
+                    <i class="fas fa-signature me-2"></i>Sender Name:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="MAIL_SENDER_NAME"
+                        th:value="${MAIL_SENDER_NAME}" required
+                        style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                </div>
+            </div>
+            
+            <!-- Form buttons -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-lg px-4" 
+                        style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-radius: 8px;">
+                    <i class="fas fa-save me-2"></i>Save
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Custom styles for this component -->
+    <style>
+        .form-control:focus {
+            border-color: #6C3483;
+            box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);
+        }
+        
+        /* Animation effect for save button */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Make select dropdowns consistent with other inputs */
+        select.form-control {
+            appearance: auto;
+        }
+    </style>
+</div>
+</body>
+</html>

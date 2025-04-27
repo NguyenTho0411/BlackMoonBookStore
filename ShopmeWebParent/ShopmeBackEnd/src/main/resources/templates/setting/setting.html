@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Setting', 'tag')"/>
+    <link rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
+    <script th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu"></div>
+
+        <!-- Tiêu đề đẹp -->
+        <div class="text-center my-4">
+            <h2 class="fw-bold" style="color: #512DA8;">
+                <i class="fas fa-book-reader me-2"></i>Site Setting
+            </h2>
+            <hr class="mx-auto" style="width: 50%; border-color: #6C3483; opacity: 0.5;">
+        </div>
+            <!-- Success Message with improved styling -->
+            <div th:if="${message!=null}" class="alert alert-success text-center" style="border-radius: 8px; border-left: 5px solid #198754;">
+                <i class="fas fa-check-circle me-2"></i>[[${message}]]
+            </div>
+            <div>
+        <ul class="nav nav-tabs" id="settingTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#general" role="tab">General</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#countries" role="tab">Countries</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#states" role="tab">States</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#mailServer" role="tab">Mail Server</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#mailTemplates" role="tab">Mail Template</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active p-3" id="general" role="tabpanel">
+  <div th:replace="setting/general :: content"></div>
+                </div>
+                <div class="tab-pane p-3" id="countries" role="tabpanel">
+  <div th:replace="setting/countries :: content"></div>
+                </div>
+                <div class="tab-pane p-3" id="states" role="tabpanel">
+	<div th:replace="setting/states :: content"></div>
+                </div>
+                <div class="tab-pane p-3" id="mailServer" role="tabpanel">
+	<div th:replace="setting/mail_server :: content"></div>
+                </div>
+                <div class="tab-pane p-3" id="mailTemplates" role="tabpanel">
+	<div th:replace="setting/mail_templates/mail_templates :: content"></div>
+                </div>
+            </div>
+            </div>
+            
+            
+<div class="toast justify-content-center d-flex" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="toast-body">
+    <span id="toastMessage"></span>
+  </div>
+</div>
+
+            <!-- Buttons -->
+        <div th:replace="fragments :: footer"></div>
+    </div>
+
+    <script type="text/javascript">
+        MAX_FILE_SIZE = 502400; // 100KB
+        publisherModuleURL = "[[@{/publishers}]]";
+		moduleURL = "[[@{/books}]]";
+		contextPath = "[[@{/}]]";
+		var csrfHeaderName = "[[${_csrf.headerName}]]";
+		var csrfValue = "[[${_csrf.token}]]";
+		var extraImagesCount = 0 ;
+		dropdownBrands = $("#publisher");
+        dropdownCategories = $("#category");
+        defaultImageThumbnailSrc ="[[@{/images/image-thumbnail.png}]]";
+        
+        dropdownBrands = $("#publisher");
+        dropdownCategories = $("#category");
+
+        $(document).ready(function() {
+            $("#shortDescription").richText();
+            $("#fullDescription").richText();
+
+            dropdownBrands.change(function() {
+                dropdownCategories.empty();
+                getCategories();
+            });
+
+            getCategoriesForNewForm();
+			
+    		
+
+			
+			$("input[name='extraImage']").each(function(index){
+				$(this).change(function(){
+extraImagesCount++;
+					showExtraImageThumbnail(this, index);
+				});
+			});
+			$("a[name='linkRemoveExtraImage']").each(function(index){
+				$(this).click(function(){
+					removeExtraImage(index);
+				});
+			});
+			$("a[name='linkRemoveDetail']").each(function(index){
+				$(this).click(function(){
+					removeDetailSectionByIndex(index);
+				});
+			});
+        });
+		
+		function getCategoriesForNewForm(){
+			catIdField = $("#categoryId");
+			editMode = false;
+			
+			if(catIdField.length){
+				editMode = true;
+			}
+			if(!editMode ) getCategories();
+		}
+function showExtraImageThumbnail(fileInput, index){
+	var file = fileInput.files[0];
+	fileName = file.name;
+	imageNameHiddenField = $("#imageName"+index);
+	if(imageNameHiddenField.length){
+		imageNameHiddenField.val(fileName);
+	}
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		$("#extraThumbnail"+index).attr("src", e.target.result);
+	};
+
+	reader.readAsDataURL(file);
+	if(index >= extraImagesCount -1){
+		addNextExtraImageSection(index+1);
+	}
+
+}
+
+function addNextExtraImageSection(index){
+	htmlExtraImage = `			<div class="col border m-3 p-2" id="divExtraImage${index}">
+		<div id="extraImageHeader${index}"><label>Extra Image #${index+1}: </label></div>
+		<div class="m-2">
+			<img id="extraThumbnail${index}" alt="Extra Image #${index+1} Preview" class="img-fluid"
+			th:src="@{/images/image-thumbnail.png}">
+		</div>
+		<div>
+			<input  type="file" name="extraImage" onchange="showExtraImageThumbnail(this,${index})"
+					accept="image/png, image/jpeg" >
+		</div>
+	</div>`;
+	htmlLinkRemove = `<a class="btn fas fa-times-circle fa-2x icon-dark float-right" title="Remove this Image" href="javascript:removeExtraImage(${index-1})"></a>`;
+	$("#divProductImages").append(htmlExtraImage);
+
+	$("#extraImageHeader" + (index-1)).append(htmlLinkRemove);
+	extraImagesCount++;
+}
+function removeExtraImage(index){
+		$("#divExtraImage"+index).remove();
+}
+function removeDetailSectionByIndex(index){
+	$("#divDetail"+index).remove();
+}
+        function getCategories() {
+            publisherId = dropdownBrands.val();
+            url = publisherModuleURL + "/" + publisherId + "/categories";
+
+            $.get(url, function(responseJson) {
+                $.each(responseJson, function(index, category) {
+                    $("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
+                });
+            });
+        }
+        function addNextDetailSection(){
+        	
+        	allDivDetails = $("[id^='divDetail']");
+        	divDetailsCount = allDivDetails.length;
+        	
+        	htmlDetailSection = `	<div class="form-inline" id="divDetail${divDetailsCount}">
+        		<input type="hidden" name="detailIDs" value="0" />
+        		<label class="m-3">Name:</label>
+        		<input type="text" class="form-control w-25" name="detailNames" maxLength="255"/>
+        					<label class="m-3">Value:</label>
+        		<input type="text" class="form-control w-25" name="detailValues" maxLength="255"/>
+        	</div>`;
+        	
+        	$("#divBookDetails").append(htmlDetailSection);
+        	
+        	
+       	 previousDivDetailSection = allDivDetails.last();
+       	previousDivDetailID = previousDivDetailSection.attr("id");
+        	htmlLinkRemove = 
+        	`<a class="btn fas fa-times-circle fa-2x icon-dark" title="Remove this detail"
+        	 href="javascript:removeDetailSectionById('${previousDivDetailID}')"></a>`;
+
+        	previousDivDetailSection.append(htmlLinkRemove);
+        	$("input[name='detailNames']").last().focus();
+        }
+function removeDetailSectionById(id){
+$("#"+id).remove();
+
+}
+$(document).ready(function () {
+	$("#customerVerificationContent").richText();
+	$("#orderConfirmationContent").richText({height: 400});
+});
+
+        
+     
+	    </script>
+    <script th:src="@{/js/common_form.js}"></script>
+    <script th:src="@{/js/countries_setting.js}"></script>
+	<script th:src="@{/js/states_setting.js}"></script>
+</body>
+</html>

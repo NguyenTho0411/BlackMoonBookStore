@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="page_head(title, remove)" th:remove="${remove}">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>[[${title}]] - [[${SITE_NAME}]]</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <!-- Bootstrap JS (Bundle includes Popper.js) -->
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<body>
+
+    <div th:fragment="footer" class="text-center m-3">
+        <p>[[${COPYRIGHT}]]</p>
+    </div>
+
+    <th th:fragment="column_link(fieldName, columnLabel)">
+        <a 
+           th:href="@{'/users/page/' + ${currentPage} +'?sortField=' + ${fieldName} + '&amp;sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+            [[${columnLabel}]]
+        </a>
+        <span th:if="${sortField == fieldName}" 
+              th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+    </th>
+        <th th:fragment="column_link2(fieldName, columnLabel)">
+        <a 
+           th:href="@{'/customers/page/' + ${currentPage} +'?sortField=' + ${fieldName} + '&amp;sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+            [[${columnLabel}]]
+        </a>
+        <span th:if="${sortField == fieldName}" 
+              th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+    </th>
+
+    <th th:fragment="column_link1(fieldName, columnLabel)">
+        <a class="text-white" 
+           th:href="@{'/categories/page/' + ${currentPage} +'?sortField=' + ${fieldName} + '&amp;sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+            [[${columnLabel}]]
+        </a>
+        <span th:if="${sortField == fieldName}" 
+              th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+    </th>
+
+    <a th:fragment="page_link(pageNum,label)" class="page-link" 
+       th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&amp;sortDir=' + ${sortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+        [[${label}]]
+    </a>
+
+    <a th:fragment="page_link1(pageNum,label)" class="page-link" 
+       th:href="@{'/categories/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&amp;sortDir=' + ${sortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+        [[${label}]]
+    </a>
+
+    <a th:fragment="page_link2(pageNum,label)" class="page-link" 
+       th:href="@{'/publishers/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&amp;sortDir=' + ${sortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+        [[${label}]]
+    </a>
+    
+        <a th:fragment="page_link2(pageNum,label)" class="page-link" 
+       th:href="@{'/customers/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&amp;sortDir=' + ${sortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
+        [[${label}]]
+    </a>
+
+</body>
+</html>

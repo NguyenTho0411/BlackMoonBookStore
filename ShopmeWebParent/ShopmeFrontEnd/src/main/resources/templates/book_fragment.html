@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+				<div th:fragment="content" class="col-sm-2">
+							<div>
+				<a th:href="@{'/b/' + ${book.alias}}">
+									<img th:src="@{${book.mainImagePath}}" width="150">
+					<br/>
+					<b>[[${book.shortName}]]</b>
+				</a>
+
+				</div>
+				<div th:if="${book.discountPercent <= 0}">
+					<span><span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>[[${book.price}]]
+					<span><span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>[[${book.price}]]
+					</span>
+				</div>
+								<div th:if="${book.discountPercent > 0}">
+													<span style="font-size: larger; color: darked">[[${CURRENCY_SYMBOL}]][[${book.discountPrice}]]</span>
+					<del><span>[[${CURRENCY_SYMBOL}]][[${book.price}]]</span></del>
+				</div>
+				</div>
+				
+				<div th:fragment="book_price" th:remove="tag">
+		<th:block th:if="${book.discountPercent &lt;= 0}">
+			<div
+				th:replace="book_fragment :: price_fragment(${book.price})"></div>
+		</th:block>
+		<th:block th:if="${book.discountPercent > 0}">
+			<span style="font-size: larger; color: darkred">
+				<div
+					th:replace="book_fragment :: price_fragment(${book.discountPrice})"></div>
+			</span>
+			<del>
+				<span>
+					<div
+						th:replace="book_fragment :: price_fragment(${book.price})"></div>
+				</span>
+			</del>
+		</th:block>
+	</div>
+
+	<div th:fragment="price_fragment(bookPrice)" >
+		<span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}"
+			th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>[[${#numbers.formatDecimal(bookPrice,
+		1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]<span
+			th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+	</div>
+				
+				
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Blackmoon Books', 'none')">
+  <!-- Additional styles will be included here -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" defer></script>
+</head>
+
+<style>
+  /* Enhanced visual styles for maximum impact */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0e6ff 0%, #e6f0ff 100%);
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  #particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  
+  .container-fluid {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .main-container {
+    min-height: 80vh;
+    padding: 20px 0;
+  }
+  
+  .login-title {
+    padding: 20px 0;
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .login-title h2 {
+    color: #512DA8;
+    font-weight: 800;
+    font-size: 2.8rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+  
+  .login-title h2:after {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+  }
+  
+  .login-title p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  .form-container {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(138, 43, 226, 0.15);
+    padding: 35px;
+    max-width: 450px;
+    margin: 0 auto;
+    position: relative;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transform: translateY(0);
+    transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  
+  .form-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(138, 43, 226, 0.25);
+  }
+  
+  .form-container:after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(135deg, rgba(142, 68, 173, 0.2) 0%, rgba(74, 35, 90, 0.2) 100%);
+    border-radius: 20px;
+    z-index: -1;
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+  
+  .form-container:hover:after {
+    opacity: 1;
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  }
+  
+  .input-group-text {
+    border: none;
+    background: linear-gradient(135deg, #f0e6ff 0%, #e6f0ff 100%);
+    color: #8E44AD;
+    padding: 15px;
+  }
+  
+  .form-control {
+    border: none;
+    padding: 15px;
+    border-radius: 0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+    background-color: #f8f5ff;
+  }
+  
+  .btn-social {
+    background: white;
+    color: #512DA8;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    margin: 15px auto;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    border: none;
+  }
+  
+  .btn-social:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(142, 68, 173, 0.1) 0%, rgba(74, 35, 90, 0.1) 100%);
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+  
+  .btn-social:hover:before {
+    width: 100%;
+  }
+  
+  .btn-social:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+  
+  .btn-social.google {
+    background: #fff;
+    color: #DB4437;
+    border: 1px solid #DB4437;
+  }
+  
+  .btn-social.facebook {
+    background: #fff;
+    color: #4267B2;
+    border: 1px solid #4267B2;
+  }
+  
+  .btn-social i {
+    margin-right: 12px;
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .btn-social span {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .btn-login {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+  }
+  
+  .btn-login:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+    transition: all 0.5s ease;
+  }
+  
+  .btn-login:hover:before {
+    left: 100%;
+  }
+  
+  .btn-login:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
+  }
+  
+  .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-check-input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  .form-check-label {
+    cursor: pointer;
+    font-weight: 500;
+    color: #512DA8;
+  }
+  
+  .alert {
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid;
+    font-weight: 500;
+  }
+  
+  .alert-danger {
+    background-color: #fff2f2;
+    border-color: #ff5252;
+    color: #c30000;
+  }
+  
+  .alert-warning {
+    background-color: #fffbf2;
+    border-color: #ffc107;
+    color: #856404;
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    font-weight: 500;
+    color: #666;
+  }
+  
+  .divider:before, .divider:after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+  }
+  
+  .divider:before {
+    margin-right: 15px;
+  }
+  
+  .divider:after {
+    margin-left: 15px;
+  }
+  
+  .link-container {
+    text-align: center;
+    margin-top: 25px;
+  }
+  
+  .link-container a {
+    color: #8E44AD;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .link-container a:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    transition: all 0.3s ease;
+  }
+  
+  .link-container a:hover:after {
+    width: 100%;
+  }
+  
+  .link-container a:hover {
+    color: #512DA8;
+    text-decoration: none;
+  }
+  
+  .card-effect {
+    position: relative;
+  }
+  
+  .card-effect:before {
+    content: "";
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(142, 68, 173, 0.3) 0%, rgba(74, 35, 90, 0.3) 100%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    animation: floatEffect 10s infinite alternate;
+  }
+  
+  .card-effect:after {
+    content: "";
+    position: absolute;
+    bottom: -150px;
+    left: -150px;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(74, 35, 90, 0.3) 0%, rgba(142, 68, 173, 0.3) 100%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    animation: floatEffect 15s infinite alternate-reverse;
+  }
+  
+  @keyframes floatEffect {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(30px, 30px);
+    }
+  }
+  
+  .footer-nav {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    padding: 0;
+    margin-top: 50px;
+    box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+    border-top: 5px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .footer-nav .nav-link {
+    color: white;
+    padding: 15px 20px;
+    margin: 0 5px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .footer-nav .nav-link:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: -1;
+  }
+  
+  .footer-nav .nav-link:hover:before {
+    width: 100%;
+  }
+  
+  .footer-nav .nav-link:hover {
+    transform: translateY(-3px);
+  }
+  
+  .footer-nav .nav-link:hover i {
+    transform: scale(1.3);
+  }
+  
+  .footer-nav .nav-link i {
+    margin-right: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .copyright {
+    background: linear-gradient(135deg, #4A235A 0%, #2c1636 100%);
+    color: white;
+    padding: 15px 0;
+    font-weight: 500;
+  }
+  
+  .copyright p {
+    margin: 0;
+    font-size: 1rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .login-title h2 {
+      font-size: 2.2rem;
+    }
+    
+    .form-container {
+      padding: 25px;
+      margin: 0 15px;
+    }
+    
+    .btn-social {
+      width: 90%;
+    }
+  }
+  
+  /* Animation for form elements */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animated {
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+  }
+  
+  .fadeInUp {
+    animation-name: fadeInUp;
+  }
+  
+  .delay-1 {
+    animation-delay: 0.1s;
+  }
+  
+  .delay-2 {
+    animation-delay: 0.2s;
+  }
+  
+  .delay-3 {
+    animation-delay: 0.3s;
+  }
+  
+  .delay-4 {
+    animation-delay: 0.4s;
+  }
+</style>
+
+<body>
+<div id="particles-js"></div>
+<div class="container-fluid p-0">
+<!--   <div th:replace="navigation :: header_menu"></div> -->
+  <div>&nbsp;</div>
+  
+  <!-- Main Content -->
+  <div class="container main-container">
+    <div class="login-title animated fadeInUp">
+      <h2>Welcome Back</h2>
+      <p class="text-muted">Sign in to continue your literary journey with Blackmoon Books</p>
+    </div>
+    
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card-effect">
+          <form th:action="@{/login}" method="post" class="form-container animated fadeInUp delay-1">
+            <div th:if="${param.error}" class="alert alert-danger">
+              <i class="fas fa-exclamation-circle me-2"></i>[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]
+            </div>
+            <div th:if="${param.logout}" class="alert alert-warning">
+              <i class="fas fa-check-circle me-2"></i>You have been logged out.
+            </div>
+
+            <div class="input-group animated fadeInUp delay-2">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" name="email" class="form-control" placeholder="Your Email Address" required />
+            </div>
+            
+            <div class="input-group animated fadeInUp delay-3">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" name="password" class="form-control" placeholder="Your Password" required />
+            </div>
+            
+            <div class="form-check text-start mb-3 animated fadeInUp delay-4">
+              <input type="checkbox" name="remember-me" class="form-check-input" id="remember-me" />
+              <label class="form-check-label" for="remember-me">Keep me signed in</label>
+            </div>
+            
+            <div class="mb-3 animated fadeInUp delay-4">
+              <button type="submit" class="btn btn-login">
+                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+              </button>
+            </div>
+            
+            <div class="divider animated fadeInUp delay-4">or continue with</div>
+            
+            <div class="text-center mt-4 animated fadeInUp delay-4">
+              <a class="btn btn-social google" th:href="@{/oauth2/authorization/google}">
+                <i class="fab fa-google"></i><span>Google</span>
+              </a>
+              
+              <a class="btn btn-social facebook" th:href="@{/oauth2/authorization/facebook}">
+                <i class="fab fa-facebook"></i><span>Facebook</span>
+              </a>
+            </div>
+            
+            <div class="link-container animated fadeInUp delay-4">
+              <div class="mb-3">
+                <a th:href="@{/forgot_password}">Forgot your password?</a>
+              </div>
+              <div>
+                Don't have an account? <a th:href="@{/register}" class="fw-bold">Create Account</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!--  
+  <nav class="navbar navbar-expand-lg navbar-dark footer-nav">
+    <div class="container">
+      <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse" data-bs-target="#bottomNavbar" style="border: none; padding: 8px;">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="bottomNavbar">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-info-circle"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-shield-alt"></i> Privacy Notice
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-book"></i> Terms of Service
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-exchange-alt"></i> Returns &amp; Refunds
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-question-circle"></i> Help Center
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav> -->
+  
+  <!-- Copyright -->
+<!--   <div class="copyright text-center py-3">
+    <p>Blackmoon Books &copy; 2025 • The Magic of Reading</p>
+  </div>
+</div>
+ -->
+<!-- Particles.js Initialization -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    particlesJS('particles-js', {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#8E44AD"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          },
+          "polygon": {
+            "nb_sides": 5
+          }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": false,
+          "anim": {
+            "enable": false,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 40,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#8E44AD",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 400,
+            "line_linked": {
+              "opacity": 1
+            }
+          },
+          "bubble": {
+            "distance": 400,
+            "size": 40,
+            "duration": 2,
+            "opacity": 8,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 100,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  });
+</script>
+</body>
+</html>

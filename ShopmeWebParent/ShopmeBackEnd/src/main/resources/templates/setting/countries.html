@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+    <!-- Container with matching styles from the first document -->
+    <div style="max-width: 800px; margin: 0 auto">
+        <!-- Improved container with shadow and rounded corners -->
+        <div class="border rounded p-4 bg-white shadow-sm" 
+             style="border-radius: 12px !important; border-color: #e0e0e0 !important;">
+            
+            <!-- Introduction text -->
+            <div class="alert alert-info" style="background-color: #E8EAF6; color: #3F51B5; border-color: #C5CAE9; border-radius: 8px;">
+                <i class="fas fa-info-circle me-2"></i>
+                <p class="mb-0">Use this page to manage countries which will be displayed in the customer registration form. Click Load Country List first.</p>
+            </div>
+            
+            <!-- Load Country List button -->
+            <div class="text-center mb-3">
+                <button id="buttonLoadCountries" class="btn btn-lg px-4" 
+                        style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-radius: 8px;">
+                    <i class="fas fa-globe me-2"></i>Load Country List
+                </button>
+            </div>
+            
+            <!-- Country dropdown -->
+            <div class="form-group mb-4">
+                <label class="fw-medium mb-2" style="color: #512DA8;">
+                    <i class="fas fa-flag me-2"></i>Available Countries:
+                </label>
+                <select id="dropDownCountries" class="form-control" 
+                        style="height: 300px; border-radius: 8px; border-color: #e0e0e0;" 
+                        size="3">
+                </select>
+            </div>
+            
+            <!-- Country Form -->
+            <form id="formCountry">
+                <div class="row mb-3">
+                    <!-- Country Name field -->
+                    <div class="col-md-6 mb-3">
+                        <label id="labelCountryName" class="form-label fw-medium" style="color: #512DA8;">
+                            <i class="fas fa-font me-2"></i>Country Name:
+                        </label>
+                        <input type="text" class="form-control" id="fieldCountryName"
+                               required minlength="3" maxlength="45"
+                               style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                    </div>
+                    
+                    <!-- Country Code field -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-medium" style="color: #512DA8;">
+                            <i class="fas fa-tag me-2"></i>Code:
+                        </label>
+                        <input type="text" class="form-control" id="fieldCountryCode"
+                               required minlength="2" maxlength="3"
+                               style="border-radius: 8px; border-color: #e0e0e0; padding: 10px;">
+                    </div>
+                </div>
+                
+                <!-- Form buttons -->
+                <div class="text-center mt-4">
+                    <button type="button" id="buttonAddCountry" class="btn btn-lg px-4" 
+                            style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-radius: 8px;">
+                        <i class="fas fa-plus me-2"></i>New
+                    </button>
+                    <button type="button" id="buttonUpdateCountry" class="btn btn-lg btn-success px-4 ms-2"
+                            disabled="disabled" style="border-radius: 8px;">
+                        <i class="fas fa-edit me-2"></i>Update
+                    </button>
+                    <button type="button" id="buttonDeleteCountry" class="btn btn-lg btn-danger px-4 ms-2"
+                            disabled="disabled" style="border-radius: 8px;">
+                        <i class="fas fa-trash me-2"></i>Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Custom styles for this component -->
+    <style>
+        .form-control:focus {
+            border-color: #6C3483;
+            box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);
+        }
+        
+        /* Animation effect for buttons */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style for the dropdown when selected */
+        #dropDownCountries option:checked {
+            background-color: #E8EAF6;
+            color: #512DA8;
+        }
+    </style>
+    
+    <script>
+        $(document).ready(function() {
+            // Add any script logic here
+            // The original functionality should be implemented by your existing JavaScript
+        });
+    </script>
+</div>
+</body>
+</html>

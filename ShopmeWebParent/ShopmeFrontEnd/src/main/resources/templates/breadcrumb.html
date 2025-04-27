@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="content">
+  <div th:if="${listCategoryParents != null && !listCategoryParents.empty}" class="breadcrumb-wrapper mb-4">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb custom-breadcrumb">
+          <li class="breadcrumb-item">
+            <a th:href="@{/}" class="home-link">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+
+          <th:block th:each="parent : ${listCategoryParents}">
+            <li class="breadcrumb-item">
+              <a th:href="@{'/c/' + ${parent.alias}}" class="category-link">
+                [[${parent.name}]]
+              </a>
+            </li>
+          </th:block>
+
+          <li class="breadcrumb-item active" th:if="${book != null}">
+            <span class="current-page">[[${book.shortName}]]</span>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <style>
+    /* Enhanced Breadcrumb Styling */
+    .breadcrumb-wrapper {
+      background-color: #f9f6fd;
+      padding: 12px 0;
+      border-radius: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+    
+    .custom-breadcrumb {
+      margin-bottom: 0;
+      padding: 0;
+      background: transparent;
+      font-size: 0.9rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "\f054";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      color: #8E44AD;
+      font-size: 0.7rem;
+      margin: 0 10px;
+      opacity: 0.5;
+    }
+    
+    .breadcrumb-item a {
+      color: #512DA8;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    
+    .breadcrumb-item a:hover {
+      color: #8E44AD;
+      background-color: rgba(142, 68, 173, 0.1);
+      text-decoration: none;
+    }
+    
+    .home-link {
+      display: flex;
+      align-items: center;
+    }
+    
+    .home-link i {
+      margin-right: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .category-link {
+      position: relative;
+    }
+    
+    .current-page {
+      font-weight: 600;
+      color: #4A235A;
+      padding: 4px 8px;
+    }
+    
+    .breadcrumb-item.active {
+      color: #4A235A;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .breadcrumb-wrapper {
+        padding: 10px 0;
+      }
+      
+      .custom-breadcrumb {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</div>
+</body>
+</html>
