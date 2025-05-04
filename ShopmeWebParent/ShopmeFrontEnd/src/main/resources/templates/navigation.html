@@ -5,121 +5,672 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
-  
+  <style>
+/* Enhanced Base styles for modern appeal */
+body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Main container styles with improved spacing */
+.main-container {
+    min-height: 85vh;
+    padding: 30px 0;
+}
+
+/* Preserving existing navigation styles as requested */
+.navbar {
+    padding: 12px 0;
+    transition: all 0.4s ease;
+}
+
+.navbar .nav-link {
+    position: relative;
+    padding: 8px 18px;
+    margin: 0 2px;
+    transition: all 0.4s ease;
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.navbar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pulse-icon {
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover .pulse-icon {
+    transform: scale(1.2);
+    color: #FEC3A6;
+}
+
+/* Enhanced dropdown styling */
+.dropdown-item {
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    margin: 2px 6px;
+}
+
+.dropdown-item:hover {
+    background-color: #f0e6ff;
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* User icon glow effect */
+.user-icon-glow {
+    filter: drop-shadow(0 0 3px rgba(254, 195, 166, 0.5));
+    transition: all 0.3s ease;
+}
+
+/* Shopping cart button styling */
+.cart-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 8px 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.cart-badge {
+    background-color: #FF5252;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+/* Enhanced search bar */
+.search-form {
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+}
+
+.search-input {
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    flex-grow: 1;
+}
+
+.search-input:focus {
+    box-shadow: none;
+    border: none;
+    outline: none;
+}
+
+.search-button {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    color: white;
+    border: none;
+    width: 60px;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.search-button:hover {
+    background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
+    transform: scale(1.05);
+    color: white;
+}
+
+/* Preserving breadcrumb styling as requested */
+.breadcrumb {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.breadcrumb-item a {
+    color: #673AB7;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #9C27B0;
+    text-decoration: none;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    content: "›";
+    color: #8E44AD;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.breadcrumb-item.active {
+    color: #512DA8;
+    font-weight: 600;
+}
+
+/* Enhanced Image hover effects */
+.image-thumbnail {
+    transition: all 0.4s ease;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.image-thumbnail:hover {
+    transform: scale(1.08);
+}
+
+.thumbnail-container {
+    border: 2px solid #e0e0e0; 
+    transition: all 0.4s ease; 
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.thumbnail-container:hover {
+    border-color: #673AB7;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+#bigImage {
+    transition: all 0.5s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    cursor: pointer;
+    object-fit: contain;
+    background-color: #fff;
+    padding: 10px;
+}
+
+#bigImage:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* Modernized Book details styling */
+.book-details {
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+    border: 1px solid rgba(0,0,0,0.03);
+    height: 100%;
+}
+
+.book-title {
+    color: #512DA8;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+.book-publisher {
+    color: #673AB7;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+    font-size: 1.05rem;
+}
+
+.action-box {
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0,0,0,0.03);
+    height: 100%;
+}
+
+.description-section, .details-section {
+    padding: 30px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.section-heading {
+    color: #512DA8;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0e6ff;
+    font-size: 1.5rem;
+}
+
+/* Price styling */
+.original-price {
+    color: gray;
+    text-decoration: line-through;
+    font-size: 1rem;
+}
+
+.discounted-price {
+    font-size: 1.5rem;
+    color: #E91E63;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.discount-badge {
+    background-color: #E91E63;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 5px;
+    box-shadow: 0 2px 5px rgba(233, 30, 99, 0.3);
+}
+
+/* Stock status styling */
+.stock-badge {
+    font-size: 1rem;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.in-stock {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.out-stock {
+    background-color: #F44336;
+    color: white;
+}
+
+/* Add to cart button styling */
+#buttonAdd2Cart {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+    margin-top: 15px;
+    width: 100%;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+#buttonAdd2Cart:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.4);
+}
+
+#buttonAdd2Cart::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: rotate(30deg);
+    transition: all 1s ease;
+    opacity: 0;
+}
+
+#buttonAdd2Cart:hover::after {
+    opacity: 1;
+    left: 100%;
+    top: 100%;
+}
+
+/* Ratings styling */
+.ratings-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.ratings-count {
+    color: #673AB7;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.ratings-count:hover {
+    color: #512DA8;
+    text-decoration: underline;
+}
+
+/* Book details table styling */
+.book-detail-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #673AB7;
+    min-width: 150px;
+}
+
+/* Footer styling */
+.footer-nav {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px 0;
+}
+
+.footer-link {
+    color: white;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    color: white;
+    text-decoration: none;
+}
+
+.copyright-section {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    font-weight: 500;
+    color: #512DA8;
+}
+
+/* Modal styling */
+.modal-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 20px;
+}
+
+.modal-title {
+    color: #512DA8;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: 1px solid #f0f0f0;
+    padding: 15px 20px;
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Short description styling */
+.short-description {
+    line-height: 1.7;
+    color: #555;
+    font-size: 1.05rem;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid #f0e6ff;
+}
+
+/* Full description styling */
+.full-description {
+    line-height: 1.8;
+    color: #333;
+    font-size: 1.05rem;
+}
+
+/* Quantity control styling */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.quantity-control button {
+    background-color: #f0e6ff;
+    color: #512DA8;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.quantity-control button:hover {
+    background-color: #e1d4f0;
+    transform: scale(1.1);
+}
+
+.quantity-control input {
+    width: 60px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #512DA8;
+    border: none;
+    background: transparent;
+    margin: 0 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .navbar-nav {
+        padding: 10px 0;
+    }
+    .navbar .nav-link {
+        padding: 12px 15px;
+        margin: 3px 0;
+    }
+    .search-form {
+        margin-top: 10px;
+    }
+    .book-details, .action-box {
+        margin-bottom: 20px;
+    }
+    .book-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 15px 0;
+    }
+    .description-section, .details-section {
+        padding: 20px;
+    }
+    #bigImage {
+        max-width: 250px;
+    }
+}
+</style>
 <body>
   <div th:fragment="header_menu">
-    <!-- Enhanced gradient background with deeper purple tones -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-      <div class="container">
-        <!-- Logo with enhanced animation -->
-        <a class="navbar-brand" th:href="@{/}" style="padding: 5px 0;">
-          <img th:src="@{/images/blackmoonsmall.png}" src="" alt="Blackmoon Books" style="height: 45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'; this.style.filter='drop-shadow(0 4px 8px rgba(0,0,0,0.4))'" onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 2px 4px rgba(0,0,0,0.3))'"/>
-        </a>
-            
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar, #searchNavbar" style="border: none; padding: 8px;">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-            
-        <div class="collapse navbar-collapse" id="topNavbar">
-          <!-- Menu items with enhanced visual styling -->
-          <ul class="navbar-nav mx-auto" style="gap: 5px;">
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="">
-                <i class="fas fa-briefcase me-1 pulse-icon"></i> Careers
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="">
-                <i class="fas fa-credit-card me-1 pulse-icon"></i> Payments
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="">
-                <i class="fas fa-truck me-1 pulse-icon"></i> Shipping &amp; Delivery
-              </a>
-            </li>
-            
-            <th:block sec:authorize="!isAuthenticated()">
-              <li class="nav-item">
-                <a class="nav-link fw-medium shine-effect" th:href="@{/login}">
-                  <i class="fas fa-sign-in-alt me-1 pulse-icon"></i> Login
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link fw-medium shine-effect" th:href="@{/register}">
-                  <i class="fas fa-user-plus me-1 pulse-icon"></i> Register
-                </a>
-              </li>
-            </th:block>
-            
-            <th:block sec:authorize="isAuthenticated()">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown"
-                   data-bs-toggle="dropdown" role="button" aria-expanded="false">
-                  <span class="fas fa-user-circle me-2 user-icon-glow" style="font-size: 1.5rem; color: #FEC3A6;"></span>
-                  <span sec:authentication="principal.fullName" class="fw-medium"></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" 
-                     style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0,0,0,0.2); padding: 10px 5px;">
-                  <a class="dropdown-item" th:href="@{/account}">
-                    <i class="fas fa-user-cog me-2"></i> Tài khoản
-                  </a>
-                  <a class="dropdown-item" th:href="@{/orders/my_orders}">
-                    <i class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
-                  </a>
-                                    <a class="dropdown-item" th:href="@{/orders/my_orders}">
-                    <i class="fas fa-shopping-bag me-2"></i> Reviews
-                  </a>
-                                                      <a class="dropdown-item" th:href="@{/orders/my_orders}">
-                    <i class="fas fa-shopping-bag me-2"></i> Cart
-                  </a>
-                                                      <a class="dropdown-item" th:href="@{/orders/my_orders}">
-                    <i class="fas fa-shopping-bag me-2"></i> Questions
-                  </a>
-                                                      <a class="dropdown-item" th:href="@{/orders/my_orders}">
-                    <i class="fas fa-shopping-bag me-2"></i> Addresses
-                  </a>
-                  <div class="dropdown-divider"></div>
-<form th:action="@{/logout}" method="post">
-  <button type="submit" class="dropdown-item" style="border: none; background: none;">
-    <i class="fas fa-sign-out-alt me-2"></i> Logout
-  </button>
-</form>
-                </div>
-              </li>
-            </th:block>
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="">
-                <i class="fas fa-envelope me-1 pulse-icon"></i> Contact
-              </a>
-            </li>
-          </ul>
-          
-          <!-- Enhanced shopping cart icon with animation -->
-          <div class="ms-auto">
-            <a th:href="@{/cart}" class="btn position-relative cart-button">
-              <i class="fas fa-shopping-cart"></i>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge" 
-                    th:if="${cartItemCount != null && cartItemCount > 0}" th:text="${cartItemCount}">
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
+	<!-- Header Menu -->
+		<nav class="navbar navbar-expand-lg navbar-dark"
+			style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+			<div class="container">
+				<!-- Logo with enhanced animation -->
+				<a class="navbar-brand" th:href="@{/}" style="padding: 5px 0;">
+					<img th:src="@{${S3_BASE_URI+SITE_LOGO}}" alt="Blackmoon Books"
+					style="height: 45px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); transition: all 0.3s ease;"
+					onmouseover="this.style.transform='scale(1.08)'; this.style.filter='drop-shadow(0 4px 8px rgba(0,0,0,0.4))'"
+					onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 2px 4px rgba(0,0,0,0.3))'" />
+				</a>
+
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#topNavbar"
+					style="border: none; padding: 8px;">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="topNavbar">
+					<!-- Menu items with enhanced visual styling -->
+					<ul class="navbar-nav mx-auto" style="gap: 5px;">
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-briefcase me-1 pulse-icon"></i> Careers
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-credit-card me-1 pulse-icon"></i> Payments
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-truck me-1 pulse-icon"></i> Shipping &amp;
+								Delivery
+						</a></li>
+
+						<th:block sec:authorize="!isAuthenticated()">
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/login}">
+									<i class="fas fa-sign-in-alt me-1 pulse-icon"></i> Login
+							</a></li>
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/register}">
+									<i class="fas fa-user-plus me-1 pulse-icon"></i> Register
+							</a></li>
+						</th:block>
+
+						<th:block sec:authorize="isAuthenticated()">
+							<li class="nav-item dropdown"><a
+								class="nav-link dropdown-toggle d-flex align-items-center"
+								href="#" id="navbarDropdown" data-bs-toggle="dropdown"
+								role="button" aria-expanded="false"> <span
+									class="fas fa-user-circle me-2 user-icon-glow"
+									style="font-size: 1.5rem; color: #FEC3A6;"></span> <span
+									sec:authentication="principal.fullName" class="fw-medium"></span>
+							</a>
+								<div class="dropdown-menu dropdown-menu-end"
+									aria-labelledby="navbarDropdown"
+									style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); padding: 10px 5px;">
+									<a class="dropdown-item" th:href="@{/account}"> <i
+										class="fas fa-user-cog me-2"></i> Account
+									</a> <a class="dropdown-item" th:href="@{/orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> My Orders
+									</a> <a class="dropdown-item" th:href="@{/reviews}"> <i
+										class="fas fa-star me-2"></i> Reviews
+									</a> <a class="dropdown-item" th:href="@{/cart}"> <i
+										class="fas fa-shopping-cart me-2"></i> Cart
+									</a> <a class="dropdown-item" th:href="@{/questions}"> <i
+										class="fas fa-question-circle me-2"></i> Questions
+									</a> <a class="dropdown-item" th:href="@{/address_book}"> <i
+										class="fas fa-map-marker-alt me-2"></i> Addresses
+									</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" id="logoutLink" th:href="@{/logout}">
+										<i class="fas fa-sign-out-alt me-2"></i> Logout
+									</a>
+								</div></li>
+						</th:block>
+
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-envelope me-1 pulse-icon"></i> Contact
+						</a></li>
+					</ul>
+
+					<!-- Enhanced shopping cart icon with animation -->
+					<div class="ms-auto">
+						<a th:href="@{/cart}" class="btn position-relative cart-button">
+							<i class="fas fa-shopping-cart"></i> <span
+							class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge"
+							th:if="${cartItemCount != null && cartItemCount > 0}"
+							th:text="${cartItemCount}"> </span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</nav>
   </div>
 
   <div th:fragment="search_nav" class="container mt-3 mb-3">
-    <div class="row">
-      <div class="col-md">
-        <form class="d-flex search-form" th:action="@{/search}" method="get">
-          <input type="search" name="keyword" class="form-control search-input" required placeholder="Tìm kiếm sách..." th:value="${keyword}">
-          <button type="submit" class="btn search-button">
-            <i class="fas fa-search"></i>
-          </button>
-        </form>
-      </div>
-    </div>
+<div class="row">
+				<div class="col-md">
+					<form class="d-flex search-form" th:action="@{/search}"
+						method="get">
+						<input type="search" name="keyword"
+							class="form-control search-input" required
+							placeholder="Search books..." th:value="${keyword}">
+						<button type="submit" class="btn search-button">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+				</div>
+			</div>
   </div>
 
   <div th:fragment="footer_menu">

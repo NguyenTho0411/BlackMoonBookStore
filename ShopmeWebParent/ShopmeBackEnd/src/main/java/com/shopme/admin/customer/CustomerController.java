@@ -2,6 +2,8 @@ package com.shopme.admin.customer;
 
 import java.util.List;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +20,7 @@ import com.shopme.common.exception.CustomerNotFoundException;
 
 @Controller
 public class CustomerController {
-private String defaultRedirectURL = "redirect:/customers/page/1?sortField=firstName&sortDir=asc";
+	private String defaultRedirectURL = "redirect:/customers/page/1?sortField=firstName&sortDir=asc";
 	
 	@Autowired private CustomerService service;
 	
@@ -98,4 +100,5 @@ private String defaultRedirectURL = "redirect:/customers/page/1?sortField=firstN
 		
 		return defaultRedirectURL;
 	}
+	
 }

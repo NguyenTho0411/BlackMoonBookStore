@@ -51,23 +51,31 @@ function updateVoteCountAndIcons(currentLink, voteResult) {
 }
 
 function highlightVoteUpIcon(voteUpLink, voteDownLink) {
-	voteUpLink.removeClass("far").addClass("fas");
+	voteUpLink.find("i").removeClass("far").addClass("fas");
 	voteUpLink.attr("title", "Undo vote up this review");
-	voteDownLink.removeClass("fas").addClass("far");
+	voteUpLink.addClass("voted");
+
+	voteDownLink.find("i").removeClass("fas").addClass("far");
+	voteDownLink.removeClass("voted");
 }
 
 function highlightVoteDownIcon(voteDownLink, voteUpLink) {
-	voteDownLink.removeClass("far").addClass("fas");
+	voteDownLink.find("i").removeClass("far").addClass("fas");
 	voteDownLink.attr("title", "Undo vote down this review");
-	voteUpLink.removeClass("fas").addClass("far");
+	voteDownLink.addClass("voted");
+
+	voteUpLink.find("i").removeClass("fas").addClass("far");
+	voteUpLink.removeClass("voted");
 }
 
 function unhighlightVoteDownIcon(voteDownLink) {
 	voteDownLink.attr("title", "Vote down this review");
-	voteDownLink.removeClass("fas").addClass("far");
+	voteDownLink.find("i").removeClass("fas").addClass("far");
+	voteDownLink.removeClass("voted");
 }
 
 function unhighlightVoteUpIcon(voteUpLink) {
 	voteUpLink.attr("title", "Vote up this review");
-	voteUpLink.removeClass("fas").addClass("far");
+	voteUpLink.find("i").removeClass("fas").addClass("far");
+	voteUpLink.removeClass("voted");
 }

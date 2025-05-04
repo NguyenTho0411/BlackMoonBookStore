@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="content(reportType)" th:remove="tag">
+  <!-- Time Period Selection Buttons -->
+  <div class="period-buttons mb-4" th:with="buttonClass = 'button-sales-by' + ${reportType}">
+    <button period="last_7_days" class="btn btn-primary m-1" th:classappend="${buttonClass}">
+      <i class="fas fa-calendar-week me-2"></i>Last 7 days
+    </button>
+    <button period="last_28_days" class="btn btn-light m-1" th:classappend="${buttonClass}">
+      <i class="fas fa-calendar-alt me-2"></i>Last 28 days
+    </button>
+    <button period="last_6_months" class="btn btn-light m-1" th:classappend="${buttonClass}">
+      <i class="far fa-calendar-alt me-2"></i>Last 6 Months
+    </button>
+    <button period="last_year" class="btn btn-light m-1" th:classappend="${buttonClass}">
+      <i class="fas fa-calendar me-2"></i>Last Year
+    </button>
+    <button period="custom" class="btn btn-light m-1" th:classappend="${buttonClass}">
+      <i class="fas fa-calendar-plus me-2"></i>Custom Date Range
+    </button>
+  </div>
+
+  <!-- Custom Date Range Form with Enhanced UI -->
+  <form>
+    <div th:id="'divCustomDateRange' + ${reportType}" class="date-range-container d-none">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <label class="form-label fw-medium">From date:</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+            <input type="date" th:id="'startDate' + ${reportType}" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-medium">To date:</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+            <input type="date" th:id="'endDate' + ${reportType}" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button type="button" class="btn btn-primary px-4" th:id="'buttonViewReportByDateRange' + ${reportType}">
+            <i class="fas fa-search me-2"></i>Generate Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Chart Container with Enhanced Styling -->
+  <div class="chart-container">
+    <div class="mb-3">
+      <h5 class="text-primary fw-bold mb-3" th:id="'reportTitle' + ${reportType}">Sales Performance Report</h5>
+    </div>
+    <div th:id="'chart_sales_by' + ${reportType}" class="justify-content-center"></div>
+  </div>
+
+  <!-- Statistics Cards with Enhanced Design -->
+  <div class="row stats-row">
+    <div class="col-md-4 col-lg stats-col">
+      <div class="card stats-card">
+        <div class="card-header">
+          <i class="fas fa-chart-line"></i>
+          <span class="fw-bold">Total Gross Sales</span>
+        </div>
+        <div class="card-body">
+          <span class="h3" th:id="'textTotalGrossSales' + ${reportType}"></span>
+          <div class="mt-2 text-muted small" th:id="'grossSalesChange' + ${reportType}">
+            <!-- Dynamic change indicator will be inserted by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg stats-col">
+      <div class="card stats-card">
+        <div class="card-header">
+          <i class="fas fa-hand-holding-usd"></i>
+          <span class="fw-bold">Total Net Sales</span>
+        </div>
+        <div class="card-body">
+          <span class="h3" th:id="'textTotalNetSales' + ${reportType}"></span>
+          <div class="mt-2 text-muted small" th:id="'netSalesChange' + ${reportType}">
+            <!-- Dynamic change indicator will be inserted by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg stats-col">
+      <div class="card stats-card">
+        <div class="card-header">
+          <i class="fas fa-chart-bar"></i>
+          <span class="fw-bold">Avg. Gross Sales</span>
+        </div>
+        <div class="card-body">
+          <span class="h3" th:id="'textAvgGrossSales' + ${reportType}"></span>
+          <div class="mt-2 text-muted small" th:id="'avgGrossSalesChange' + ${reportType}">
+            <!-- Dynamic change indicator will be inserted by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg stats-col">
+      <div class="card stats-card">
+        <div class="card-header">
+          <i class="fas fa-clipboard"></i>
+          <span class="fw-bold">Avg. Net Sales</span>
+        </div>
+        <div class="card-body">
+          <span class="h3" th:id="'textAvgNetSales' + ${reportType}"></span>
+          <div class="mt-2 text-muted small" th:id="'avgNetSalesChange' + ${reportType}">
+            <!-- Dynamic change indicator will be inserted by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg stats-col">
+      <div class="card stats-card">
+        <div class="card-header">
+          <i class="fas fa-boxes"></i>
+          <span class="fw-bold"><span th:id="'labelTotalItems' + ${reportType}"></span></span>
+        </div>
+        <div class="card-body">
+          <span class="h3" th:id="'textTotalItems' + ${reportType}"></span>
+          <div class="mt-2 text-muted small" th:id="'totalItemsChange' + ${reportType}">
+            <!-- Dynamic change indicator will be inserted by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<!-- Add custom JS to track changes between periods -->
+<script th:inline="javascript">
+  function updateChangeIndicators(reportType, previousData, currentData) {
+    if (!previousData) return;
+    
+    // Calculate changes and update indicators
+    const metrics = [
+      {id: 'grossSalesChange', curr: currentData.totalGrossSales, prev: previousData.totalGrossSales},
+      {id: 'netSalesChange', curr: currentData.totalNetSales, prev: previousData.totalNetSales},
+      {id: 'avgGrossSalesChange', curr: currentData.avgGrossSales, prev: previousData.avgGrossSales},
+      {id: 'avgNetSalesChange', curr: currentData.avgNetSales, prev: previousData.avgNetSales},
+      {id: 'totalItemsChange', curr: currentData.totalItems, prev: previousData.totalItems}
+    ];
+    
+    metrics.forEach(metric => {
+      const change = ((metric.curr - metric.prev) / metric.prev) * 100;
+      const element = document.getElementById(metric.id + reportType);
+      if (!element) return;
+      
+      if (change > 0) {
+        element.innerHTML = `<i class="fas fa-arrow-up text-success"></i> ${Math.abs(change).toFixed(1)}%`;
+      } else if (change < 0) {
+        element.innerHTML = `<i class="fas fa-arrow-down text-danger"></i> ${Math.abs(change).toFixed(1)}%`;
+      } else {
+        element.innerHTML = `<i class="fas fa-equals text-muted"></i> No change`;
+      }
+    });
+  }
+</script>
+</body>
+
+</html>

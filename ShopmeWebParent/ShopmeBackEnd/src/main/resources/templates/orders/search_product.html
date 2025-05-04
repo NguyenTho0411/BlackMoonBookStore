@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments2 :: page_head('Search Product', 'none')" />
+
+<body>
+	<div class="container-fluid">
+		<div>
+			<form th:action="@{/orders/search_product}" method="post"
+				class="form-inline my-2">
+				<input type="search" required class="form-control mr-sm-2"
+					name="keyword" th:value="${keyword}" placeholder="book name" />
+				<input type="submit" class="btn btn-outline-success" value="Search" />
+			</form>
+		</div>
+
+		<div class="row">
+			<th:block th:each="book : ${listBooks}">
+				<div class="col">
+					<div>
+						<a href="" class="linkBook" th:pid="${book.id}"> <img
+							th:src="@{${book.mainImagePath}}" height="150"> <br />
+							<b th:id="'bname' + ${book.id}">[[${book.shortName}]]</b>
+						</a>
+					</div>
+				</div>
+			</th:block>
+		</div>
+		<div th:replace="modal_fragments :: modal_dialog"></div>
+		<div th:replace="fragments2 :: pagination('books')"></div>
+	</div>
+	<script th:src="@{/js/common_form.js}"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			handleLinkProduct();
+		});
+		function showModalDialog(title, message) {
+			document.getElementById("modalTitle").textContent = title;
+			document.getElementById("modalBody").textContent = message;
+
+			const modal = new bootstrap.Modal(document.getElementById('modalDialog'), {});
+			modal.show();
+		}
+
+		function showWarningModal(message) {
+			showModalDialog("Warning", message);
+		}
+
+		function showErrorModal(message) {
+			showModalDialog("Error", message);
+		}
+		function handleLinkProduct() {
+			$(".linkBook").on("click", function (e) {
+				e.preventDefault();
+				bookId = $(this).attr("pid");
+				bookName = $("#bname" + bookId).text();
+
+				if (window.parent.isProductAlreadyAdded(bookId)) {
+					showWarningModal("The book '" + bookName + "' was already added.");
+				} else {
+					window.parent.addProduct(bookId, bookName);
+				}
+
+
+			});
+		}
+	</script>
+</body>
+
+</html>

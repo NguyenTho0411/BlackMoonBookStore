@@ -15,651 +15,854 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	defer></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<link th:href="@{/star-rating/css/star-rating.css}" media="all"
+	rel="stylesheet" type="text/css" />
+<script th:src="@{/star-rating/js/star-rating.js}"
+	type="text/javascript"></script>
+<link th:href="@{/star-rating/themes/krajee-svg/theme.css}" media="all"
+	rel="stylesheet" type="text/css" />
+<script th:src="@{/star-rating/themes/krajee-svg/theme.js}"></script>
+<script type="text/javascript">
+  contextPath = "[[@{/}]]";
+  bookId = "[[${book.id}]]";
+  var csrfHeaderName = "[[${_csrf.headerName}]]";
+  var csrfValue = "[[${_csrf.token}]]";
+  decimalSeparator = "[[${DECIMAL_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
+  thousandSeparator = "[[${THOUSANDS_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
+</script>
 <style>
-/* Base styles with enhanced visuals */
+/* Enhanced Base styles for modern appeal */
 body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background-color: #f9f5ff;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
 }
 
-/* Main container styles */
+/* Main container styles with improved spacing */
 .main-container {
-	min-height: 80vh;
-	padding: 20px 0;
+    min-height: 85vh;
+    padding: 30px 0;
 }
 
-/* Navigation styles */
+/* Preserving existing navigation styles as requested */
 .navbar {
-	padding: 12px 0;
-	transition: all 0.4s ease;
+    padding: 12px 0;
+    transition: all 0.4s ease;
 }
 
 .navbar .nav-link {
-	position: relative;
-	padding: 8px 18px;
-	margin: 0 2px;
-	transition: all 0.4s ease;
-	border-radius: 8px;
-	font-weight: 500;
-	letter-spacing: 0.3px;
+    position: relative;
+    padding: 8px 18px;
+    margin: 0 2px;
+    transition: all 0.4s ease;
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
 }
 
 .navbar .nav-link:hover {
-	background-color: rgba(255, 255, 255, 0.15);
-	transform: translateY(-3px);
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar .nav-link.active {
-	background-color: rgba(255, 255, 255, 0.2);
-	font-weight: 600;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Pulse animation for icons */
 .pulse-icon {
-	transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .nav-link:hover .pulse-icon {
-	transform: scale(1.2);
-	color: #FEC3A6;
+    transform: scale(1.2);
+    color: #FEC3A6;
 }
 
 /* Enhanced dropdown styling */
 .dropdown-item {
-	padding: 10px 20px;
-	transition: all 0.3s ease;
-	border-radius: 6px;
-	margin: 2px 6px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    margin: 2px 6px;
 }
 
 .dropdown-item:hover {
-	background-color: #f0e6ff;
-	transform: translateX(5px);
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background-color: #f0e6ff;
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* User icon glow effect */
 .user-icon-glow {
-	filter: drop-shadow(0 0 3px rgba(254, 195, 166, 0.5));
-	transition: all 0.3s ease;
+    filter: drop-shadow(0 0 3px rgba(254, 195, 166, 0.5));
+    transition: all 0.3s ease;
 }
 
 /* Shopping cart button styling */
 .cart-button {
-	background-color: rgba(255, 255, 255, 0.2);
-	color: white;
-	border-radius: 8px;
-	padding: 8px 14px;
-	transition: all 0.3s ease;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 8px 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cart-button:hover {
-	background-color: rgba(255, 255, 255, 0.3);
-	transform: translateY(-3px);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-	color: white;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
 }
 
 .cart-badge {
-	background-color: #FF5252;
-	font-weight: bold;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	animation: pulse 2s infinite;
+    background-color: #FF5252;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
 }
 
 /* Enhanced search bar */
 .search-form {
-	position: relative;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	border-radius: 10px;
-	overflow: hidden;
-	display: flex;
-	width: 100%;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
 }
 
 .search-input {
-	border: none;
-	padding: 12px 20px;
-	font-size: 1rem;
-	transition: all 0.3s ease;
-	box-shadow: none;
-	flex-grow: 1;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    flex-grow: 1;
 }
 
 .search-input:focus {
-	box-shadow: none;
-	border: none;
-	outline: none;
+    box-shadow: none;
+    border: none;
+    outline: none;
 }
 
 .search-button {
-	background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
-	color: white;
-	border: none;
-	width: 60px;
-	min-width: 60px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: all 0.3s ease;
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    color: white;
+    border: none;
+    width: 60px;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .search-button:hover {
-	background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
-	transform: scale(1.05);
-	color: white;
+    background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
+    transform: scale(1.05);
+    color: white;
 }
 
-/* Shine effect for important buttons */
-.shine-effect {
-	position: relative;
-	overflow: hidden;
-}
-
-.shine-effect::after {
-	content: '';
-	position: absolute;
-	top: -50%;
-	left: -50%;
-	width: 200%;
-	height: 200%;
-	background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,
-		rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
-	transform: rotate(30deg);
-	transition: all 1.5s ease;
-	opacity: 0;
-}
-
-.shine-effect:hover::after {
-	opacity: 1;
-	left: 100%;
-	top: 100%;
-}
-
-/* Breadcrumb styling */
+/* Preserving breadcrumb styling as requested */
 .breadcrumb {
-	background-color: white;
-	padding: 15px;
-	border-radius: 10px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	margin-bottom: 20px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
 }
 
 .breadcrumb-item a {
-	color: #673AB7;
-	text-decoration: none;
-	font-weight: 500;
-	transition: all 0.3s ease;
+    color: #673AB7;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .breadcrumb-item a:hover {
-	color: #9C27B0;
-	text-decoration: none;
+    color: #9C27B0;
+    text-decoration: none;
 }
 
 .breadcrumb-item+.breadcrumb-item::before {
-	content: "›";
-	color: #8E44AD;
-	font-weight: bold;
-	font-size: 1.2rem;
-	line-height: 1;
-	vertical-align: middle;
+    content: "›";
+    color: #8E44AD;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+    vertical-align: middle;
 }
 
 .breadcrumb-item.active {
-	color: #512DA8;
-	font-weight: 600;
+    color: #512DA8;
+    font-weight: 600;
 }
 
-/* Image hover effects */
+/* Enhanced Image hover effects */
 .image-thumbnail {
-	transition: all 0.3s ease;
-	cursor: pointer;
-	border-radius: 4px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    border-radius: 8px;
 }
 
 .image-thumbnail:hover {
-	transform: scale(1.05);
+    transform: scale(1.08);
+}
+
+.thumbnail-container {
+    border: 2px solid #e0e0e0; 
+    transition: all 0.4s ease; 
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.thumbnail-container:hover {
+    border-color: #673AB7;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
 }
 
 #bigImage {
-	transition: all 0.3s ease;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
-	cursor: pointer;
+    transition: all 0.5s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    cursor: pointer;
+    object-fit: contain;
+    background-color: #fff;
+    padding: 10px;
 }
 
 #bigImage:hover {
-	transform: scale(1.03);
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
-/* Book details styling */
+/* Modernized Book details styling */
 .book-details {
-	padding: 15px;
-	background: white;
-	border-radius: 12px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-	margin-bottom: 20px;
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+    border: 1px solid rgba(0,0,0,0.03);
+    height: 100%;
+}
+
+.book-title {
+    color: #512DA8;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+.book-publisher {
+    color: #673AB7;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+    font-size: 1.05rem;
 }
 
 .action-box {
-	padding: 15px;
-	background: white;
-	border-radius: 12px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0,0,0,0.03);
+    height: 100%;
 }
 
 .description-section, .details-section {
-	padding: 20px;
-	background: white;
-	border-radius: 12px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-	margin-bottom: 20px;
+    padding: 30px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.03);
 }
 
 .section-heading {
-	color: #512DA8;
-	font-weight: 600;
-	margin-bottom: 15px;
-	padding-bottom: 10px;
-	border-bottom: 2px solid #f0e6ff;
+    color: #512DA8;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0e6ff;
+    font-size: 1.5rem;
+}
+
+/* Price styling */
+.original-price {
+    color: gray;
+    text-decoration: line-through;
+    font-size: 1rem;
+}
+
+.discounted-price {
+    font-size: 1.5rem;
+    color: #E91E63;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.discount-badge {
+    background-color: #E91E63;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 5px;
+    box-shadow: 0 2px 5px rgba(233, 30, 99, 0.3);
+}
+
+/* Stock status styling */
+.stock-badge {
+    font-size: 1rem;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.in-stock {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.out-stock {
+    background-color: #F44336;
+    color: white;
+}
+
+/* Add to cart button styling */
+#buttonAdd2Cart {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+    margin-top: 15px;
+    width: 100%;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+#buttonAdd2Cart:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.4);
+}
+
+#buttonAdd2Cart::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: rotate(30deg);
+    transition: all 1s ease;
+    opacity: 0;
+}
+
+#buttonAdd2Cart:hover::after {
+    opacity: 1;
+    left: 100%;
+    top: 100%;
+}
+
+/* Ratings styling */
+.ratings-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.ratings-count {
+    color: #673AB7;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.ratings-count:hover {
+    color: #512DA8;
+    text-decoration: underline;
+}
+
+/* Book details table styling */
+.book-detail-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #673AB7;
+    min-width: 150px;
+}
+
+/* Footer styling */
+.footer-nav {
+    background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px 0;
+}
+
+.footer-link {
+    color: white;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    color: white;
+    text-decoration: none;
+}
+
+.copyright-section {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    font-weight: 500;
+    color: #512DA8;
+}
+
+/* Modal styling */
+.modal-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 20px;
+}
+
+.modal-title {
+    color: #512DA8;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: 1px solid #f0f0f0;
+    padding: 15px 20px;
 }
 
 /* Animation keyframes */
-@
-keyframes pulse { 0% {
-	transform: scale(1);
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-50
-%
-{
-transform
-:
-scale(
-1.1
-);
+/* Short description styling */
+.short-description {
+    line-height: 1.7;
+    color: #555;
+    font-size: 1.05rem;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid #f0e6ff;
 }
-100
-%
-{
-transform
-:
-scale(
-1
-);
+
+/* Full description styling */
+.full-description {
+    line-height: 1.8;
+    color: #333;
+    font-size: 1.05rem;
 }
+
+/* Quantity control styling */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.quantity-control button {
+    background-color: #f0e6ff;
+    color: #512DA8;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.quantity-control button:hover {
+    background-color: #e1d4f0;
+    transform: scale(1.1);
+}
+
+.quantity-control input {
+    width: 60px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #512DA8;
+    border: none;
+    background: transparent;
+    margin: 0 10px;
 }
 
 /* Responsive adjustments */
-@media ( max-width : 992px) {
-	.navbar-nav {
-		padding: 10px 0;
-	}
-	.navbar .nav-link {
-		padding: 12px 15px;
-		margin: 3px 0;
-	}
-	.search-form {
-		margin-top: 10px;
-	}
+@media (max-width: 992px) {
+    .navbar-nav {
+        padding: 10px 0;
+    }
+    .navbar .nav-link {
+        padding: 12px 15px;
+        margin: 3px 0;
+    }
+    .search-form {
+        margin-top: 10px;
+    }
+    .book-details, .action-box {
+        margin-bottom: 20px;
+    }
+    .book-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 15px 0;
+    }
+    .description-section, .details-section {
+        padding: 20px;
+    }
+    #bigImage {
+        max-width: 250px;
+    }
 }
 </style>
 </head>
 <body>
-	<div class="container-fluid p-0">
-		<!-- Header Menu -->
-		<nav class="navbar navbar-expand-lg navbar-dark"
-			style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
-			<div class="container">
-				<!-- Logo with enhanced animation -->
-				<a class="navbar-brand" th:href="@{/}" style="padding: 5px 0;">
-					<img th:src="@{/images/blackmoonsmall.png}" alt="Blackmoon Books"
-					style="height: 45px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); transition: all 0.3s ease;"
-					onmouseover="this.style.transform='scale(1.08)'; this.style.filter='drop-shadow(0 4px 8px rgba(0,0,0,0.4))'"
-					onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 2px 4px rgba(0,0,0,0.3))'" />
-				</a>
+    <div class="container-fluid p-0">
+    
+        <!-- Preserving your navigation components as requested -->
+        <div th:replace="navigation :: header_menu"></div>
+        <div th:replace="navigation :: search_nav"></div>
+            
+        <!-- Preserving your enhanced breadcrumb -->
+        <div class="container mt-3">
+            <div class="row">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/}"><i
+                                class="fas fa-home"></i> Home</a></li>
+                        <th:block th:each="parent : ${listCategoryParents}">
+                            <li class="breadcrumb-item"><a
+                                th:href="@{'/c/'+ ${parent.alias}}">[[${parent.name}]]</a></li>
+                        </th:block>
+                        <li class="breadcrumb-item active">[[${book.name}]]</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-				<button class="navbar-toggler" type="button"
-					data-bs-toggle="collapse" data-bs-target="#topNavbar"
-					style="border: none; padding: 8px;">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+        <div class="container main-container">
+            <div class="row g-4">
+                <!-- Book Images Section -->
+                <div class="col-md-5 text-center">
+                    <!-- Main Image with shadow and hover effect -->
+                    <div class="position-relative mb-4">
+                        <img id="bigImage" th:src="@{${book.mainImagePath}}" 
+                            class="img-fluid" index="0" alt="Book Cover" />
+                    </div>
 
-				<div class="collapse navbar-collapse" id="topNavbar">
-					<!-- Menu items with enhanced visual styling -->
-					<ul class="navbar-nav mx-auto" style="gap: 5px;">
-						<li class="nav-item"><a class="nav-link fw-medium" href="">
-								<i class="fas fa-briefcase me-1 pulse-icon"></i> Careers
-						</a></li>
-						<li class="nav-item"><a class="nav-link fw-medium" href="">
-								<i class="fas fa-credit-card me-1 pulse-icon"></i> Payments
-						</a></li>
-						<li class="nav-item"><a class="nav-link fw-medium" href="">
-								<i class="fas fa-truck me-1 pulse-icon"></i> Shipping &amp;
-								Delivery
-						</a></li>
+                    <!-- Thumbnail Images with improved layout -->
+                    <div class="d-flex justify-content-center flex-wrap gap-3">
+                        <!-- Main image as thumbnail -->
+                        <div class="thumbnail-container" style="border: 2px solid #673AB7;">
+                            <img class="image-thumbnail" th:src="@{${book.mainImagePath}}"
+                                height="60" index="0" alt="Thumbnail" />
+                        </div>
+                        <!-- Extra images -->
+                        <th:block th:each="extraImage, status : ${book.images}">
+                            <div class="thumbnail-container">
+                                <img class="image-thumbnail" th:src="@{${extraImage.imagePath}}"
+                                    height="60" th:index="${status.count}" alt="Extra Thumbnail" />
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
 
-						<th:block sec:authorize="!isAuthenticated()">
-							<li class="nav-item"><a
-								class="nav-link fw-medium shine-effect" th:href="@{/login}">
-									<i class="fas fa-sign-in-alt me-1 pulse-icon"></i> Login
-							</a></li>
-							<li class="nav-item"><a
-								class="nav-link fw-medium shine-effect" th:href="@{/register}">
-									<i class="fas fa-user-plus me-1 pulse-icon"></i> Register
-							</a></li>
-						</th:block>
+                <!-- Book Details Section -->
+                <div class="col-md-5">
+                    <div class="book-details">
+                        <h1 class="book-title">[[${book.name}]]</h1>
+                        
+                        <!-- Ratings Section -->
+                        <div class="ratings-container">
+                            <div>
+                                <input type="text" class="product-detail-rating-star" dir="ltr"
+                                    data-size="md" th:value="${book.averageRating}" />
+                            </div>
+                            <div class="ms-3">
+                                <a class="ratings-count" th:href="@{${book.URI} + '#review'}">
+                                    [[${book.reviewCount}]] rating(s)
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Publisher Info -->
+                        <div class="mb-4">
+                            <span class="book-publisher">
+                                <i class="fas fa-building me-2"></i> Publisher: [[${book.publisher.name}]]
+                            </span>
+                        </div>
 
-						<th:block sec:authorize="isAuthenticated()">
-							<li class="nav-item dropdown"><a
-								class="nav-link dropdown-toggle d-flex align-items-center"
-								href="#" id="navbarDropdown" data-bs-toggle="dropdown"
-								role="button" aria-expanded="false"> <span
-									class="fas fa-user-circle me-2 user-icon-glow"
-									style="font-size: 1.5rem; color: #FEC3A6;"></span> <span
-									sec:authentication="principal.fullName" class="fw-medium"></span>
-							</a>
-								<div class="dropdown-menu dropdown-menu-end"
-									aria-labelledby="navbarDropdown"
-									style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); padding: 10px 5px;">
-									<a class="dropdown-item" th:href="@{/account}"> <i
-										class="fas fa-user-cog me-2"></i> Account
-									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
-										class="fas fa-shopping-bag me-2"></i> My Orders
-									</a> <a class="dropdown-item" th:href="@{/reviews}"> <i
-										class="fas fa-star me-2"></i> Reviews
-									</a> <a class="dropdown-item" th:href="@{/cart}"> <i
-										class="fas fa-shopping-cart me-2"></i> Cart
-									</a> <a class="dropdown-item" th:href="@{/questions}"> <i
-										class="fas fa-question-circle me-2"></i> Questions
-									</a> <a class="dropdown-item" th:href="@{/addresses}"> <i
-										class="fas fa-map-marker-alt me-2"></i> Addresses
-									</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" id="logoutLink" th:href="@{/logout}">
-										<i class="fas fa-sign-out-alt me-2"></i> Logout
-									</a>
-								</div></li>
-						</th:block>
+                        <!-- Price Information with enhanced styling -->
+                        <div class="pricing-section mb-4">
+                            <div class="mb-2">
+                                <span style="color: #555; font-size: 1.1rem;">List Price:</span>
 
-						<li class="nav-item"><a class="nav-link fw-medium" href="">
-								<i class="fas fa-envelope me-1 pulse-icon"></i> Contact
-						</a></li>
-					</ul>
+                                <!-- If no discount -->
+                                <span th:if="${book.discountPercent <= 0}" style="font-weight: 600; font-size: 1.3rem; color: #673AB7;">
+                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+                                    [[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE,
+                                    DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] 
+                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+                                </span>
 
-					<!-- Enhanced shopping cart icon with animation -->
-					<div class="ms-auto">
-						<a th:href="@{/cart}" class="btn position-relative cart-button">
-							<i class="fas fa-shopping-cart"></i> <span
-							class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge"
-							th:if="${cartItemCount != null && cartItemCount > 0}"
-							th:text="${cartItemCount}"> </span>
-						</a>
-					</div>
-				</div>
-			</div>
-		</nav>
+                                <!-- If discounted: original price with strikethrough -->
+                                <span th:if="${book.discountPercent > 0}" class="original-price">
+                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+                                    [[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE,
+                                    DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] 
+                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+                                </span>
+                            </div>
 
-		<!-- Search Navigation -->
-		<div class="container mt-3 mb-3">
-			<div class="row">
-				<div class="col-md">
-					<form class="d-flex search-form" th:action="@{/search}"
-						method="get">
-						<input type="search" name="keyword"
-							class="form-control search-input" required
-							placeholder="Search books..." th:value="${keyword}">
-						<button type="submit" class="btn search-button">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
+                            <!-- Show discounted price if available -->
+                            <div th:if="${book.discountPercent > 0}" class="mb-3">
+                                <span style="color: #555; font-size: 1.1rem;">Sale Price:</span> 
+                                <span class="discounted-price">
+                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+                                    [[${#numbers.formatDecimal(book.discountPrice, 1,
+                                    THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] 
+                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+                                </span>
+                                <!-- Discount badge -->
+                                <span class="discount-badge">
+                                    <i class="fas fa-tags me-1"></i> [[${book.discountPercent}]]% off
+                                </span>
+                            </div>
+                        </div>
 
-		<!-- Enhanced Breadcrumb -->
-		<div class="container mt-3">
-			<div class="row">
-				<nav aria-label="breadcrumb">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item"><a th:href="@{/}"><i
-								class="fas fa-home"></i> Home</a></li>
-						<th:block th:each="parent : ${listCategoryParents}">
-							<li class="breadcrumb-item"><a
-								th:href="@{'/c/'+ ${parent.alias}}">[[${parent.name}]]</a></li>
-						</th:block>
-						<li class="breadcrumb-item active">[[${book.name}]]</li>
-					</ol>
-				</nav>
-			</div>
-		</div>
+                        <!-- Short Description -->
+                        <div class="short-description" th:utext="${book.shortDescription}"></div>
+                    </div>
+                </div>
 
-		<div class="container main-container">
-			<div class="row">
-				<div class="col-md-6 text-center">
-					<!-- Main Image -->
-					<img id="bigImage" th:src="@{${book.mainImagePath}}" width="300"
-						index="0" class="img-fluid mb-3" />
+                <!-- Action Box (Quantity & Add to Cart) -->
+                <div class="col-md-2">
+                    <div class="action-box">
+                        <!-- Stock Status -->
+                        <div class="mb-4 text-center">
+                            <span th:unless="${book.inStock}" class="stock-badge out-stock">
+                                <i class="fas fa-times-circle me-2"></i> Out of Stock
+                            </span>
+                            <span th:if="${book.inStock}" class="stock-badge in-stock">
+                                <i class="fas fa-check-circle me-2"></i> In Stock
+                            </span>
+                        </div>
 
-					<!-- Thumbnail Images -->
-					<div class="d-flex justify-content-center flex-wrap">
-						<!-- Main image as thumbnail -->
-						<div class="m-2 p-1 rounded"
-							style="border: 2px solid #673AB7; transition: all 0.3s ease;">
-							<img class="image-thumbnail" th:src="@{${book.mainImagePath}}"
-								height="50" index="0" />
-						</div>
-						<!-- Extra images -->
-						<th:block th:each="extraImage, status : ${book.images}">
-							<div class="m-2 p-1 rounded"
-								style="border: 2px solid #e0e0e0; transition: all 0.3s ease; cursor: pointer;"
-								onmouseover="this.style.borderColor='#673AB7'; this.style.transform='translateY(-3px)'"
-								onmouseout="this.style.borderColor='#e0e0e0'; this.style.transform='translateY(0)'">
-								<img class="image-thumbnail" th:src="@{${extraImage.imagePath}}"
-									height="50" th:index="${status.count}" />
-							</div>
-						</th:block>
-					</div>
-				</div>
+                        <!-- Quantity Control and Add to Cart -->
+                        <th:block th:if="${book.inStock}">
+                            <div class="mb-3">
+                                <div th:replace="cart/quantity_control :: quantity_control(1, ${book.id})"></div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="button" id="buttonAdd2Cart" class="btn">
+                                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                </button>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
 
-				<div class="col-md-4">
-					<div class="book-details">
-						<h2 style="color: #512DA8; font-weight: 700; margin-bottom: 15px;">[[${book.name}]]</h2>
+            <!-- Book Description Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="description-section">
+                        <h3 class="section-heading">
+                            <i class="fas fa-book-open me-2"></i> Book Description
+                        </h3>
+                        <div class="full-description" th:utext="${book.fullDescription}"></div>
+                    </div>
+                </div>
+            </div>
 
-						<div class="mb-3">
-							<span style="color: #673AB7; font-weight: 500;">Publisher:
-								[[${book.publisher.name}]]</span>
-						</div>
+            <!-- Book Details Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="details-section">
+                        <h3 class="section-heading">
+                            <i class="fas fa-info-circle me-2"></i> Book Details
+                        </h3>
+                        <div class="row">
+                            <th:block th:each="detail : ${book.details}">
+                                <div class="col-md-6 mb-3">
+                                    <div class="book-detail-row">
+                                        <span class="detail-label">[[${detail.name}]]:</span>
+                                        <span>[[${detail.value}]]</span>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preserving your review and carousel sections -->
+        <div th:replace="book_top_reviews :: content"></div>
+        <div th:replace="images_carousel :: content"></div>
 
-						<div class="mb-2">
-							<span style="color: #555;">List Price:</span>
+        <!-- Footer Menu with improved styling -->
+        <div>
+            <nav class="navbar navbar-expand-lg navbar-dark footer-nav">
+                <div class="container">
+                    <button class="navbar-toggler mx-auto" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#bottomNavbar"
+                        style="border: none; padding: 8px;">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="bottomNavbar">
+                        <ul class="navbar-nav mx-auto gap-3">
+                            <li class="nav-item">
+                                <a class="footer-link" href="">
+                                    <i class="fas fa-info-circle me-2 pulse-icon"></i> About Us
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="footer-link" href="">
+                                    <i class="fas fa-shield-alt me-2 pulse-icon"></i> Privacy Notice
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="footer-link" href="">
+                                    <i class="fas fa-exchange-alt me-2 pulse-icon"></i> Returns &amp; Refunds
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Modal Dialog -->
+        <div class="modal fade" id="modalDialog" tabindex="-1"
+            aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Modal Title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">Modal Body</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Copyright -->
+        <div class="text-center py-3 copyright-section">
+            <p class="mb-0"><strong>Blackmoon</strong> - Copyright &copy; Blackmoon Ltd.</p>
+        </div>
+    </div>
 
-							<!-- If no discount -->
-							<span th:if="${book.discountPercent <= 0}"
-								style="font-weight: 600;"> <span
-								th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-								[[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE,
-								DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] <span
-								th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
-							</span>
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-							<!-- If discounted: original price with strikethrough -->
-							<del th:if="${book.discountPercent > 0}" style="color: gray;">
-								<span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-								[[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE,
-								DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] <span
-									th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
-							</del>
-						</div>
+            bigImage = $("#bigImage");
 
-						<!-- Show discounted price if available -->
-						<div th:if="${book.discountPercent > 0}" class="mb-3">
-							<span style="color: #555;">Price:</span> <span
-								style="font-size: 1.3rem; color: #E91E63; font-weight: 700;">
-								<span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-								[[${#numbers.formatDecimal(book.discountPrice, 1,
-								THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] <span
-								th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
-							</span>
-							<!-- Discount badge -->
-							<span class="badge bg-danger"
-								style="font-size: 0.85rem; margin-left: 5px;">
-								[[${book.discountPercent}]]% off </span>
-						</div>
+            $(".image-thumbnail").mouseover(function() {
+                currentImageSource = $(this).attr("src");
+                currentImageIndex = $(this).attr("index");
 
-						<div class="my-3 pt-2" style="border-top: 1px solid #eee;"
-							th:utext="${book.shortDescription}"></div>
-					</div>
-				</div>
+                // Update big image with smooth transition
+                bigImage.fadeOut(100, function() {
+                    $(this).attr("src", currentImageSource);
+                    $(this).attr("index", currentImageIndex);
+                    $(this).fadeIn(100);
+                });
 
-				<div class="col-md-2">
-					<div class="action-box">
-						<div class="mb-3 text-center">
-							<span th:unless="${book.inStock}" class="badge bg-danger"
-								style="font-size: 1rem; padding: 8px 12px;"> <i
-								class="fas fa-check-circle me-1"></i> Out of Stock
-							</span>
-						</div>
+                // Visual feedback for selected thumbnail
+                $(".thumbnail-container").css("border-color", "#e0e0e0");
+                $(this).parent().css("border-color", "#673AB7");
+            });
 
-						<th:block th:if="${book.inStock}">
-							<div
-								th:replace="cart/quantity_control :: quantity_control(1, ${book.id})"></div>
-							<div>
-								<span th:if="${book.inStock}" class="badge bg-success"
-									style="font-size: 1rem; padding: 8px 12px;"> <i
-									class="fas fa-times-circle me-1"></i> In Stock
-								</span>
-							</div>
-							<div class="text-center">
-							<input type="button" value="Add to Cart" id="buttonAdd2Cart"
-							class="btn btn-primary" />
-							</div>
-						</th:block>
-					</div>
-				</div>
-			</div>
-
-			<div class="row mt-5">
-				<div class="col-12">
-					<div class="description-section">
-						<h3 class="section-heading">Book Description</h3>
-						<div th:utext="${book.fullDescription}" style="line-height: 1.6;"></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row mt-4">
-				<div class="col-12">
-					<div class="details-section">
-						<h3 class="section-heading">Book Details</h3>
-						<div class="row">
-							<th:block th:each="detail : ${book.details}">
-								<div class="col-md-6 mb-2">
-									<span style="font-weight: 600; color: #673AB7;">[[${detail.name}]]:</span>
-									<span>[[${detail.value}]]</span>
-								</div>
-							</th:block>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div th:replace="images_carousel :: content"></div>
-
-		<!-- Footer Menu -->
-		<div>
-			<nav class="navbar navbar-expand-lg navbar-dark"
-				style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);">
-				<div class="container">
-					<button class="navbar-toggler mx-auto" type="button"
-						data-bs-toggle="collapse" data-bs-target="#bottomNavbar"
-						style="border: none; padding: 8px;">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="bottomNavbar">
-						<ul class="navbar-nav mx-auto" style="gap: 5px;">
-							<li class="nav-item"><a class="nav-link fw-medium" href="">
-									<i class="fas fa-info-circle me-1 pulse-icon"></i> About Us
-							</a></li>
-							<li class="nav-item"><a class="nav-link fw-medium" href="">
-									<i class="fas fa-shield-alt me-1 pulse-icon"></i> Privacy
-									Notice
-							</a></li>
-							<li class="nav-item"><a class="nav-link fw-medium" href="">
-									<i class="fas fa-exchange-alt me-1 pulse-icon"></i> Returns
-									&amp; Refunds
-							</a></li>
-						</ul>
-					</div>
-				</div>
-			</nav>
-		</div>
-		<!-- Modal Dialog -->
-		<div class="modal fade" id="modalDialog" tabindex="-1"
-			aria-labelledby="modalTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header bg-light">
-						<h5 class="modal-title fw-bold" id="modalTitle">Modal Title</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body p-4" id="modalBody">Modal Body</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Footer Copyright -->
-		<div class="text-center py-3"
-			style="font-weight: 500; color: #512DA8;">
-			<p class="mb-0">Blackmoon - Copyright &copy; Blackmoon Ltd.</p>
-		</div>
-	</div>
-
-	<script type="text/javascript">
-		contextPath = "[[@{/}]]";
-		bookId = "[[${book.id}]]";
-		var csrfHeaderName = "[[${_csrf.headerName}]]";
-		var csrfValue = "[[${_csrf.token}]]";
-
-		decimalSeparator = "[[${DECIMAL_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
-		thousandSeparator = "[[${THOUSANDS_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
-
-		$(document).ready(function() {
-			bigImage = $("#bigImage");
-
-			$(".image-thumbnail").mouseover(function() {
-				currentImageSource = $(this).attr("src");
-				currentImageIndex = $(this).attr("index");
-
-				// Update big image
-				bigImage.attr("src", currentImageSource);
-				bigImage.attr("index", currentImageIndex);
-
-				// Visual feedback for selected thumbnail
-				$(".image-thumbnail").parent().css("border-color", "#e0e0e0");
-				$(this).parent().css("border-color", "#673AB7");
-			});
-
-			bigImage.on("click", function() {
-				$("#carouselModal").modal("show");
-				imageIndex = parseInt(bigImage.attr("index"));
-				$("#carouselExampleIndicators").carousel(imageIndex);
-			});
-		});
-	</script>
-	<script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
-	<script type="text/javascript" th:src="@{/js/quantity_control.js}"></script>
-	<script type="text/javascript" th:src="@{/js/add_to_cart.js}"></script>
+            bigImage.on("click", function() {
+                $("#carouselModal").modal("show");
+                imageIndex = parseInt(bigImage.attr("index"));
+                $("#carouselExampleIndicators").carousel(imageIndex);
+            });
+        });
+    </script>
+    <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common_rating.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/quantity_control.js}"></script>
+    <script type="text/javascript" th:src="@{/js/add_to_cart.js}"></script>
+    <script type="text/javascript" th:src="@{/js/review_vote.js}"></script>
 </body>
 </html>

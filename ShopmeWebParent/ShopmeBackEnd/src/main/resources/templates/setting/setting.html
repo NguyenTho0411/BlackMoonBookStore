@@ -38,6 +38,9 @@
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#mailTemplates" role="tab">Mail Template</a>
                 </li>
+                                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#payment" role="tab">Payment</a>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -55,6 +58,9 @@
                 </div>
                 <div class="tab-pane p-3" id="mailTemplates" role="tabpanel">
 	<div th:replace="setting/mail_templates/mail_templates :: content"></div>
+                </div>
+                                <div class="tab-pane p-3" id="payment" role="tabpanel">
+	<div th:replace="setting/payment :: content"></div>
                 </div>
             </div>
             </div>

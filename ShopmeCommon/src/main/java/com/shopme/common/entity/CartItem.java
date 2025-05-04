@@ -22,6 +22,8 @@ public class CartItem {
 	private Customer customer;
 	private int quantity;
 	
+	@Transient
+	private float shippingCost;
 	@ManyToOne
 	@JoinColumn(name= "book_id")
 	private Book book;
@@ -61,6 +63,13 @@ public class CartItem {
 	}
 	public void setBook(Book book) {
 		this.book = book;
+	}
+	@Transient
+	public float getShippingCost() {
+		return shippingCost;
+	}
+	public void setShippingCost(float shippingCost) {
+		this.shippingCost = shippingCost;
 	}
 	@Override
 	public String toString() {

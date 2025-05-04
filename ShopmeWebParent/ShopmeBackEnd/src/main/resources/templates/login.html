@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Login - Shopme Admin', 'none')"></head>
+<head th:replace="fragments2 :: page_head('Login - Shopme Admin', 'none')"></head>
 <body class="bg-light">
   <div class="container">
     <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
       <div class="col-md-6 col-lg-5">
         <div class="card shadow-lg border-0 rounded-lg mt-4">
           <div class="card-header bg-white text-center py-3">
-            <img th:src="@{/images/ShopmeAdminBig.png}" alt="Shopme Admin Logo" class="img-fluid mb-2" style="max-height: 60px;">
+            <img th:src="@{${S3_BASE_URI+SITE_LOGO}}" alt="Blackmoon Books"class="img-fluid mb-2" style="max-height: 60px;">
             <h4 class="text-center">Admin Control Panel</h4>
           </div>
           

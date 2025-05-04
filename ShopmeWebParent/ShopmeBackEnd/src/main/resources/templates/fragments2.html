@@ -76,23 +76,23 @@
 			<nav>
 				<ul class="pagination justify-content-center flex-wrap">
 					<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-						<a th:replace="fragments :: page_link(1, 'First')"></a>
+						<a th:replace="fragments2 :: page_link(1, 'First')"></a>
 					</li>
 					<li	th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
 						<a
-						th:replace="fragments :: page_link(${currentPage - 1}, 'Previous')"></a>
+						th:replace="fragments2 :: page_link(${currentPage - 1}, 'Previous')"></a>
 					</li>
 
 					<li	th:class="${currentPage != i ? 'page-item': 'page-item active'}"
 						th:each="i : ${#numbers.sequence(1, totalPages)}"><a
-						th:replace="fragments :: page_link(${i}, ${i})"></a></li>
+						th:replace="fragments2 :: page_link(${i}, ${i})"></a></li>
 
 					<li	th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-						<a th:replace="fragments :: page_link(${currentPage + 1}, 'Next')"></a>
+						<a th:replace="fragments2 :: page_link(${currentPage + 1}, 'Next')"></a>
 					</li>
 
 					<li	th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-						<a th:replace="fragments :: page_link(${totalPages}, 'Last')"></a>
+						<a th:replace="fragments2 :: page_link(${totalPages}, 'Last')"></a>
 					</li>
 				</ul>
 			</nav>
@@ -120,7 +120,20 @@
 		<div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
 	</div>
 
+	<div th:fragment="format_currency(amount)" th:remove="tag">
+		<span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}"
+			th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>[[${#numbers.formatDecimal(amount, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]<span
+			th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+	</div>
 
+	<div th:fragment="format_time(dateTime)" th:remove="tag">
+		<span th:text="${#dates.format(dateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+	</div>
+
+	<div th:fragment="currency_input(amount)" th:remove="tag">
+		<input type="text" readonly class="form-control"
+			th:value="${(CURRENCY_SYMBOL_POSITION == 'Before price' ? CURRENCY_SYMBOL : '') + #numbers.formatDecimal(amount, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE) + (CURRENCY_SYMBOL_POSITION == 'After price' ? CURRENCY_SYMBOL : '')}">
+	</div>
 </body>
 
 </html>

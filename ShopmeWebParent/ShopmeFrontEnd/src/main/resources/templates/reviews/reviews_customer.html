@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>My Reviews - [[${SITE_NAME}]]</title>
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #512DA8;
+            --secondary-color: #673AB7;
+            --accent-color: #FFC107;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fe;
+            color: var(--text-color);
+        }
+        
+        .main-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(81, 45, 168, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .page-header {
+            position: relative;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+        }
+        
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .table-dark {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .table th {
+            font-weight: 600;
+        }
+        
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(103, 58, 183, 0.05);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(103, 58, 183, 0.1);
+        }
+        
+        .badge.bg-rating {
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.7rem;
+        }
+        
+        .btn-purple {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-purple:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(103, 58, 183, 0.3);
+        }
+        
+        .btn-outline-purple {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-purple:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(103, 58, 183, 0.2);
+        }
+        
+        .star-rating {
+            color: var(--accent-color);
+            margin-right: 5px;
+        }
+        
+        .card {
+            border: none;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(103, 58, 183, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+        }
+        
+        .book-link {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .book-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .search-form {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .search-input {
+            border-radius: 50px 0 0 50px;
+            border: 2px solid #e0e0e0;
+            padding-left: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(103, 58, 183, 0.25);
+        }
+        
+        .search-btn {
+            border-radius: 0 50px 50px 0;
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .search-btn:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .reset-btn {
+            border-radius: 50px;
+            margin-left: 10px;
+        }
+        
+        .pagination {
+            margin-top: 30px;
+        }
+        
+        .page-link {
+            color: var(--secondary-color);
+            border: 1px solid rgba(103, 58, 183, 0.2);
+            margin: 0 3px;
+            border-radius: 5px;
+        }
+        
+        .page-item.active .page-link {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.8em;
+        }
+        
+        /* Animation for cards on mobile view */
+        @media (max-width: 768px) {
+            .card {
+                animation: fadeInUp 0.5s ease-out;
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+        
+        /* Animation for table rows */
+        .table tbody tr {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Custom styles for different screen sizes */
+        @media (max-width: 992px) {
+            .full-details {
+                display: none;
+            }
+            .less-details {
+                display: block;
+            }
+        }
+        
+        @media (min-width: 993px) {
+            .full-details {
+                display: block;
+            }
+            .less-details {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!-- Preserved original layout elements -->
+        <div th:replace="navigation :: header_menu"></div>
+        <div th:replace="navigation :: search_nav"></div>
+
+        <div class="container main-container animate__animated animate__fadeIn">
+            <!-- Page Header -->
+            <div class="row">
+                <div class="col-12 text-center page-header">
+                    <h2 class="fw-bold" style="color: var(--primary-color);">
+                        <i class="fas fa-comment-dots me-2"></i> Reviews Posted by me
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Search Form -->
+            <form th:action="@{${moduleURL} + '/page/1'}" class="search-form row g-3 align-items-center">
+                <input type="hidden" name="sortField" th:value="${sortField}" />
+                <input type="hidden" name="sortDir" th:value="${sortDir}" />
+                
+                <div class="col-md-3 col-12">
+                    <label class="visually-hidden">Filter</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                        <input type="search" name="keyword" th:value="${keyword}" class="form-control search-input" placeholder="Search your reviews..." required />
+                    </div>
+                </div>
+                
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-purple search-btn">
+                        <i class="fas fa-search me-1"></i> Search
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary reset-btn" onclick="clearFilter()">
+                        <i class="fas fa-eraser me-1"></i> Clear
+                    </button>
+                </div>
+            </form>
+
+            <!-- Desktop View - Full Details Table -->
+            <div class="full-details">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>
+                                    <a class="text-white" th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=id' + '&sortDir=' + ${sortField != 'id' ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+                                        ID
+                                    </a>
+                                    <span th:if="${sortField == 'id'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                                </th>
+                                <th>
+                                    <a class="text-white" th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=book' + '&sortDir=' + ${sortField != 'book' ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+                                        Book
+                                    </a>
+                                    <span th:if="${sortField == 'book'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                                </th>
+                                <th>
+                                    <a class="text-white" th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=headline' + '&sortDir=' + ${sortField != 'headline' ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+                                        Headline
+                                    </a>
+                                    <span th:if="${sortField == 'headline'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                                </th>
+                                <th>
+                                    <a class="text-white" th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=rating' + '&sortDir=' + ${sortField != 'rating' ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+                                        Rating
+                                    </a>
+                                    <span th:if="${sortField == 'rating'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                                </th>
+                                <th>
+                                    <a class="text-white" th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=reviewTime' + '&sortDir=' + ${sortField != 'reviewTime' ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+                                        Review Time
+                                    </a>
+                                    <span th:if="${sortField == 'reviewTime'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                                </th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="review : ${listReviews}">
+                                <td>[[${review.id}]]</td>
+                                <td>
+                                    <a th:href="@{'/p/' + ${review.book.alias}}" target="_blank" class="book-link">
+                                        [[${review.book.shortName}]]
+                                    </a>
+                                </td>
+                                <td>[[${review.headline}]]</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-rating">
+                                            <i class="fas fa-star me-1 star-rating"></i>[[${review.rating}]]
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>[[${review.reviewTime}]]</td>
+                                <td class="text-center">
+                                    <a class="btn btn-sm btn-outline-purple link-detail-review" th:href="@{'/reviews/detail/' + ${review.id}}" title="View details of this review">
+                                        <i class="fas fa-file-alt me-1"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile View - Less Details Card Format -->
+            <div class="less-details">
+                <div th:each="review : ${listReviews}" class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="badge bg-secondary">ID: [[${review.id}]]</span>
+                        <span class="badge bg-rating">
+                            <i class="fas fa-star me-1 star-rating"></i>[[${review.rating}]]
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{'/p/' + ${review.book.alias}}" target="_blank" class="book-link">
+                                [[${review.book.shortName}]]
+                            </a>
+                        </h5>
+                        <h6 class="card-subtitle mb-3 text-muted">[[${review.headline}]]</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="card-text small text-muted mb-0">
+                                <i class="far fa-clock me-1"></i> [[${review.reviewTime}]]
+                            </p>
+                            <a class="btn btn-sm btn-purple link-detail-review" th:href="@{'/reviews/detail/' + ${review.id}}">
+                                <i class="fas fa-file-alt me-1"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="text-center m-1" th:if="${totalItems > 0}">
+                <span>Showing reviews # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+            </div>
+            <div class="text-center m-1" th:unless="${totalItems > 0}">
+                <span>No reviews found</span>
+            </div>
+
+            <div th:if="${totalPages > 1}">
+                <nav>
+                    <ul class="pagination justify-content-center flex-wrap">
+                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                            <a class="page-link" th:href="@{${moduleURL} + '/page/1' + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                            <a class="page-link" th:href="@{${moduleURL} + '/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        </li>
+
+                        <li th:class="${currentPage != i ? 'page-item': 'page-item active'}" th:each="i : ${#numbers.sequence(1, totalPages)}">
+                            <a class="page-link" th:href="@{${moduleURL} + '/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${i}]]</a>
+                        </li>
+
+                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                            <a class="page-link" th:href="@{${moduleURL} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                            <a class="page-link" th:href="@{${moduleURL} + '/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Review Detail Modal -->
+            <div class="modal fade" id="reviewDetailModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <!-- Modal content will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="navigation :: footer_menu"></div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/common_list.js}"></script>
+    
+    <script type="text/javascript">
+        // Preserve original JavaScript logic
+        moduleURL = "[[@{/reviews}]]";
+
+        $(document).ready(function() {
+            handleDetailLink(".link-detail-review", "#reviewDetailModal");
+            
+            // Add animations on scroll
+            const animateOnScroll = () => {
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    const cardPosition = card.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (cardPosition < screenPosition) {
+                        card.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                });
+            };
+            
+            // Animation for table rows with delay
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach((row, index) => {
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                }, index * 100);
+            });
+            
+            // Only add scroll listener on mobile
+            if (window.innerWidth <= 992) {
+                window.addEventListener('scroll', animateOnScroll);
+                // Initial check for visible elements
+                animateOnScroll();
+            }
+        });
+        
+        function clearFilter() {
+            window.location = moduleURL;
+        }
+    </script>
+</body>
+</html>

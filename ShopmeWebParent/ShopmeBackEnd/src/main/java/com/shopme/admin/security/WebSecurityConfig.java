@@ -36,16 +36,17 @@ public class WebSecurityConfig {
 
     @Bean
     SecurityFilterChain configureHttpSecurity(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").hasAuthority("Admin")
-        		.requestMatchers("/settings/**").hasAuthority("Admin")
-        		.requestMatchers("/publishers/**").hasAnyAuthority("Admin","Editor")
-        		.requestMatchers("/books/**").hasAnyAuthority("Admin","Editor","Shipper","Salesperson")
-        		.requestMatchers("/customers/**").hasAnyAuthority("Admin","Salesperson")
-        		.requestMatchers("/shipping/**").hasAnyAuthority("Admin","Salesperson")
-        		.requestMatchers("/orders/**").hasAnyAuthority("Admin","Salesperson","Shipper")
-          		.requestMatchers("/reports/**").hasAnyAuthority("Admin","Salesperson")
-          		.requestMatchers("/articles/**").hasAnyAuthority("Admin","Editor")
-          		.requestMatchers("/menus/**").hasAnyAuthority("Admin","Editor")
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/users/**").hasAuthority("Admin")
+                .requestMatchers("/settings/**").hasAuthority("Admin")
+                .requestMatchers("/publishers/**").hasAnyAuthority("Admin", "Editor")
+                .requestMatchers("/books/**").hasAnyAuthority("Admin", "Editor", "Shipper", "Salesperson")
+                .requestMatchers("/customers/**").hasAnyAuthority("Admin", "Salesperson")
+                .requestMatchers("/shipping/**").hasAnyAuthority("Admin", "Salesperson")
+                .requestMatchers("/orders/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
+                .requestMatchers("/reports/**").hasAnyAuthority("Admin", "Salesperson")
+                .requestMatchers("/articles/**").hasAnyAuthority("Admin", "Editor")
+                .requestMatchers("/menus/**").hasAnyAuthority("Admin", "Editor")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -53,12 +54,16 @@ public class WebSecurityConfig {
                 .usernameParameter("email")
                 .permitAll()
             )
-            .logout(logout -> logout.permitAll()).rememberMe(rem -> rem
-                    .key("AbcDefgHijKlmnOpqrs_1234567890")
-                    .tokenValiditySeconds(7 * 24 * 60 * 60));
+            .logout(logout -> logout.permitAll())
+            .rememberMe(rem -> rem
+                .key("AbcDefgHijKlmnOpqrs_1234567890")
+                .tokenValiditySeconds(7 * 24 * 60 * 60)
+            )
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())); // 👈 THÊM DÒNG NÀY
 
         return http.build();
     }
+
 
 
     @Bean

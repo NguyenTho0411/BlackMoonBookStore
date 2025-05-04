@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryNotFoundException;
 import com.shopme.admin.category.CategoryPageInfo;
@@ -76,7 +77,8 @@ public class CategoryController {
 	
 		Category savedCategory = service.save(category);
 		String uploadDir = "../category-images/" +savedCategory.getId();
-		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		AmazonS3Util.removeFolder(uploadDir);
+		AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 		redirectAttributes.addFlashAttribute("message", "The category has been saved successfully!");
 		return "redirect:/categories";
 	}
@@ -112,8 +114,9 @@ public class CategoryController {
 			Model model, RedirectAttributes ra ) throws UserNotFoundException {
 			try {
 				service.delete(id);
-				String categoryDir = "../category-images/"+id;
-				FileUploadUtil.removeDir(categoryDir);
+				String categoryDir = "category-images/" + id;
+				AmazonS3Util.removeFolder(categoryDir);
+				
 				ra.addFlashAttribute("message","The category with ID "+ id+ " has been deleted successfully");
 			}catch(CategoryNotFoundException ex) {
 				ra.addFlashAttribute("message",ex.getMessage());

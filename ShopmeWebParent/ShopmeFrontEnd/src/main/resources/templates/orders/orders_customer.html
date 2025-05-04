@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('My Orders', 'none')"></head>
+
+
+<body>
+	<div class="container-fluid p-0">
+		<!-- Header Menu -->
+		<nav class="navbar navbar-expand-lg navbar-dark"
+			style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+			<div class="container">
+				<!-- Logo with enhanced animation -->
+				<a class="navbar-brand" th:href="@{/}" style="padding: 5px 0;">
+					<img th:src="@{/images/blackmoonsmall.png}" alt="Blackmoon Books"
+					style="height: 45px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); transition: all 0.3s ease;"
+					onmouseover="this.style.transform='scale(1.08)'; this.style.filter='drop-shadow(0 4px 8px rgba(0,0,0,0.4))'"
+					onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 2px 4px rgba(0,0,0,0.3))'" />
+				</a>
+
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#topNavbar"
+					style="border: none; padding: 8px;">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="topNavbar">
+					<!-- Menu items with enhanced visual styling -->
+					<ul class="navbar-nav mx-auto" style="gap: 5px;">
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-briefcase me-1 pulse-icon"></i> Careers
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-credit-card me-1 pulse-icon"></i> Payments
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-truck me-1 pulse-icon"></i> Shipping &amp;
+								Delivery
+						</a></li>
+
+						<th:block sec:authorize="!isAuthenticated()">
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/login}">
+									<i class="fas fa-sign-in-alt me-1 pulse-icon"></i> Login
+							</a></li>
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/register}">
+									<i class="fas fa-user-plus me-1 pulse-icon"></i> Register
+							</a></li>
+						</th:block>
+
+						<th:block sec:authorize="isAuthenticated()">
+							<li class="nav-item dropdown"><a
+								class="nav-link dropdown-toggle d-flex align-items-center"
+								href="#" id="navbarDropdown" data-bs-toggle="dropdown"
+								role="button" aria-expanded="false"> <span
+									class="fas fa-user-circle me-2 user-icon-glow"
+									style="font-size: 1.5rem; color: #FEC3A6;"></span> <span
+									sec:authentication="principal.fullName" class="fw-medium"></span>
+							</a>
+								<div class="dropdown-menu dropdown-menu-end"
+									aria-labelledby="navbarDropdown"
+									style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); padding: 10px 5px;">
+									<a class="dropdown-item" th:href="@{/account_details}"> <i
+										class="fas fa-user-cog me-2"></i> Tài khoản
+									</a> <a class="dropdown-item" th:href="@{/orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
+									</a> <a class="dropdown-item" th:href="@{/reviews}"> <i
+										class="fas fa-shopping-bag me-2"></i> Reviews
+									</a> <a class="dropdown-item" th:href="@{/cart}"> <i
+										class="fas fa-shopping-bag me-2"></i> Cart
+									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Questions
+									</a> <a class="dropdown-item" th:href="@{/address_book}"> <i
+										class="fas fa-shopping-bag me-2"></i> Addresses
+									</a>
+									<div class="dropdown-divider"></div>
+									<form th:action="@{/logout}" method="post">
+										<button type="submit" class="dropdown-item"
+											style="border: none; background: none;">
+											<i class="fas fa-sign-out-alt me-2"></i> Logout
+										</button>
+									</form></li>
+						</th:block>
+
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-envelope me-1 pulse-icon"></i> Contact
+						</a></li>
+					</ul>
+
+					<!-- Enhanced shopping cart icon with animation -->
+					<div class="ms-auto">
+						<a th:href="@{/cart}" class="btn position-relative cart-button">
+							<i class="fas fa-shopping-cart"></i> <span
+							class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge"
+							th:if="${cartItemCount != null && cartItemCount > 0}"
+							th:text="${cartItemCount}"> </span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Search Navigation -->
+		<div class="container mt-3 mb-3">
+			<div class="row">
+				<div class="col-md">
+					<form class="d-flex search-form" th:action="@{/search}"
+						method="get">
+						<input type="search" name="keyword"
+							class="form-control search-input" required
+							placeholder="Tìm kiếm sách..." th:value="${keyword}">
+						<button type="submit" class="btn search-button">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Content Container with improved spacing and styling -->
+		<div class="container py-4">
+			<!-- Page Header with Blackmoon Style -->
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<h2 class="mb-0" style="color: #512DA8; font-weight: 600;">
+					<i class="fas fa-shopping-bag me-2"></i>My Orders
+				</h2>
+			</div>
+
+			<!-- Search Form with better styling -->
+			<div class="card mb-4"
+				style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+				<div class="card-body">
+					<form th:action="@{${moduleURL} + '/page/1'}"
+						class="d-flex flex-wrap align-items-center">
+						<input type="hidden" name="sortField" th:value="${sortField}" />
+						<input type="hidden" name="sortDir" th:value="${sortDir}" />
+
+						<div class="input-group" style="max-width: 400px;">
+							<span class="input-group-text"
+								style="background-color: #f8f0ff; border-color: #e0d0ff;">
+								<i class="fas fa-search"></i>
+							</span> <input type="search" name="keyword" th:value="${keyword}"
+								class="form-control" placeholder="Search orders..." required
+								style="border-color: #e0d0ff;" />
+						</div>
+
+						<div class="ms-auto mt-2 mt-sm-0">
+							<button type="submit" class="btn btn-primary me-2"
+								style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); border: none;">
+								<i class="fas fa-search me-1"></i> Search
+							</button>
+							<button type="button" class="btn btn-outline-secondary"
+								onclick="clearFilter()">
+								<i class="fas fa-times me-1"></i> Clear
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- Orders Table with enhanced styling -->
+            <div class="card" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+				<div class="card-body p-0">
+					<div class="table-responsive">
+						<table class="table table-hover mb-0">
+							<thead
+								style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+								<tr>
+									<th th:replace="fragments :: column_link('id', 'ID', 'none')"></th>
+									<th
+										th:replace="fragments :: column_link('orderTime', 'Order Time', 'none')"></th>
+									<th>Products</th>
+									<th
+										th:replace="fragments :: column_link('total', 'Total', 'none')"></th>
+									<th
+										th:replace="fragments :: column_link('status', 'Status', 'none')"></th>
+									<th class="text-center">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="order : ${listOrders}">
+									<td th:text="${order.id}">ID</td>
+									<td>
+										<div th:replace="fragments :: format_time(${order.orderTime})">Order
+											Time</div>
+									</td>
+									<td th:utext="${order.productNames}"></td>
+									<td>
+										<div th:replace="fragments :: format_currency(${order.total})">Total</div>
+									</td>
+									<td><span th:class="'textOrderStatus' + ${order.id}"
+										style="padding: 5px 10px; border-radius: 12px; font-weight: 500;"
+										th:style="${order.status == 'DELIVERED' ? 'background-color: #e6f7e6; color: #198754;' : 
+														(order.status == 'PROCESSING' ? 'background-color: #fff3cd; color: #856404;' : 
+														(order.status == 'SHIPPED' ? 'background-color: #e0f3ff; color: #0c63e4;' : 
+														(order.status == 'PICKED' ? 'background-color: #f8f0ff; color: #6C3483;' : 
+														(order.status == 'RETURNED' ? 'background-color: #f8d7da; color: #dc3545;' : 
+														'background-color: #e9ecef; color: #6c757d;'))))}">[[${order.status}]]</span>
+									</td>
+									<td class="text-center"><a class="btn btn-sm me-2 linkDetail"
+										th:href="@{'/orders/detail/' + ${order.id}}"
+										title="View details"> <i class="fas fa-file-alt"></i>
+									</a> <th:block
+											th:if="${order.returnRequested == false && order.delivered == true && order.returned == false}">
+											<a class="btn btn-sm btn-outline-secondary linkReturnOrder"
+												href="" th:classappend="'linkReturn' + ${order.id}"
+												th:orderId="${order.id}" title="Return this order"> <i
+												class="fas fa-undo"></i>
+											</a>
+										</th:block></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- Pagination info with better styling -->
+			<div class="mt-4">
+				<div class="text-center m-1" th:if="${totalItems > 0}">
+					<span class="text-muted">Showing Orders [[${startCount}]] to
+						[[${endCount}]] of [[${totalItems}]]</span>
+				</div>
+				<div class="text-center m-1" th:unless="${totalItems > 0}">
+					<span class="text-muted">No orders found</span>
+				</div>
+
+				<!-- Enhanced Pagination -->
+				<div th:if="${totalPages > 1}" class="mt-3">
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center">
+							<!-- First page -->
+							<li
+								th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+								<a th:replace="fragments :: page_link(${moduleURL}, 1, 'First')"></a>
+							</li>
+							<!-- Previous page -->
+							<li
+								th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+								<a
+								th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Previous')"></a>
+							</li>
+							<!-- Page numbers -->
+							<li th:each="i : ${#numbers.sequence(1, totalPages)}"
+								th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+								th:style="${currentPage == i ? 'background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);' : ''}">
+								<a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
+							</li>
+							<!-- Next page -->
+							<li
+								th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+								<a
+								th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Next')"></a>
+							</li>
+							<!-- Last page -->
+							<li
+								th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+								<a
+								th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Last')"></a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Return Order Modal -->
+		<div th:replace="orders/return_order_modal :: content"></div>
+
+		<!-- Order Details Modal -->
+		<div class="modal fade" id="orderDetailsModal">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content"
+					style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">
+					<!-- Modal content will be loaded here -->
+				</div>
+			</div>
+		</div>
+
+		<div>&nbsp;</div>
+		<div th:replace="navigation :: footer_menu"></div>
+	</div>
+
+	<script th:src="@{/js/common_list.js}"></script>
+	<script type="text/javascript">
+		moduleURL = "[[@{/orders}]]";
+		contextPath = "[[@{/}]]";
+		var csrfHeaderName = "[[${_csrf.headerName}]]";
+		var csrfValue = "[[${_csrf.token}]]";
+
+		$(document).ready(function() {
+			handleDetailLink(".linkDetail", "#orderDetailsModal");
+		});
+
+		function clearFilter() {
+			window.location = "[[@{/orders}]]";
+		}
+	</script>
+	<script type="text/javascript" th:src="@{/js/return_order.js}"></script>
+
+	<!-- Add additional styling -->
+	<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f9f5ff;
+}
+
+.main-container {
+	min-height: 80vh;
+	padding: 20px 0;
+}
+
+.welcome-section {
+	padding: 30px 0;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.welcome-section h1 {
+	color: #512DA8;
+	font-weight: 700;
+	font-size: 2.5rem;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-bottom: 15px;
+}
+
+.welcome-subtitle {
+	color: #673AB7;
+	font-size: 1.2rem;
+	margin-bottom: 30px;
+}
+
+.category-card {
+	transition: all 0.3s ease;
+	padding: 15px;
+	margin-bottom: 20px;
+	text-align: center;
+	border-radius: 12px;
+	background: white;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.category-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-card img {
+	max-width: 100%;
+	height: auto;
+	transition: all 0.3s ease;
+	margin-bottom: 10px;
+}
+
+.category-card:hover img {
+	transform: scale(1.05);
+}
+
+.category-name {
+	font-weight: 600;
+	color: #512DA8;
+	margin-top: 10px;
+	font-size: 1.1rem;
+}
+
+.category-card a {
+	text-decoration: none;
+	color: #512DA8;
+	transition: all 0.3s ease;
+}
+
+.category-card a:hover {
+	color: #9C27B0;
+}
+
+/* Navigation styles */
+.navbar {
+	padding: 12px 0;
+	transition: all 0.4s ease;
+}
+
+.navbar .nav-link {
+	position: relative;
+	padding: 8px 18px;
+	margin: 0 2px;
+	transition: all 0.4s ease;
+	border-radius: 8px;
+	font-weight: 500;
+	letter-spacing: 0.3px;
+}
+
+.navbar .nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	transform: translateY(-3px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link.active {
+	background-color: rgba(255, 255, 255, 0.2);
+	font-weight: 600;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Pulse animation for icons */
+.pulse-icon {
+	transition: all 0.3s ease;
+}
+
+.nav-link:hover .pulse-icon {
+	transform: scale(1.2);
+	color: #FEC3A6;
+}
+
+/* Enhanced dropdown styling */
+.dropdown-item {
+	padding: 10px 20px;
+	transition: all 0.3s ease;
+	border-radius: 6px;
+	margin: 2px 6px;
+}
+
+.dropdown-item:hover {
+	background-color: #f0e6ff;
+	transform: translateX(5px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* User icon glow effect */
+.user-icon-glow {
+	filter: drop-shadow(0 0 3px rgba(254, 195, 166, 0.5));
+	transition: all 0.3s ease;
+}
+
+/* Shopping cart button styling */
+.cart-button {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: white;
+	border-radius: 8px;
+	padding: 8px 14px;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-button:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+	transform: translateY(-3px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.cart-badge {
+	background-color: #FF5252;
+	font-weight: bold;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	animation: pulse 2s infinite;
+}
+
+/* Enhanced search bar */
+.search-form {
+	position: relative;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+	overflow: hidden;
+	display: flex;
+	width: 100%;
+}
+
+.search-input {
+	border: none;
+	padding: 12px 20px;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	box-shadow: none;
+	flex-grow: 1;
+}
+
+.search-input:focus {
+	box-shadow: none;
+	border: none;
+	outline: none;
+}
+
+.search-button {
+	background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+	color: white;
+	border: none;
+	width: 60px;
+	min-width: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s ease;
+}
+
+.search-button:hover {
+	background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
+	transform: scale(1.05);
+	color: white;
+}
+
+/* Shine effect for important buttons */
+.shine-effect {
+	position: relative;
+	overflow: hidden;
+}
+
+.shine-effect::after {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,
+		rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+	transform: rotate(30deg);
+	transition: all 1.5s ease;
+	opacity: 0;
+}
+
+.shine-effect:hover::after {
+	opacity: 1;
+	left: 100%;
+	top: 100%;
+}
+
+/* Animation keyframes */
+@
+keyframes pulse { 0% {
+	transform: scale(1);
+}
+
+50
+%
+{
+transform
+:
+scale(
+1.1
+);
+}
+100
+%
+{
+transform
+:
+scale(
+1
+);
+}
+}
+
+/* Responsive adjustments */
+@media ( max-width : 992px) {
+	.navbar-nav {
+		padding: 10px 0;
+	}
+	.navbar .nav-link {
+		padding: 12px 15px;
+		margin: 3px 0;
+	}
+	.search-form {
+		margin-top: 10px;
+	}
+	.welcome-section h1 {
+		font-size: 2rem;
+	}
+	.page-item.active .page-link {
+		background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);
+		border-color: #512DA8;
+	}
+	.page-link {
+		color: #512DA8;
+	}
+	.btn-primary {
+		background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);
+		border: none;
+	}
+	.btn-primary:hover {
+		background: linear-gradient(135deg, #7D3C98 0%, #5E35B1 100%);
+	}
+
+	/* Animation for hover effects */
+	.btn, .nav-link, .page-link {
+		transition: all 0.3s ease;
+	}
+	.btn:hover, .page-link:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Make status badges prettier */
+	[class^="textOrderStatus"] {
+		display: inline-block;
+		text-align: center;
+		transition: all 0.3s ease;
+	}
+	.table tbody tr:hover {
+		background-color: #f8f0ff;
+	}
+	
+}
+</style>
+</body>
+</html>

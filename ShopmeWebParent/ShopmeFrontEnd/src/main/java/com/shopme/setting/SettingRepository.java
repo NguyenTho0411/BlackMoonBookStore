@@ -18,4 +18,6 @@ public interface SettingRepository extends JpaRepository<Setting, String> {
 	@Query("SELECT s FROM Setting s WHERE s.category = ?1 OR s.category = ?2")
 	public List<Setting> findByTwoCategories(SettingCategory catOne, SettingCategory catTwo);
 	
+	
+	public Setting findByKey(String key);
 }

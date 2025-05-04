@@ -1,5 +1,7 @@
 package com.shopme;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Properties;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -7,8 +9,9 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
-import com.shopme.common.entity.EmailSettingBag;
 import com.shopme.security.oauth.CustomerOath2User;
+import com.shopme.setting.CurrencySettingBag;
+import com.shopme.setting.EmailSettingBag;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -54,5 +57,33 @@ public class Utility {
 	    
 	    // Trả về email của khách hàng hoặc null nếu không xác thực được
 	    return customerEmail;
+	}
+	public static String formatCurrency(float amount, CurrencySettingBag settings) {
+		String symbol = settings.getSymbol();
+		String symbolPosition = settings.getSymbolPosition();
+		String decimalPointType = settings.getDecimalPointType();
+		String thousandPointType = settings.getThousandPointType();
+		int decimalDigits = settings.getDecimalDigits();
+		
+		String pattern = symbolPosition.equals("Before price") ? symbol : "";
+		pattern += "###,###";
+		
+		if (decimalDigits > 0) {
+			pattern += ".";
+			for (int count = 1; count <= decimalDigits; count++) pattern += "#";
+		}
+		
+		pattern += symbolPosition.equals("After price") ? symbol : "";
+		
+		char thousandSeparator = thousandPointType.equals("POINT") ? '.' : ',';
+		char decimalSeparator = decimalPointType.equals("POINT") ? '.' : ',';
+		
+		DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+		decimalFormatSymbols.setDecimalSeparator(decimalSeparator);
+		decimalFormatSymbols.setGroupingSeparator(thousandSeparator);
+		
+		DecimalFormat formatter = new DecimalFormat(pattern, decimalFormatSymbols);
+		
+		return formatter.format(amount);
 	}
 }

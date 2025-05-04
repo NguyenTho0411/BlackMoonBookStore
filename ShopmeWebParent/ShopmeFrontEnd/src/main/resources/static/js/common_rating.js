@@ -5,13 +5,16 @@ $(document).ready(function() {
 
 $(".product-detail-rating-star").rating({
 	displayOnly: true,
-	hoverOnClear: false,
+	theme: 'krajee-svg',
+	step: 0.1,
+	min: 0,
+	max: 5,
 	showCaption: false,
-	theme: 'krajee-svg'
+	showClear: false
 });
 
 function formatRatingNumber() {
-	ratingText = $("#ratingNumber").text();
-	formattedRating = $.number(ratingText, 2, decimalSeparator, thousandSeparator);
-	$("#ratingNumber").text(formattedRating);
+	let ratingText = $("#ratingNumber").text();
+	let ratingFloat = parseFloat(ratingText);
+	$("#ratingNumber").text(ratingFloat.toFixed(1)); // Chỉ còn 1 số thập phân
 }

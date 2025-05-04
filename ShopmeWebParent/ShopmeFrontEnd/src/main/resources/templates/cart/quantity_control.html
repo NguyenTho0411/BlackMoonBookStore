@@ -2,20 +2,101 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-	<div th:fragment="quantity_control(quantityValue, bookId)">
-		<nav>
-			<ul class="pagination">
-				<li class="page-item"><a class="page-link linkMinus"
-					th:pid="${bookId}" href=""><b>-</b></a></li>
-				<li class="page-item"><input type="text"
-					th:value="${quantityValue}" th:id="'quantity' + ${bookId}"
-					onkeydown="return false;" class="form-control text-center"
-					style="width: 55px" /></li>
-				<li class="page-item"><a class="page-link linkPlus"
-					th:pid="${bookId}" href=""><b>+</b></a></li>
-			</ul>
-		</nav>
-	</div>
+  <div th:fragment="quantity_control(quantityValue, bookId)" class="quantity-control-wrapper">
+    <div class="quantity-control">
+      <button type="button" class="btn-quantity btn-decrease linkMinus" th:pid="${bookId}">
+        <i class="fas fa-minus"></i>
+      </button>
+      <input type="text" th:value="${quantityValue}" th:id="'quantity' + ${bookId}" 
+             onkeydown="return false;" class="form-control quantity-input" />
+      <button type="button" class="btn-quantity btn-increase linkPlus" th:pid="${bookId}">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <style>
+      .quantity-control-wrapper {
+        margin: 15px 0;
+      }
+      
+      .quantity-control {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        width: fit-content;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+      }
+      
+      .quantity-control:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+      }
+      
+      .btn-quantity {
+        border: none;
+        background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+        color: white;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-quantity:hover {
+        background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
+        transform: scale(1.05);
+      }
+      
+      .btn-quantity i {
+        font-size: 0.8rem;
+      }
+      
+      .btn-decrease {
+        border-radius: 8px 0 0 8px;
+      }
+      
+      .btn-increase {
+        border-radius: 0 8px 8px 0;
+      }
+      
+      .quantity-input {
+        width: 50px !important;
+        text-align: center;
+        font-weight: 600;
+        border: none;
+        height: 40px;
+        padding: 5px;
+        color: #512DA8;
+        background: white;
+        border-radius: 0;
+        outline: none;
+        box-shadow: none;
+        transition: all 0.3s ease;
+      }
+      
+      .quantity-input:focus {
+        background-color: #f9f5ff;
+      }
+      
+      /* Pulse animation for hover */
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+      
+      .btn-quantity:active {
+        animation: pulse 0.3s;
+      }
+    </style>
+  </div>
 </body>
 
 </html>

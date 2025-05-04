@@ -1,14 +1,18 @@
-package com.shopme.common.entity;
+package com.shopme.setting;
 
 import java.util.List;
+
+import com.shopme.common.entity.Setting;
+import com.shopme.common.entity.SettingBag;
+
+
 
 public class EmailSettingBag extends SettingBag {
 
 	public EmailSettingBag(List<Setting> listSettings) {
 		super(listSettings);
-		// TODO Auto-generated constructor stub
 	}
-	
+
 	public String getHost() {
 		return super.getValue("MAIL_HOST");
 	}

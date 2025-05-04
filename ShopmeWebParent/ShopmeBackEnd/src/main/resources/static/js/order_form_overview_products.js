@@ -1,4 +1,4 @@
-var fieldProductCost;
+var fieldBookCost;
 var fieldSubtotal;
 var fieldShippingCost;
 var fieldTax;
@@ -6,30 +6,30 @@ var fieldTotal;
 
 $(document).ready(function() {
 
-	fieldProductCost = $("#productCost");
+	fieldBookCost = $("#bookCost");
 	fieldSubtotal = $("#subtotal");
 	fieldShippingCost = $("#shippingCost");
 	fieldTax = $("#tax");
 	fieldTotal = $("#total");
 
 	formatOrderAmounts();
-	formatProductAmounts();
+	formatBookAmounts();
 
-	$("#productList").on("change", ".quantity-input", function(e) {
+	$("#bookList").on("change", ".quantity-input", function(e) {
 		updateSubtotalWhenQuantityChanged($(this));
 		updateOrderAmounts();
 	});
 
-	$("#productList").on("change", ".price-input", function(e) {
+	$("#bookList").on("change", ".price-input", function(e) {
 		updateSubtotalWhenPriceChanged($(this));
 		updateOrderAmounts();
 	});
 
-	$("#productList").on("change", ".cost-input", function(e) {
+	$("#bookList").on("change", ".cost-input", function(e) {
 		updateOrderAmounts();
 	});
 
-	$("#productList").on("change", ".ship-input", function(e) {
+	$("#bookList").on("change", ".ship-input", function(e) {
 		updateOrderAmounts();
 	});
 });
@@ -43,17 +43,17 @@ function updateOrderAmounts() {
 		quantityValue = $("#quantity" + rowNumber).val();
 
 
-		productCost = getNumberValueRemovedThousandSeparator(costInputField);
-		totalCost += productCost * parseInt(quantityValue);
+		bookCost = getNumberValueRemovedThousandSeparator(costInputField);
+		totalCost += bookCost * parseInt(quantityValue);
 	});
 
-	setAndFormatNumberForField("productCost", totalCost);
+	setAndFormatNumberForField("bookCost", totalCost);
 
 	orderSubtotal = 0.0;
 
 	$(".subtotal-output").each(function(e) {
-		productSubtotal = getNumberValueRemovedThousandSeparator($(this));
-		orderSubtotal += productSubtotal;
+		bookSubtotal = getNumberValueRemovedThousandSeparator($(this));
+		orderSubtotal += bookSubtotal;
 	});
 
 	setAndFormatNumberForField("subtotal", orderSubtotal);
@@ -61,8 +61,8 @@ function updateOrderAmounts() {
 	shippingCost = 0.0;
 
 	$(".ship-input").each(function(e) {
-		productShip = getNumberValueRemovedThousandSeparator($(this));
-		shippingCost += productShip;
+		bookShip = getNumberValueRemovedThousandSeparator($(this));
+		shippingCost += bookShip;
 	});
 
 	setAndFormatNumberForField("shippingCost", shippingCost);
@@ -102,7 +102,7 @@ function updateSubtotalWhenQuantityChanged(input) {
 	setAndFormatNumberForField("subtotal" + rowNumber, newSubtotal);
 }
 
-function formatProductAmounts() {
+function formatBookAmounts() {
 	$(".cost-input").each(function(e) {
 		formatNumberForField($(this));
 	});
@@ -121,7 +121,7 @@ function formatProductAmounts() {
 }
 
 function formatOrderAmounts() {
-	formatNumberForField(fieldProductCost);
+	formatNumberForField(fieldBookCost);
 	formatNumberForField(fieldSubtotal);
 	formatNumberForField(fieldShippingCost);
 	formatNumberForField(fieldTax);
@@ -135,7 +135,7 @@ function formatNumberForField(fieldRef) {
 function processFormBeforeSubmit() {
 	setCountryName();
 
-	removeThousandSeparatorForField(fieldProductCost);
+	removeThousandSeparatorForField(fieldBookCost);
 	removeThousandSeparatorForField(fieldSubtotal);
 	removeThousandSeparatorForField(fieldShippingCost);
 	removeThousandSeparatorForField(fieldTax);
@@ -169,3 +169,9 @@ function setCountryName() {
 	countryName = selectedCountry.text();
 	$("#countryName").val(countryName);
 }
+$('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+	if ($(e.target).attr("href") === "#books") {
+		formatBookAmounts();
+		formatOrderAmounts();
+	}
+});

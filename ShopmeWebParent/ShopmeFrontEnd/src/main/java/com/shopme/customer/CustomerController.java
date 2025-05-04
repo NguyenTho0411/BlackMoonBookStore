@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
@@ -23,9 +22,9 @@ import com.shopme.Utility;
 import com.shopme.common.entity.AuthenticationType;
 import com.shopme.common.entity.Country;
 import com.shopme.common.entity.Customer;
-import com.shopme.common.entity.EmailSettingBag;
 import com.shopme.security.CustomerUserDetails;
 import com.shopme.security.oauth.CustomerOath2User;
+import com.shopme.setting.EmailSettingBag;
 import com.shopme.setting.SettingService;
 
 import jakarta.mail.MessagingException;
@@ -135,9 +134,22 @@ public class CustomerController {
 	    }
 
 	    service.update(customer);
-	    updateNameForAuthenticatedCustomer(customer,request);
-	    ra.addFlashAttribute("message", "Your account details have been updated!");
-	    return "redirect:/account_details";
+		ra.addFlashAttribute("message", "Your account details have been updated.");
+		
+		updateNameForAuthenticatedCustomer(customer, request);
+		
+		String redirectOption = request.getParameter("redirect");
+		String redirectURL = "redirect:/account_details";
+		
+		if ("address_book".equals(redirectOption)) {
+			redirectURL = "redirect:/address_book";
+		} else if ("cart".equals(redirectOption)) {
+			redirectURL = "redirect:/cart";
+		} else if ("checkout".equals(redirectOption)) {
+			redirectURL = "redirect:/address_book?redirect=checkout";
+		}
+		
+		return redirectURL;
 	}
 
 

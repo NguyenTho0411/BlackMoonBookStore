@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('Shopping Cart', 'none')" />
+
+
+<body>
+	<div class="container-fluid p-0">
+		<!-- Header Menu -->
+		<nav class="navbar navbar-expand-lg navbar-dark"
+			style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+			<div class="container">
+				<!-- Logo with enhanced animation -->
+				<a class="navbar-brand" th:href="@{/}" style="padding: 5px 0;">
+					<img th:src="@{/images/blackmoonsmall.png}" alt="Blackmoon Books"
+					style="height: 45px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); transition: all 0.3s ease;"
+					onmouseover="this.style.transform='scale(1.08)'; this.style.filter='drop-shadow(0 4px 8px rgba(0,0,0,0.4))'"
+					onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 2px 4px rgba(0,0,0,0.3))'" />
+				</a>
+
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#topNavbar"
+					style="border: none; padding: 8px;">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="topNavbar">
+					<!-- Menu items with enhanced visual styling -->
+					<ul class="navbar-nav mx-auto" style="gap: 5px;">
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-briefcase me-1 pulse-icon"></i> Careers
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-credit-card me-1 pulse-icon"></i> Payments
+						</a></li>
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-truck me-1 pulse-icon"></i> Shipping &amp;
+								Delivery
+						</a></li>
+
+						<th:block sec:authorize="!isAuthenticated()">
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/login}">
+									<i class="fas fa-sign-in-alt me-1 pulse-icon"></i> Login
+							</a></li>
+							<li class="nav-item"><a
+								class="nav-link fw-medium shine-effect" th:href="@{/register}">
+									<i class="fas fa-user-plus me-1 pulse-icon"></i> Register
+							</a></li>
+						</th:block>
+
+						<th:block sec:authorize="isAuthenticated()">
+							<li class="nav-item dropdown"><a
+								class="nav-link dropdown-toggle d-flex align-items-center"
+								href="#" id="navbarDropdown" data-bs-toggle="dropdown"
+								role="button" aria-expanded="false"> <span
+									class="fas fa-user-circle me-2 user-icon-glow"
+									style="font-size: 1.5rem; color: #FEC3A6;"></span> <span
+									sec:authentication="principal.fullName" class="fw-medium"></span>
+							</a>
+								<div class="dropdown-menu dropdown-menu-end"
+									aria-labelledby="navbarDropdown"
+									style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); padding: 10px 5px;">
+									<a class="dropdown-item" th:href="@{/account_details}"> <i
+										class="fas fa-user-cog me-2"></i> Tài khoản
+									</a> <a class="dropdown-item" th:href="@{/orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
+									</a> <a class="dropdown-item" th:href="@{/reviews}"> <i
+										class="fas fa-shopping-bag me-2"></i> Reviews
+									</a> <a class="dropdown-item" th:href="@{/cart}"> <i
+										class="fas fa-shopping-bag me-2"></i> Cart
+									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+										class="fas fa-shopping-bag me-2"></i> Questions
+									</a> <a class="dropdown-item" th:href="@{/address_book}"> <i
+										class="fas fa-shopping-bag me-2"></i> Addresses
+									</a>
+									<div class="dropdown-divider"></div>
+									<form th:action="@{/logout}" method="post">
+										<button type="submit" class="dropdown-item"
+											style="border: none; background: none;">
+											<i class="fas fa-sign-out-alt me-2"></i> Logout
+										</button>
+									</form></li>
+						</th:block>
+
+						<li class="nav-item"><a class="nav-link fw-medium" href="">
+								<i class="fas fa-envelope me-1 pulse-icon"></i> Contact
+						</a></li>
+					</ul>
+
+					<!-- Enhanced shopping cart icon with animation -->
+					<div class="ms-auto">
+						<a th:href="@{/cart}" class="btn position-relative cart-button">
+							<i class="fas fa-shopping-cart"></i> <span
+							class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge"
+							th:if="${cartItemCount != null && cartItemCount > 0}"
+							th:text="${cartItemCount}"> </span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<div class="checkout-container">
+			<div class="text-center">
+				<h2 class="page-title">Complete Your Order</h2>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-8 col-md-7">
+					<div class="checkout-card card mb-4">
+						<div class="card-header">
+							<h5>
+								<i class="fas fa-shipping-fast mr-2"></i> Shipping Information
+							</h5>
+						</div>
+						<div class="card-body">
+							<div class="ship-to-address">
+								<p class="mb-2">
+									<span class="delivery-info-label">Ship to:</span> <span
+										class="delivery-info-value">[[${shippingAddress}]]</span> <a
+										class="change-address-link"
+										th:href="@{/address_book(redirect=checkout)}"> <i
+										class="fas fa-pencil-alt"></i> Change address
+									</a>
+								</p>
+							</div>
+
+							<div class="delivery-info">
+								<div class="delivery-info-item">
+									<span class="delivery-info-label">Delivery Time:</span> <span
+										class="delivery-info-value">[[${checkoutInfo.deliverDays}]]
+										day(s)</span>
+								</div>
+								<div class="delivery-info-item">
+									<span class="delivery-info-label">Expected Delivery:</span> <span
+										class="delivery-info-value">[[${#dates.format(checkoutInfo.deliverDate,
+										'E, dd MMM yyyy')}]]</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="checkout-card card">
+						<div class="card-header">
+							<h5>
+								<i class="fas fa-credit-card mr-2"></i> Payment Method
+							</h5>
+						</div>
+						<div class="card-body">
+							<div th:if="${checkoutInfo.codSupported}">
+								<form th:action="@{/place_order}" method="post">
+									<div class="payment-method-option">
+										<input type="radio" name="paymentMethod" id="radioCOD"
+											value="COD" /> <label for="radioCOD" class="mb-0">Cash
+											on Delivery (COD)</label>
+									</div>
+									<button class="btn btn-primary d-none" type="submit"
+										id="buttonSubmit">
+										<i class="fas fa-check mr-2"></i> Place Order with COD
+									</button>
+								</form>
+							</div>
+
+							<div id="paypal-button-container"></div>
+							<form th:action="@{/process_paypal_order}" method="post"
+								id="paypalForm">
+								<input type="hidden" name="orderId" id="orderId" /> <input
+									type="hidden" name="paymentMethod" value="PAYPAL" />
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-4 col-md-5">
+					<div class="checkout-card card">
+						<div class="card-header">
+							<h5>
+								<i class="fas fa-shopping-basket mr-2"></i> Order Summary
+							</h5>
+						</div>
+						<div class="card-body">
+							<div class="order-items">
+								<th:block th:each="item, iterStat : ${cartItems}">
+									<div class="order-item" th:with="book = ${item.book}">
+										<div class="item-quantity">[[${item.quantity}]]</div>
+										<div class="flex-grow-1">
+											<a th:href="@{'/b/' + ${book.alias}}" target="_blank"
+												class="item-name"> [[${book.shortName}]] </a>
+											<div class="shipping-badge">
+												Shipping: <span
+													th:replace="fragments :: format_currency(${item.shippingCost})"></span>
+											</div>
+										</div>
+										<div class="item-price">
+											<div
+												th:replace="fragments :: format_currency(${item.subtotal})"></div>
+										</div>
+									</div>
+								</th:block>
+							</div>
+
+							<div class="order-summary">
+								<div class="order-summary-row">
+									<div>Product Total:</div>
+									<div
+										th:replace="fragments :: format_currency(${checkoutInfo.bookTotal})"></div>
+								</div>
+
+								<div class="order-summary-row">
+									<div>Shipping Total:</div>
+									<div
+										th:replace="fragments :: format_currency(${checkoutInfo.shippingCostTotal})"></div>
+								</div>
+
+								<div class="order-summary-row order-total">
+									<div>Payment Total:</div>
+									<div
+										th:replace="fragments :: format_currency(${checkoutInfo.paymentTotal})"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div th:replace="fragments :: modal_dialog"></div>
+		<div th:replace="navigation :: footer_menu"></div>
+	</div>
+	<script
+		th:src="@{https://www.paypal.com/sdk/js(client-id=${paypalClientId},currency=${currencyCode})}"></script>
+	<script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
+	<script type="text/javascript">
+		contextPath = "[[@{/}]]";
+		var csrfHeaderName = "[[${_csrf.headerName}]]";
+		var csrfValue = "[[${_csrf.token}]]";
+
+		$(document).ready(function() {
+			$("#radioCOD").on("click", function() {
+				$("#buttonSubmit").removeClass("d-none");
+			});
+		});
+
+		function validateOrder(orderId) {
+			$("#orderId").val(orderId);
+			$("#paypalForm").submit();
+		}
+
+		paypal
+				.Buttons(
+						{
+							enableStandardCardFields : true,
+							createOrder : function(data, actions) {
+								// setup a transaction
+								return actions.order
+										.create({
+
+											intent : 'CAPTURE', // make payment immediately
+											payer : {
+												name : {
+													given_name : "[[${customer.firstName}]]",
+													surname : "[[${customer.lastName}]]"
+												},
+
+												address : {
+													address_line_1 : "[[${customer.addressLine1}]]",
+													address_line_2 : "[[${customer.addressLine2}]]",
+													admin_area_1 : "[[${customer.state}]]",
+													admin_area_2 : "[[${customer.city}]]",
+													postal_code : "[[${customer.postalCode}]]",
+													country_code : "[[${customer.country.code}]]"
+												},
+
+												email_address : "[[${customer.email}]]",
+
+												phone : {
+													phone_type : "MOBILE",
+													phone_number : {
+														national_number : "[[${customer.phoneNumber}]]"
+													}
+												}
+											},
+
+											purchase_units : [ {
+												amount : {
+													value : "[[${checkoutInfo.paymentTotal4PayPal}]]",
+													currency_code : "[[${currencyCode}]]"
+												}
+											} ],
+
+											application_context : {
+												shipping_preference : "NO_SHIPPING"
+											}
+										});
+							},
+
+							onApprove : function(data, actions) {
+								// buyer approved payment
+								return actions.order.capture().then(
+										function(details) {
+											//console.log(details);
+											orderId = details.id;
+											validateOrder(orderId);
+										});
+							},
+
+							onCancel : function(data) {
+								// buyer cancelled payment
+								alert('Payment cancelled by the buyer');
+							},
+
+							onError : function(err) {
+								// error that prevents buyer from doing checkout
+								showErrorModal("Something wrong with your address information, so payment will not work.");
+							}
+						}).render("#paypal-button-container");
+	</script>
+</body>
+<style>
+body {
+	background-color: #f8f9fa;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.checkout-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.page-title {
+	margin-bottom: 30px;
+	color: #4a235a;
+	font-weight: 600;
+	position: relative;
+	padding-bottom: 10px;
+}
+
+.page-title:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80px;
+	height: 3px;
+	background-color: #8e44ad;
+}
+
+.checkout-card {
+	border: none;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(142, 68, 173, 0.08);
+	margin-bottom: 25px;
+	transition: transform 0.3s;
+}
+
+.checkout-card:hover {
+	transform: translateY(-5px);
+}
+
+.card-header {
+	background-color: #fff;
+	border-bottom: 1px solid #eaeaea;
+	border-radius: 10px 10px 0 0 !important;
+	padding: 15px 20px;
+}
+
+.card-header h5 {
+	margin: 0;
+	color: #8e44ad;
+	font-weight: 600;
+	font-size: 1.25rem;
+}
+
+.card-body {
+	padding: 20px;
+}
+
+.btn-primary {
+	background-color: #8e44ad;
+	border: none;
+	border-radius: 30px;
+	padding: 10px 25px;
+	font-weight: 600;
+	transition: all 0.3s;
+}
+
+.btn-primary:hover {
+	background-color: #6c3483;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+}
+
+.payment-method-option {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+	padding: 15px;
+	border-radius: 8px;
+	border: 1px solid #eaeaea;
+	transition: all 0.3s;
+}
+
+.payment-method-option:hover {
+	border-color: #8e44ad;
+	background-color: #f5eef8;
+}
+
+.payment-method-option input[type="radio"] {
+	margin-right: 10px;
+	transform: scale(1.2);
+}
+
+.order-item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #eaeaea;
+}
+
+.order-item:last-child {
+	border-bottom: none;
+}
+
+.order-item-image {
+	width: 50px;
+	height: 50px;
+	border-radius: 8px;
+	margin-right: 15px;
+	background-color: #f1f1f1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.order-summary-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	font-size: 0.95rem;
+}
+
+.order-total {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #4a235a;
+	margin-top: 15px;
+	padding-top: 15px;
+	border-top: 2px solid #eaeaea;
+}
+
+.item-quantity {
+	background-color: #f5eef8;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	color: #8e44ad;
+	margin-right: 10px;
+}
+
+.shipping-badge {
+	display: inline-block;
+	background-color: #f5eef8;
+	color: #8e44ad;
+	border-radius: 4px;
+	padding: 3px 8px;
+	font-size: 0.75rem;
+	margin-top: 5px;
+}
+
+.ship-to-address {
+	background-color: #f8f9fa;
+	border-radius: 8px;
+	padding: 15px;
+	margin-bottom: 15px;
+	border-left: 4px solid #8e44ad;
+}
+
+.change-address-link {
+	color: #8e44ad;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.9rem;
+	margin-left: 10px;
+	transition: all 0.2s;
+}
+
+.change-address-link:hover {
+	color: #6c3483;
+	text-decoration: underline;
+}
+
+.delivery-info {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 15px;
+}
+
+.delivery-info-item {
+	flex: 1 0 50%;
+	margin-bottom: 10px;
+}
+
+.delivery-info-label {
+	font-weight: 600;
+	color: #7f8c8d;
+	margin-right: 5px;
+}
+
+.delivery-info-value {
+	font-weight: 600;
+	color: #4a235a;
+}
+
+#paypal-button-container {
+	margin-top: 20px;
+}
+
+.main-container {
+	min-height: 80vh;
+	padding: 20px 0;
+}
+
+.welcome-section {
+	padding: 30px 0;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.welcome-section h1 {
+	color: #512DA8;
+	font-weight: 700;
+	font-size: 2.5rem;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-bottom: 15px;
+}
+
+.welcome-subtitle {
+	color: #673AB7;
+	font-size: 1.2rem;
+	margin-bottom: 30px;
+}
+
+.category-card {
+	transition: all 0.3s ease;
+	padding: 15px;
+	margin-bottom: 20px;
+	text-align: center;
+	border-radius: 12px;
+	background: white;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.category-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-card img {
+	max-width: 100%;
+	height: auto;
+	transition: all 0.3s ease;
+	margin-bottom: 10px;
+}
+
+.category-card:hover img {
+	transform: scale(1.05);
+}
+
+.category-name {
+	font-weight: 600;
+	color: #512DA8;
+	margin-top: 10px;
+	font-size: 1.1rem;
+}
+
+.category-card a {
+	text-decoration: none;
+	color: #512DA8;
+	transition: all 0.3s ease;
+}
+
+.category-card a:hover {
+	color: #9C27B0;
+}
+
+/* Navigation styles */
+.navbar {
+	padding: 12px 0;
+	transition: all 0.4s ease;
+}
+
+.navbar .nav-link {
+	position: relative;
+	padding: 8px 18px;
+	margin: 0 2px;
+	transition: all 0.4s ease;
+	border-radius: 8px;
+	font-weight: 500;
+	letter-spacing: 0.3px;
+}
+
+.navbar .nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	transform: translateY(-3px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link.active {
+	background-color: rgba(255, 255, 255, 0.2);
+	font-weight: 600;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Pulse animation for icons */
+.pulse-icon {
+	transition: all 0.3s ease;
+}
+
+.nav-link:hover .pulse-icon {
+	transform: scale(1.2);
+	color: #FEC3A6;
+}
+
+/* Enhanced dropdown styling */
+.dropdown-item {
+	padding: 10px 20px;
+	transition: all 0.3s ease;
+	border-radius: 6px;
+	margin: 2px 6px;
+}
+
+.dropdown-item:hover {
+	background-color: #f0e6ff;
+	transform: translateX(5px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* User icon glow effect */
+.user-icon-glow {
+	filter: drop-shadow(0 0 3px rgba(254, 195, 166, 0.5));
+	transition: all 0.3s ease;
+}
+
+/* Shopping cart button styling */
+.cart-button {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: white;
+	border-radius: 8px;
+	padding: 8px 14px;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-button:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+	transform: translateY(-3px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.cart-badge {
+	background-color: #FF5252;
+	font-weight: bold;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	animation: pulse 2s infinite;
+}
+
+/* Enhanced search bar */
+.search-form {
+	position: relative;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+	overflow: hidden;
+	display: flex;
+	width: 100%;
+}
+
+.search-input {
+	border: none;
+	padding: 12px 20px;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	box-shadow: none;
+	flex-grow: 1;
+}
+
+.search-input:focus {
+	box-shadow: none;
+	border: none;
+	outline: none;
+}
+
+.search-button {
+	background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+	color: white;
+	border: none;
+	width: 60px;
+	min-width: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s ease;
+}
+
+.search-button:hover {
+	background: linear-gradient(135deg, #9B59B6 0%, #512DA8 100%);
+	transform: scale(1.05);
+	color: white;
+}
+
+/* Shine effect for important buttons */
+.shine-effect {
+	position: relative;
+	overflow: hidden;
+}
+
+.shine-effect::after {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,
+		rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+	transform: rotate(30deg);
+	transition: all 1.5s ease;
+	opacity: 0;
+}
+
+.shine-effect:hover::after {
+	opacity: 1;
+	left: 100%;
+	top: 100%;
+}
+
+/* Animation keyframes */
+@
+keyframes pulse { 0% {
+	transform: scale(1);
+}
+
+50
+%
+{
+transform
+:
+scale(
+1.1
+);
+}
+100
+%
+{
+transform
+:
+scale(
+1
+);
+}
+}
+
+/* Responsive adjustments */
+@media ( max-width : 992px) {
+	.navbar-nav {
+		padding: 10px 0;
+	}
+	.navbar .nav-link {
+		padding: 12px 15px;
+		margin: 3px 0;
+	}
+	.search-form {
+		margin-top: 10px;
+	}
+	.welcome-section h1 {
+		font-size: 2rem;
+	}
+}
+</style>
+</html>

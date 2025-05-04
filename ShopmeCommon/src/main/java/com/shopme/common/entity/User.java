@@ -1,7 +1,10 @@
 package com.shopme.common.entity;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+
+import com.shopme.common.Constants;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -134,7 +137,19 @@ public class User {
 	@Transient
 	public String getPhotosImagePath() {
 		if(id == null || photos == null) return "/images/default-user.png";
-		return "/user-photos/" +this.id+"/"+this.photos;
+		return Constants.S3_BASE_URI + "/user-photos/" + this.id + "/" + this.photos;
 	}
 	
+	public boolean hasRole(String roleName) {
+		Iterator<Role> iterator = roles.iterator();
+		
+		while (iterator.hasNext()) {
+			Role role = iterator.next();
+			if (role.getName().equals(roleName)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

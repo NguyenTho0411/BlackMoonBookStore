@@ -1,5 +1,6 @@
 package com.shopme.admin.security;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -79,5 +80,9 @@ public class ShopmeUserDetails implements UserDetails {
 	}
 	public void setLastName(String lastName) {
 		this.user.setFirstName(lastName);
+	}
+	
+	public boolean hasRole(String roleName) {
+		return user.hasRole(roleName);
 	}
 }

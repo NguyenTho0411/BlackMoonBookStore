@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Blackmoon Books</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Bootstrap CSS & JS -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-	rel="stylesheet">
-	
-	 <style>
-    /* Base styles with enhanced visuals */
+  <title>Blackmoon Books</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS & Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    /* Base styles */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f5ff;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f5ff;
+      color: #333;
     }
+    
     
     .main-container {
       min-height: 80vh;
@@ -269,10 +267,362 @@
         font-size: 2rem;
       }
     }
+    /* Header styling */
+    .page-header {
+      padding: 2rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%);
+      color: white;
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 4px 20px rgba(94, 53, 177, 0.2);
+    }
+    
+    .page-header h2 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      margin-bottom: 0;
+    }
+    
+    /* Cart item styling */
+    .cart-item {
+      background-color: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cart-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .item-number {
+      background-color: #8e24aa;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .delete-btn {
+      color: #dc3545;
+      background-color: rgba(220, 53, 69, 0.1);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    
+    .delete-btn:hover {
+      background-color: #dc3545;
+      color: white;
+      transform: rotate(90deg);
+    }
+    
+    .product-image {
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .product-image:hover {
+      transform: scale(1.05);
+    }
+    
+    .product-details {
+      padding-left: 1.5rem;
+    }
+    
+    .product-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+    
+    .product-title a {
+      color: #333;
+      text-decoration: none;
+    }
+    
+    .product-title a:hover {
+      color: #8e24aa;
+    }
+    
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      margin: 1rem 0;
+    }
+    
+    .quantity-btn {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(94, 53, 177, 0.25);
+    }
+    
+    .quantity-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quantity-input {
+      width: 60px;
+      text-align: center;
+      font-weight: bold;
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      margin: 0 10px;
+    }
+    
+    .price-calculation {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .subtotal {
+      font-weight: 700;
+      color: #8e24aa;
+      font-size: 1.4rem;
+      margin-left: 0.5rem;
+    }
+    
+    /* Total section styling */
+    .total-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 20px;
+    }
+    
+    .total-header {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #333;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 1rem;
+    }
+    
+    .total-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #8e24aa;
+      margin: 1.5rem 0;
+    }
+    
+    .checkout-btn {
+      background: linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(142, 36, 170, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .checkout-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(142, 36, 170, 0.5);
+    }
+    
+    .checkout-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(30deg);
+      transition: all 1s ease;
+      opacity: 0;
+    }
+    
+    .checkout-btn:hover::after {
+      opacity: 1;
+      left: 100%;
+      top: 100%;
+    }
+    
+    /* Empty cart message */
+    .empty-cart {
+      text-align: center;
+      padding: 3rem;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+    
+    .empty-cart h3 {
+      font-size: 1.8rem;
+      color: #6c757d;
+      margin-bottom: 2rem;
+    }
+    
+    .empty-cart i {
+      font-size: 5rem;
+      color: #8e24aa;
+      margin-bottom: 2rem;
+      opacity: 0.5;
+    }
+    
+    .continue-shopping {
+      background: linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%);
+      color: white;
+      text-decoration: none;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+      margin-top: 1rem;
+      box-shadow: 0 4px 15px rgba(142, 36, 170, 0.3);
+    }
+    
+    .continue-shopping:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(142, 36, 170, 0.4);
+      color: white;
+    }
+    
+    /* Shipping not available styling */
+    .shipping-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+      border-left: 5px solid #ffc107;
+    }
+    
+    .address-link {
+      color: #8e24aa;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: block;
+      margin-top: 1rem;
+    }
+    
+    .address-link:hover {
+      color: #5e35b1;
+      transform: translateX(5px);
+    }
+    
+    /* Modal styling */
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%);
+      color: white;
+      border-radius: 15px 15px 0 0;
+      padding: 1.2rem 1.5rem;
+    }
+    
+    .modal-title {
+      font-weight: 700;
+    }
+    
+    .modal-body {
+      padding: 2rem;
+    }
+    
+    .modal .btn-close {
+      background-color: white;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+    
+    .modal .btn-close:hover {
+      opacity: 1;
+      transform: rotate(90deg);
+    }
+    
+    .modal-footer {
+      border-top: 1px solid #f0f0f0;
+      padding: 1.2rem;
+    }
+    
+    .modal-footer .btn {
+      border-radius: 50px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 600;
+    }
+    
+    /* Animation keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Apply animations */
+    .cart-item {
+      animation: fadeIn 0.6s ease forwards;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .product-details {
+        padding-left: 0;
+        margin-top: 1.5rem;
+      }
+      
+      .total-section {
+        margin-top: 2rem;
+        position: static;
+      }
+      
+      .page-header h2 {
+        font-size: 2rem;
+      }
+    }
   </style>
+</head>
 <body>
-		<div class="container-fluid p-0">
-		<!-- Header Menu -->
+  <div class="container-fluid p-0">
+  		<!-- Header Menu -->
 		<nav class="navbar navbar-expand-lg navbar-dark"
 			style="background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
 			<div class="container">
@@ -329,15 +679,15 @@
 									style="border-radius: 12px; border: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); padding: 10px 5px;">
 									<a class="dropdown-item" th:href="@{/account_details}"> <i
 										class="fas fa-user-cog me-2"></i> Tài khoản
-									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+									</a> <a class="dropdown-item" th:href="@{/orders}"> <i
 										class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
-									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+									</a> <a class="dropdown-item" th:href="@{/reviews}"> <i
 										class="fas fa-shopping-bag me-2"></i> Reviews
 									</a> <a class="dropdown-item" th:href="@{/cart}"> <i
 										class="fas fa-shopping-bag me-2"></i> Cart
 									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
 										class="fas fa-shopping-bag me-2"></i> Questions
-									</a> <a class="dropdown-item" th:href="@{/orders/my_orders}"> <i
+									</a> <a class="dropdown-item" th:href="@{/address_book}"> <i
 										class="fas fa-shopping-bag me-2"></i> Addresses
 									</a>
 									<div class="dropdown-divider"></div>
@@ -366,95 +716,139 @@
 				</div>
 			</div>
 		</nav>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+    <div class="page-header">
+      <h2><i class="fas fa-shopping-cart me-2"></i>Your Shopping Cart</h2>
+    </div>
 
-		<!-- Search Navigation -->
-		<div class="container mt-3 mb-3">
-			<div class="row">
-				<div class="col-md">
-					<form class="d-flex search-form" th:action="@{/search}"
-						method="get">
-						<input type="search" name="keyword"
-							class="form-control search-input" required
-							placeholder="Tìm kiếm sách..." th:value="${keyword}">
-						<button type="submit" class="btn search-button">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<div class="text-center">
-			<h2>Your Shopping Cart</h2>
-		</div>
-
-		<div class="row m-1">
-			<div class="col-sm-8">
-				<th:block th:each="item, status : ${cartItems}">
-					<div class="row border rounded p-1"
-						th:with="book = ${item.book}"
-						th:id="'row' + ${status.count}">
-						<div class="col-1">
-							<div class="divCount">[[${status.count}]]</div>
-							<div>
-								<a class="fas fa-trash icon-dark linkRemove"
-									th:rowNumber="${status.count}"
-									th:href="@{'/cart/remove/' + ${book.id}}"></a>
-							</div>
-						</div>
-						<div class="col-3">
-							<img th:src="@{${book.mainImagePath}}" class="img-fluid" />
-						</div>
-						<div class="col-6">
-							<div>
-								<a th:href="@{'/b/' + ${book.alias}}" target="_blank"
-									th:title="${book.name}"> <b>[[${book.shortName}]]</b>
-								</a>
-							</div>
-							<div
-								th:replace="cart/quantity_control :: quantity_control(${item.quantity}, ${book.id})">
-							</div>
-
-							<div>
-								<span>X&nbsp;</span>
-								<div th:replace="book_fragment :: book_price"></div>
-							</div>
-							<div>
-								<span>=&nbsp;</span> <span
-									th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}"
-									th:remove="tag">[[${CURRENCY_SYMBOL}]]</span><span
-									th:id="'subtotal' + ${book.id}" class="h4 subtotal">[[${#numbers.formatDecimal(item.subtotal,
-									1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]</span><span
-									th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}"
-									th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
-							</div>
-						</div>
-					</div>
-					<div class="row m-1" th:id="'blankLine' + ${status.count}">&nbsp;</div>
-				</th:block>
-			</div>
-
-		
-      <div class="col-sm-4" th:unless="${#lists.isEmpty(cartItems)}" id="sectionTotal">
-        <div><span class="h3">Estimated Total:</span></div>
-        <div class="mt-2">
-          <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-          <span id="total" class="h2">
-            [[${#numbers.formatDecimal(estimatedTotal, 1,
-                 THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
-          </span>
-          <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+    <div class="container main-container">
+      <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+          <th:block th:each="item, status : ${cartItems}">
+            <div class="cart-item" th:with="book = ${item.book}" th:id="'row' + ${status.count}">
+              <div class="row align-items-center">
+                <!-- Item Number and Delete Button -->
+                <div class="col-md-1 text-center">
+                  <div class="item-number">[[${status.count}]]</div>
+                  <a class="delete-btn linkRemove" th:rowNumber="${status.count}" th:href="@{'/cart/remove/' + ${book.id}}">
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </div>
+                
+                <!-- Product Image -->
+                <div class="col-md-3">
+                  <img th:src="@{${book.mainImagePath}}" class="img-fluid product-image" />
+                </div>
+                
+                <!-- Product Details -->
+                <div class="col-md-8 product-details">
+                  <h4 class="product-title">
+                    <a th:href="@{'/b/' + ${book.alias}}" target="_blank" th:title="${book.name}">
+                      [[${book.shortName}]]
+                    </a>
+                  </h4>
+                  
+                  <!-- Quantity Control -->
+                  <div th:replace="cart/quantity_control :: quantity_control(${item.quantity}, ${book.id})"></div>
+                  
+                  <!-- Price Calculation -->
+                  <div class="price-calculation">
+                    <span class="price-label">Price:</span>
+                    <div th:replace="book_fragment :: book_price"></div>
+                  </div>
+                  
+                  <!-- Subtotal -->
+                  <div class="price-calculation">
+                    <span class="subtotal-label">Subtotal:</span>
+                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+                    <span th:id="'subtotal' + ${book.id}" class="subtotal">
+                      [[${#numbers.formatDecimal(item.subtotal, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+                    </span>
+                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </th:block>
         </div>
-        <!-- … nút Checkout hoặc thông báo không hỗ trợ shipping … -->
+        
+        <!-- Order Summary -->
+        <div class="col-lg-4" th:unless="${#lists.isEmpty(cartItems)}" id="sectionTotal">
+          <div class="total-section">
+            <h3 class="total-header">Order Summary</h3>
+            
+            <div class="d-flex justify-content-between">
+              <span class="h5">Estimated Total:</span>
+              <div class="total-amount">
+                <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+                <span id="total">[[${#numbers.formatDecimal(estimatedTotal, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]</span>
+                <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <div th:if="${shippingSupported}">
+                <form th:action="@{/checkout}">
+                  <button type="submit" class="checkout-btn">
+                    <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                  </button>
+                </form>
+              </div>
+              
+              <div th:unless="${shippingSupported}">
+                <div class="shipping-warning">
+                  <i class="fas fa-exclamation-triangle me-2"></i>
+                  <span>No shipping available for your location</span>
+                </div>
+                
+                <div th:if="${usePrimaryAddressAsDefault}">
+                  <a th:href="@{/account_details(redirect=cart)}" class="address-link">
+                    <i class="fas fa-map-marker-alt me-2"></i>Update your address
+                  </a>
+                </div>
+                
+                <div th:unless="${usePrimaryAddressAsDefault}">
+                  <a th:href="@{/address_book(redirect=cart)}" class="address-link">
+                    <i class="fas fa-address-book me-2"></i>Use another shipping address
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Empty Cart Message -->
+      <div id="sectionEmptyCartMessage" th:class="'empty-cart' + ${#lists.isEmpty(cartItems) ? '' : ' d-none'}">
+        <i class="fas fa-shopping-cart mb-4"></i>
+        <h3>Your shopping cart is empty</h3>
+        <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
+        <a th:href="@{/}" class="continue-shopping">
+          <i class="fas fa-book me-2"></i>Continue Shopping
+        </a>
       </div>
     </div>
 
-    <div id="sectionEmptyCartMessage"
-         th:class="'text-center' + ${#lists.isEmpty(cartItems) ? '' : ' d-none'}">
-      <h3>You have not chosen any products yet.</h3>
+    <!-- Modal Dialog -->
+    <div class="modal fade" id="modalDialog" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Modal Title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalBody">
+            Modal Body
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div th:replace="fragments :: modal_dialog"></div>
     <div th:replace="navigation :: footer_menu"></div>
   </div>
 

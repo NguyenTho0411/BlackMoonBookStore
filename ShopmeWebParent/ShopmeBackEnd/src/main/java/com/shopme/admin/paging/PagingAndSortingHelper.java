@@ -8,10 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-
-
-
-
 public class PagingAndSortingHelper {
 	private ModelAndViewContainer model;
 	private String listName;
@@ -19,19 +15,14 @@ public class PagingAndSortingHelper {
 	private String sortDir;
 	private String keyword;
 	
-	public PagingAndSortingHelper(ModelAndViewContainer model, String listName,
+	public PagingAndSortingHelper(ModelAndViewContainer model,String listName,
 			String sortField, String sortDir, String keyword) {
-	// Check if model is null and initialize if necessary
-	if (model == null) {
-		throw new IllegalArgumentException("ModelAndViewContainer cannot be null");
+		this.model = model;
+		this.listName = listName;
+		this.sortField = sortField;
+		this.sortDir = sortDir;
+		this.keyword = keyword;
 	}
-	this.model = model;
-	this.listName = listName;
-	this.sortField = sortField;
-	this.sortDir = sortDir;
-	this.keyword = keyword;
-}
-
 	
 	public void updateModelAttributes(int pageNum, Page<?> page) {
 		List<?> listItems = page.getContent();

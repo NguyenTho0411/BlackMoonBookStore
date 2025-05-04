@@ -38,15 +38,17 @@ function checkFileSize(fileInput) {
 }
 
 function showModalDialog(title, message) {
-	$("#modalTitle").text(title);
-	$("#modalBody").text(message);
-	$("#modalDialog").modal();
-}
+	document.getElementById("modalTitle").textContent = title;
+	document.getElementById("modalBody").textContent = message;
 
-function showErrorModal(message) {
-	showModalDialog("Error", message);
+	const modal = new bootstrap.Modal(document.getElementById('modalDialog'), {});
+	modal.show();
 }
 
 function showWarningModal(message) {
 	showModalDialog("Warning", message);
+}
+
+function showErrorModal(message) {
+	showModalDialog("Error", message);
 }

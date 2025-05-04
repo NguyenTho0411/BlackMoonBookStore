@@ -1,0 +1,386 @@
+<!-- Fragment 1: book_top_reviews.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reviews</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #f72585;
+            --light-bg: #f8f9fa;
+            --dark-text: #2b2d42;
+            --light-text: #8d99ae;
+            --success: #4cc9a4;
+            --warning: #ff9e00;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-text);
+            background-color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+        }
+        
+        .section-heading {
+            font-weight: 600;
+            color: var(--dark-text);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-heading:after {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            bottom: -1px;
+            left: 0;
+        }
+        
+        .section-heading i {
+            color: var(--warning);
+        }
+        
+        .ratings-summary {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .rating-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+        
+        .of-five {
+            font-size: 1rem;
+            color: var(--light-text);
+        }
+        
+        .ratings-count {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        .ratings-count:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.4);
+            color: white;
+        }
+        
+        .alert {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 201, 164, 0.15);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+        
+        .alert-info {
+            background-color: rgba(67, 97, 238, 0.15);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .review-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .review-headline {
+            font-weight: 600;
+            margin: 1rem 0;
+            color: var(--dark-text);
+        }
+        
+        .review-comment {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .review-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--light-text);
+            margin-top: 1rem;
+        }
+        
+        .vote-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .vote-btn {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .vote-btn:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .vote-btn.voted {
+            color: var(--primary-color);
+        }
+        
+        .vote-count {
+            font-weight: 500;
+            padding: 0.3rem 0.75rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+            font-size: 0.85rem;
+        }
+        
+        .write-review-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
+        }
+        
+        .write-review-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(247, 37, 133, 0.4);
+            color: white;
+        }
+        
+        /* Star Rating Styling */
+        .product-detail-rating-star {
+            appearance: none;
+            display: inline-block;
+            position: relative;
+            font-family: 'Font Awesome 6 Free';
+            font-size: 1.25rem;
+        }
+        
+        [data-size="md"] {
+            font-size: 1.5rem;
+        }
+        
+        [data-size="xs"] {
+            font-size: 1rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .ratings-summary {
+                padding: 1rem;
+            }
+            
+            .review-card {
+                padding: 1.25rem;
+            }
+            
+            .rating-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+<body>
+   <div th:fragment="content">
+        <div class="container">
+            <!-- Review Section Header -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="description-section">
+                        <h3 id="review" class="section-heading">
+                            <i class="fas fa-star me-2"></i> Customer Reviews
+                        </h3>
+                        
+                        <!-- Rating Summary -->
+                        <div class="ratings-summary">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <input type="text" class="product-detail-rating-star" dir="ltr"
+                                        data-size="md" th:value="${book.averageRating}" />
+                                </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <span class="rating-number" id="ratingNumber">
+                                        [[${#numbers.formatDecimal(book.averageRating, 1, 'POINT', 1, 'POINT')}]]
+                                    </span>
+                                    <span class="of-five ms-2">of 5</span>
+                                </div>
+                                
+                                <div class="col-md-4 ms-auto text-md-end mt-3 mt-md-0">
+                                    <!-- View All Ratings Link -->
+                                    <a th:href="@{'/ratings/' + ${book.alias}}" class="ratings-count">
+                                        <i class="fas fa-list-ul me-2"></i> View all [[${book.reviewCount}]] ratings
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Already Reviewed Message -->
+                        <div th:if="${customerReviewed}" class="alert alert-success p-3 mb-4">
+                            <i class="fas fa-check-circle me-2"></i> You already reviewed this book.
+                        </div>
+                        
+                        <!-- Can Review Message -->
+                        <div th:if="${customerCanReview}" class="alert alert-info p-3 mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-info-circle me-2"></i> You purchased and got this book.
+                                </div>
+                                <a th:href="@{'/write_review/book/' + ${book.id}}" class="write-review-btn">
+                                    <i class="fas fa-pencil-alt me-1"></i> Write Your Review
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Reviews List -->
+                        <div class="reviews-container">
+                            <th:block th:each="review : ${listReviews}">
+                                <div class="review-card">
+                                    <div class="review-header">
+                                        <input type="text" class="product-detail-rating-star" dir="ltr"
+                                            data-size="xs" th:value="${review.rating}" />
+                                            
+                                        <div class="vote-controls">
+                                            <a class="vote-btn linkVoteReview" 
+                                                th:classappend="${review.upvotedByCurrentCustomer ? 'voted' : ''}"
+                                                th:id="'linkVoteUp-' + ${review.id}" 
+                                                th:reviewId="${review.id}"
+                                                th:href="@{'/vote_review/' + ${review.id} + '/up'}">
+                                                <i class="fa-thumbs-up" th:classappend="${review.upvotedByCurrentCustomer ? 'fas' : 'far'}"></i>
+                                            </a>
+                                            
+                                            <span class="vote-count" th:id="'voteCount-' + ${review.id}">
+                                                [[${review.votes}]] Votes
+                                            </span>
+                                            
+                                            <a class="vote-btn linkVoteReview" 
+                                                th:classappend="${review.downvotedByCurrentCustomer ? 'voted' : ''}"
+                                                th:id="'linkVoteDown-' + ${review.id}" 
+                                                th:reviewId="${review.id}"
+                                                th:href="@{'/vote_review/' + ${review.id} + '/down'}">
+                                                <i class="fa-thumbs-down" th:classappend="${review.downvotedByCurrentCustomer ? 'fas' : 'far'}"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="review-headline">[[${review.headline}]]</h5>
+                                    <p class="review-comment">[[${review.comment}]]</p>
+                                    
+                                    <div class="review-meta">
+                                        <i class="far fa-user me-1"></i>
+                                        <span class="fw-medium">[[${review.customer.fullName}]]</span>
+                                        <span class="mx-2">•</span>
+                                        <div th:replace="fragments :: format_time(${review.reviewTime})"></div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (required for some components) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom scripts to initialize star rating -->
+    <script>
+        // This script initializes and styles the star ratings
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any JavaScript components here
+            // Note: The actual star rating functionality would need a proper plugin or custom implementation
+            // This is just a visual representation for the demo
+            
+            const starRatings = document.querySelectorAll('.product-detail-rating-star');
+            starRatings.forEach(function(input) {
+                const value = parseFloat(input.getAttribute('value')) || 0;
+                const size = input.getAttribute('data-size');
+                const parent = input.parentElement;
+                
+                // Create star visualization
+                const starsContainer = document.createElement('div');
+                starsContainer.className = 'stars-container';
+                starsContainer.style.color = '#ff9e00';
+                
+                for (let i = 1; i <= 5; i++) {
+                    const star = document.createElement('i');
+                    
+                    if (i <= Math.floor(value)) {
+                        star.className = 'fas fa-star';
+                    } else if (i - 0.5 <= value) {
+                        star.className = 'fas fa-star-half-alt';
+                    } else {
+                        star.className = 'far fa-star';
+                    }
+                    
+                    star.style.marginRight = '2px';
+                    starsContainer.appendChild(star);
+                }
+                
+                // Replace input with stars
+                parent.replaceChild(starsContainer, input);
+            });
+        });
+    </script>
+</body>
+</html>

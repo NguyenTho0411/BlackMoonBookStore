@@ -63,7 +63,7 @@
                     
                     <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" th:href="@{/shipping}">
+                            <a class="nav-link fw-medium" th:href="@{/shipping_rates}">
                                 <i class="fas fa-shipping-fast me-1"></i> Shipping
                             </a>
                         </li>
@@ -76,7 +76,13 @@
                             </a>
                         </li>
                     </th:block>
-                    
+                                        <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" th:href="@{/reviews}">
+                                <i class="fas fa-shopping-bag me-1"></i> Reviews
+                            </a>
+                        </li>
+                    </th:block>
                     <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/reports}">

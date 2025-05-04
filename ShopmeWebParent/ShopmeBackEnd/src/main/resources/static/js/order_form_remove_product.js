@@ -1,9 +1,9 @@
-$(document).ready(function() {
-	$("#productList").on("click", ".linkRemove", function(e) {
+$(document).ready(function () {
+	$("#bookList").on("click", ".linkRemove", function (e) {
 		e.preventDefault();
 
 		if (doesOrderHaveOnlyOneProduct()) {
-			showWarningModal("Could not remove product. The order must have eat least one product.");
+			showWarningModal("Could not remove book. The order must have at least one book.");
 		} else {
 			removeProduct($(this));
 			updateOrderAmounts();
@@ -11,8 +11,9 @@ $(document).ready(function() {
 	});
 });
 
+
 function removeProduct(link) {
-	rowNumber = link.attr("rowNumber");
+	const rowNumber = link.attr("data-row-number");
 	$("#row" + rowNumber).remove();
 	$("#blankLine" + rowNumber).remove();
 
@@ -21,7 +22,8 @@ function removeProduct(link) {
 	});
 }
 
+
 function doesOrderHaveOnlyOneProduct() {
-	productCount = $(".hiddenProductId").length;
-	return productCount == 1;
+	const bookCount = $(".hiddenBookId").length;
+	return bookCount === 1;
 }

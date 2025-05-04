@@ -1,6 +1,7 @@
 package com.shopme.cart;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.common.exception.ShoppingCartException;
 import com.shopme.customer.CustomerService;
 
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -54,6 +56,20 @@ public class ShoppingCartRestController {
 		} catch (CustomerNotFoundException e) {
 			// TODO Auto-generated catch block
 			return "You must login to change quantity of book";
+		}
+	}
+	
+	
+	@DeleteMapping("/cart/remove/{bookId}")
+	public String removeBook(@PathVariable(name="bookId") Integer bookId, HttpServletRequest request) {
+		try {
+			Customer customer = getAuthenticatedCustomer(request);
+			cartService.removeBook(bookId, customer);
+			
+			return "The book has been removed from your shopping cart!";
+		} catch (CustomerNotFoundException e) {
+			// TODO Auto-generated catch block
+			return "You must login to remove book";
 		}
 	}
 }

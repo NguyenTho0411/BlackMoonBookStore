@@ -62,7 +62,7 @@
         [[${label}]]
     </a>
     
-        <a th:fragment="page_link2(pageNum,label)" class="page-link" 
+        <a th:fragment="page_link3(pageNum,label)" class="page-link" 
        th:href="@{'/customers/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&amp;sortDir=' + ${sortDir} + ${keyword != null ? '&amp;keyword=' + keyword : ''}}">
         [[${label}]]
     </a>

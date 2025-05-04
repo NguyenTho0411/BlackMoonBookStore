@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.shopme.common.Constants;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -72,7 +74,11 @@ public class Book {
 	@JoinColumn(name="publisher_id")
 	private Publisher publisher;
 	
+	private int reviewCount;
+	private float averageRating;
 	
+	@Transient private boolean customerCanReview;
+	@Transient private boolean reviewedByCustomer;
 	public Integer getId() {
 		return id;
 	}
@@ -81,6 +87,9 @@ public class Book {
 	}
 	
 	
+	public Book(String name) {
+		this.name = name;
+	}
 	public Set<BookImage> getImages() {
 		return images;
 	}
@@ -207,10 +216,9 @@ public class Book {
 	
 	@Transient
 	public String getMainImagePath() {
-		if(id == null || mainImage == null) {
-			 return "/images/image-thumbnail.png";
-		}
-		return "/book-images/"+this.id+"/"+this.mainImage;
+		if (id == null || mainImage == null) return "/images/image-thumbnail.png";
+		
+		return Constants.S3_BASE_URI +"/book-images/" + this.id + "/" + this.mainImage;
 	}
 	public List<BookDetail> getDetails() {
 		return details;
@@ -256,6 +264,43 @@ public class Book {
 		this.id = id;
 	}
 	public Book() {
+	}
+
+	public int getReviewCount() {
+		return reviewCount;
+	}
+
+	public void setReviewCount(int reviewCount) {
+		this.reviewCount = reviewCount;
+	}
+
+	public float getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(float averageRating) {
+		this.averageRating = averageRating;
+	}
+	
+	@Transient
+	public String getURI() {
+		return "/b/" + this.alias + "/";
+	}
+
+	public boolean isCustomerCanReview() {
+		return customerCanReview;
+	}
+
+	public void setCustomerCanReview(boolean customerCanReview) {
+		this.customerCanReview = customerCanReview;
+	}
+
+	public boolean isReviewedByCustomer() {
+		return reviewedByCustomer;
+	}
+
+	public void setReviewedByCustomer(boolean reviewedByCustomer) {
+		this.reviewedByCustomer = reviewedByCustomer;
 	}
 	
 }

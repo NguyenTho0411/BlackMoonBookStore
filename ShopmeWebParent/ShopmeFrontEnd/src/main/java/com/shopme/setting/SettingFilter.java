@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.shopme.common.Constants;
 import com.shopme.common.entity.Setting;
 
 import jakarta.servlet.Filter;
@@ -43,6 +44,7 @@ public class SettingFilter implements Filter {
 			request.setAttribute(setting.getKey(), setting.getValue());
 			System.out.println(setting.getKey() + " == > " + setting.getValue());
 		});
+		request.setAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
 		chain.doFilter(request, response);
 
 	}

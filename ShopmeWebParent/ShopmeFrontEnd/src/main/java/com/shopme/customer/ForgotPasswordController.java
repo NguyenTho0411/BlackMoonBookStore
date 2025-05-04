@@ -2,6 +2,8 @@ package com.shopme.customer;
 
 import java.io.UnsupportedEncodingException;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.shopme.Utility;
 import com.shopme.common.entity.Customer;
-import com.shopme.common.entity.EmailSettingBag;
 import com.shopme.common.exception.CustomerNotFoundException;
+import com.shopme.setting.EmailSettingBag;
 import com.shopme.setting.SettingService;
 
 import jakarta.mail.MessagingException;
