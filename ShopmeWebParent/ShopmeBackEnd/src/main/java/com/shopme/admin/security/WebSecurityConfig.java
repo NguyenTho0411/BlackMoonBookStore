@@ -39,14 +39,6 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/users/**").hasAuthority("Admin")
                 .requestMatchers("/settings/**").hasAuthority("Admin")
-                .requestMatchers("/publishers/**").hasAnyAuthority("Admin", "Editor")
-                .requestMatchers("/books/**").hasAnyAuthority("Admin", "Editor", "Shipper", "Salesperson")
-                .requestMatchers("/customers/**").hasAnyAuthority("Admin", "Salesperson")
-                .requestMatchers("/shipping/**").hasAnyAuthority("Admin", "Salesperson")
-                .requestMatchers("/orders/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
-                .requestMatchers("/reports/**").hasAnyAuthority("Admin", "Salesperson")
-                .requestMatchers("/articles/**").hasAnyAuthority("Admin", "Editor")
-                .requestMatchers("/menus/**").hasAnyAuthority("Admin", "Editor")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

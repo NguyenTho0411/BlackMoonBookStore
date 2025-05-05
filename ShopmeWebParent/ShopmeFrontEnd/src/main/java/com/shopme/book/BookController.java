@@ -15,11 +15,14 @@ import com.shopme.category.CategoryService;
 import com.shopme.common.entity.Book;
 import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Customer;
+import com.shopme.common.entity.Question;
 import com.shopme.common.entity.Review;
 import com.shopme.common.exception.BookNotFoundException;
 import com.shopme.common.exception.CategoryNotFoundException;
 import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.customer.CustomerService;
+import com.shopme.question.QuestionService;
+import com.shopme.question.vote.QuestionVoteService;
 import com.shopme.review.ReviewService;
 import com.shopme.review.vote.ReviewVoteService;
 
@@ -33,7 +36,9 @@ public class BookController {
 	private BookService bookService;
 	@Autowired private ReviewService reviewService;	
 	@Autowired private CustomerService customerService;	
+	@Autowired private QuestionVoteService questionVoteService;
 	@Autowired private ReviewVoteService voteService;	
+	@Autowired private QuestionService questionService;
 	@GetMapping("/c/{category_alias}")
 	public String viewCategoryFirstPage(@PathVariable("category_alias") String alias,Model model) throws CategoryNotFoundException {
 		return viewCategoryByPage(alias,1,model);
@@ -82,12 +87,12 @@ public class BookController {
 			Book book = bookService.getBook(alias);
 			List<Category> listCategoryParents = categoryService.getCategoryParents(book.getCategory());
 			Page<Review> listReviews = reviewService.list3MostVotedReviewsByBook(book);
-			
+			List<Question> listQuestions = questionService.getTop3VotedQuestions(book.getId());
 			Customer customer = getAuthenticatedCustomer(request);
 			if (customer != null) {
 				boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, book.getId());
 				voteService.markReviewsVotedForProductByCustomer(listReviews.getContent(), book.getId(), customer.getId());
-				
+				questionVoteService.markQuestionsVotedForProductByCustomer(listQuestions, book.getId(), customer.getId());
 				if (customerReviewed) {
 					model.addAttribute("customerReviewed", customerReviewed);
 				} else {
@@ -95,7 +100,12 @@ public class BookController {
 					model.addAttribute("customerCanReview", customerCanReview);
 				}
 			}
+			int numberOfQuestions = questionService.getNumberOfQuestions(book.getId());
+			int numberOfAnsweredQuestions = questionService.getNumberOfAnsweredQuestions(book.getId());
 			
+			model.addAttribute("listQuestions", listQuestions);			
+			model.addAttribute("numberOfQuestions", numberOfQuestions);
+			model.addAttribute("numberOfAnsweredQuestions", numberOfAnsweredQuestions);
 			model.addAttribute("listCategoryParents", listCategoryParents);
 			model.addAttribute("book", book);
 			model.addAttribute("listReviews", listReviews);

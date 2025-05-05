@@ -542,7 +542,215 @@ body {
     background-color: #e1d4f0;
     transform: scale(1.1);
 }
+/* Enhanced Q&A Section Styling */
+.question-answer-section {
+    padding: 35px;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 35px;
+    border: 1px solid rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+}
 
+.question-answer-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-accent);
+}
+
+.question-box {
+    background: rgba(106, 17, 203, 0.03);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    margin-bottom: 25px;
+    transition: var(--transition);
+    border-left: 4px solid var(--secondary);
+}
+
+.question-box:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.question-content {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.answer-box {
+    background: rgba(255, 107, 107, 0.03);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    margin-left: 30px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--accent);
+    transition: var(--transition);
+}
+
+.answer-box:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+}
+
+.question-time, .answer-time {
+    color: var(--light-text);
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.question-time i, .answer-time i {
+    margin-right: 5px;
+}
+
+.staff-badge {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.vote-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.vote-button {
+    background: transparent;
+    color: var(--light-text);
+    border: none;
+    padding: 5px 10px;
+    margin: 0 3px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+}
+
+.vote-button:hover {
+    background: rgba(106, 17, 203, 0.08);
+    color: var(--primary);
+}
+
+.vote-button i {
+    margin-right: 5px;
+}
+
+.up-voted {
+    color: #28a745;
+}
+
+.down-voted {
+    color: #dc3545;
+}
+
+.vote-count {
+    font-weight: 600;
+    margin: 0 8px;
+    color: var(--primary);
+}
+
+.ask-question-btn {
+    background: var(--gradient-accent);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    display: inline-flex;
+    align-items: center;
+}
+
+.ask-question-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+    color: white;
+}
+
+.ask-question-btn i {
+    margin-right: 8px;
+}
+
+.question-form-container {
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: 25px;
+    margin-top: 25px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.form-title {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(106, 17, 203, 0.1);
+}
+
+.form-control {
+    border-radius: var(--radius-sm);
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+    border-color: var(--primary);
+}
+
+.submit-question-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+}
+
+.submit-question-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(106, 17, 203, 0.4);
+}
+
+.cancel-btn {
+    background: #f1f1f1;
+    color: var(--text);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: var(--transition);
+    margin-right: 10px;
+}
+
+.cancel-btn:hover {
+    background: #e5e5e5;
+    transform: translateY(-3px);
+}
 .quantity-control input {
     width: 60px;
     text-align: center;
@@ -653,6 +861,9 @@ body {
                                 <a class="ratings-count" th:href="@{${book.URI} + '#review'}">
                                     [[${book.reviewCount}]] rating(s)
                                 </a>
+                            </div>
+                                       <div class="ms-3">
+<a th:href="@{${book.URI} + '#qa'}">[[${numberOfAnsweredQuestions}]] answered questions</a>
                             </div>
                         </div>
                         
@@ -768,7 +979,7 @@ body {
                 </div>
             </div>
         </div>
-        
+        <div th:replace="question_answer :: content"></div>
         <!-- Preserving your review and carousel sections -->
         <div th:replace="book_top_reviews :: content"></div>
         <div th:replace="images_carousel :: content"></div>
@@ -856,6 +1067,12 @@ body {
                 imageIndex = parseInt(bigImage.attr("index"));
                 $("#carouselExampleIndicators").carousel(imageIndex);
             });
+            $(".linkVoteQuestion").on("click", function (e) {
+                e.preventDefault();
+        		doVote($(this), "question");
+            });
+
+
         });
     </script>
     <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
@@ -864,5 +1081,7 @@ body {
     <script type="text/javascript" th:src="@{/js/quantity_control.js}"></script>
     <script type="text/javascript" th:src="@{/js/add_to_cart.js}"></script>
     <script type="text/javascript" th:src="@{/js/review_vote.js}"></script>
+    <script type="text/javascript" th:src="@{/js/question_post.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common_vote.js}"></script>
 </body>
 </html>

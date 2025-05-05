@@ -152,4 +152,9 @@ public class User {
 		
 		return false;
 	}
+	@Transient
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
+	
 }

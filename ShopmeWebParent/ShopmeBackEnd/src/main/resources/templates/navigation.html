@@ -29,7 +29,7 @@
                         </a>
                     </li>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/categories}">
                                 <i class="fas fa-folder me-1"></i> Categories
@@ -37,7 +37,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/publishers}">
                                 <i class="fas fa-tags me-1"></i> Publishers
@@ -45,7 +45,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor','Salesperson','Shipper')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant','Salesperson','Shipper')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/books}">
                                 <i class="fas fa-book me-1"></i> Books
@@ -53,7 +53,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/customers}">
                                 <i class="fas fa-user-friends me-1"></i> Customers
@@ -61,7 +61,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/shipping_rates}">
                                 <i class="fas fa-shipping-fast me-1"></i> Shipping
@@ -69,7 +69,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson','Shipper')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/orders}">
                                 <i class="fas fa-shopping-bag me-1"></i> Orders
@@ -77,13 +77,18 @@
                         </li>
                     </th:block>
                                         <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
+                                                  <li class="nav-item">
+                            <a class="nav-link fw-medium" th:href="@{/questions}">
+                                <i class="fas fa-shopping-bag me-1"></i> Questions
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/reviews}">
                                 <i class="fas fa-shopping-bag me-1"></i> Reviews
                             </a>
                         </li>
                     </th:block>
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/reports}">
                                 <i class="fas fa-chart-bar me-1"></i> Sale Reports
@@ -91,7 +96,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/articles}">
                                 <i class="fas fa-newspaper me-1"></i> Articles
@@ -99,7 +104,7 @@
                         </li>
                     </th:block>
                     
-                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
                         <li class="nav-item">
                             <a class="nav-link fw-medium" th:href="@{/menus}">
                                 <i class="fas fa-bars me-1"></i> Menus

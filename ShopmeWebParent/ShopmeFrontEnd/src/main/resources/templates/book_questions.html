@@ -1,0 +1,118 @@
+<!-- questions.html (Full Page) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head(${pageTitle}, 'none')" />
+<body>
+<div class="container-fluid">
+  <div th:replace="navigation :: header_menu"></div>
+  <div th:replace="navigation :: search_nav"></div>
+  <div th:replace="breadcrumb :: content"></div>
+
+  <!-- Book Information Section -->
+  <div class="book-header card mb-4 border-0 shadow-sm">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <img th:src="@{${book.mainImagePath}}" class="book-cover img-fluid" style="max-width: 180px;">
+        </div>
+        <div class="col">
+          <h2 class="book-title mb-3">[[${book.name}]]</h2>
+          <div class="sort-options">
+            <span class="me-2 text-secondary">Sort by:</span>
+            <a th:href="@{'/questions/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=votes&sortDir=desc'}" 
+               class="btn btn-sm me-2" 
+               th:classappend="${sortField == 'votes' ? 'btn-primary' : 'btn-outline-primary'}">
+              <i class="fas fa-sort-amount-down me-1"></i> Most Voted
+            </a>
+            <a th:href="@{'/questions/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=askTime&sortDir=desc'}" 
+               class="btn btn-sm" 
+               th:classappend="${sortField == 'askTime' ? 'btn-primary' : 'btn-outline-primary'}">
+              <i class="fas fa-clock me-1"></i> Most Recent
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions List -->
+  <div th:replace="question/questions_votes :: content"></div>
+
+  <!-- Pagination -->
+  <div th:replace="fragments2 :: pagination('/questions/' + ${book.alias}, 'questions')"></div>
+
+  <!-- Modal Dialog -->
+  <div th:replace="fragments2 :: modal_dialog"></div>
+
+  <!-- Footer -->
+  <div th:replace="navigation :: footer_menu"></div>
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript">
+  contextPath = "[[@{/}]]";
+  var csrfHeaderName = "[[${_csrf.headerName}]]";
+  var csrfValue = "[[${_csrf.token}]]";
+
+  $(document).ready(function() {
+    $(".linkVoteQuestion").on("click", function(e) {
+      e.preventDefault();
+      doVote($(this), "question");
+    });
+  });
+</script>
+<script th:src="@{/js/common_modal.js}"></script>
+<script th:src="@{/js/common_vote.js}"></script>
+
+<!-- Additional CSS for enhanced styling -->
+<style>
+  .question-card {
+    transition: all 0.2s ease;
+    border-left: 4px solid #dee2e6;
+  }
+  
+  .question-card:hover {
+    border-left-color: #0d6efd;
+    transform: translateX(3px);
+  }
+  
+  .vote-btn {
+    color: #6c757d;
+    transition: all 0.2s;
+    padding: 5px;
+    border-radius: 50%;
+  }
+  
+  .vote-btn:hover {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+  
+  .vote-btn.voted {
+    color: #0d6efd;
+  }
+  
+  .answer-section {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-left: 3px solid #198754;
+  }
+  
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.05), rgba(0,0,0,0));
+  }
+  
+  .book-cover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 4px;
+  }
+  
+  .sort-options .btn {
+    font-size: 0.85rem;
+  }
+</style>
+</body>
+</html>
