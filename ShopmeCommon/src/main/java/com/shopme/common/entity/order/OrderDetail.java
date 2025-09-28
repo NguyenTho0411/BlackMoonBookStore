@@ -1,8 +1,7 @@
 package com.shopme.common.entity.order;
 
 import com.shopme.common.entity.Book;
-import com.shopme.common.entity.Category;
-
+import com.shopme.common.entity.CategoryFactory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -61,7 +60,7 @@ public class OrderDetail {
 
 	public OrderDetail(String categoryName, int quantity, float bookCost, float shippingCost, float subtotal) {
 		this.book = new Book();
-		this.book.setCategory(new Category(categoryName));
+		this.book.setCategory(CategoryFactory.createDefaultCategory(categoryName));
 		this.quantity = quantity;
 		this.bookCost = bookCost * quantity;
 		this.shippingCost = shippingCost;

@@ -19,7 +19,11 @@ public class MVCConfig implements WebMvcConfigurer {
         String dirName = "user-photos";
         Path userPhotosDir = Paths.get(dirName);
         String userPhotosPath = userPhotosDir.toFile().getAbsolutePath();
-
+        exposeDirectory("user-photos", registry);
+        exposeDirectory("../category-images", registry);
+        exposeDirectory("../publisher-logos", registry);
+        exposeDirectory("../book-images", registry);
+        exposeDirectory("../site-logo", registry);
         registry.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/" + userPhotosPath + "/");
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("classpath:/static/images/");
@@ -61,6 +65,13 @@ public class MVCConfig implements WebMvcConfigurer {
 
     }
     
+    private void exposeDirectory(String pathPattern, ResourceHandlerRegistry registry) {
+        Path dirPath = Paths.get(pathPattern).normalize().toAbsolutePath();
+        String logicalPath = pathPattern.replace("../", "") + "/**";
+
+        registry.addResourceHandler("/" + logicalPath)
+                .addResourceLocations("file:/" + dirPath + "/");
+    }
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

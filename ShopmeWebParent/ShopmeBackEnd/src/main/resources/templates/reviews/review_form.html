@@ -1,93 +1,198 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments2 :: page_head(${pageTitle}, 'none')" />
+<head th:replace="fragments2 :: page_head(${pageTitle}, 'none')"></head>
 
 <body>
-	<div class="container-fluid">
-		<div th:replace="navigation :: menu"></div>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu"></div>
+        
+        <!-- Main Content Container with improved spacing and styling -->
+        <div class="container py-4">
+            <!-- Page Header with Blackmoon Style -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0" style="color: #512DA8; font-weight: 600;">
+                    <i class="fas fa-star me-2"></i>Manage Reviews | [[${pageTitle}]]
+                </h2>
+            </div>
 
-		<div>
-			<h2>Manage Reviews | [[${pageTitle}]]</h2>
-		</div>
-
-		<form th:action="@{/reviews/save}" th:object="${review}" method="post"
-			style="max-width: 800px; margin: 0 auto;">
-			<input type="hidden" th:field="*{id}" />
-			<div class="border border-secondary rounded p-3">
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Book:</label>
-					<div class="col-sm-10">
-						<input type="text" readonly class="form-control"
-							th:value="${review.book.name}" />
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Customer:</label>
-					<div class="col-sm-10">
-						<input type="text" readonly class="form-control"
-							th:value="${review.customer.fullName}" />
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Rating:</label>
-					<div class="col-sm-10">
-						<input type="text" readonly class="form-control"
-							th:value="${review.rating}" />
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Votes:</label>
-					<div class="col-sm-10">
-						<input type="text" readonly class="form-control"
-							th:value="${review.votes}" />
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Review Time:</label>
-					<div class="col-sm-10">
-						<span
-							th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Headline:</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" th:field="*{headline}"
-							minlength="20" maxlength="128" required />
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Comment:</label>
-					<div class="col-sm-10">
-						<textarea rows="3" class="form-control" th:field="*{comment}"
-							minlength="30" maxlength="300" required></textarea>
-					</div>
-				</div>
-
-				<div class="text-center">
-					<input type="submit" value="Save" class="btn btn-primary m-3" /> <input
-						type="button" value="Cancel" class="btn btn-secondary"
-						id="buttonCancel" />
-				</div>
-			</div>
-		</form>
-
-		<div th:replace="modal_fragments :: modal_dialog"></div>
-
-		<div th:replace="fragments2 :: footer"></div>
-	</div>
-	<script type="text/javascript">
-		moduleURL = "[[@{/reviews}]]";	
-	</script>
-	<script th:src="@{/js/common_form.js}"></script>
+            <form th:action="@{/reviews/save}" th:object="${review}" method="post" 
+                  class="mb-5" style="max-width: 900px; margin: 0 auto;">
+                <input type="hidden" th:field="*{id}" />
+                
+                <div class="card" style="border-radius: 12px; border: none; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                    <div class="card-header py-3" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                        <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Review Details</h5>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <!-- Book Information -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">Book:</label>
+                            <div class="col-sm-9">
+                                <input type="text" readonly class="form-control" 
+                                       th:value="${review.book.name}" 
+                                       style="background-color: #f8f0ff; border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                        
+                        <!-- Customer Information -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">Customer:</label>
+                            <div class="col-sm-9">
+                                <input type="text" readonly class="form-control" 
+                                       th:value="${review.customer.fullName}" 
+                                       style="background-color: #f8f0ff; border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                        
+                        <!-- Rating Information -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">Rating:</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" readonly class="form-control" 
+                                           th:value="${review.rating}" 
+                                           style="background-color: #f8f0ff; border-color: #e0d0ff;" />
+                                    <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Votes Information -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">Votes:</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" readonly class="form-control" 
+                                           th:value="${review.votes}" 
+                                           style="background-color: #f8f0ff; border-color: #e0d0ff;" />
+                                    <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                        <i class="fas fa-thumbs-up" style="color: #512DA8;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Time Information -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">Review Time:</label>
+                            <div class="col-sm-9">
+                                <div class="form-control-plaintext" style="color: #666; padding: .375rem .75rem;">
+                                    <i class="far fa-clock me-2" style="color: #512DA8;"></i>
+                                    <span th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr style="border-color: #e0d0ff; opacity: 0.5;" class="my-4">
+                        
+                        <!-- Headline Field - Editable -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">
+                                Headline:
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" th:field="*{headline}" 
+                                       minlength="20" maxlength="128" required 
+                                       style="border-color: #e0d0ff;" 
+                                       placeholder="Enter review headline (20-128 characters)" />
+                                <small class="form-text text-muted">
+                                    Minimum 20 characters, maximum 128 characters
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <!-- Comment Field - Editable -->
+                        <div class="form-group row mb-3">
+                            <label class="col-sm-3 col-form-label" style="color: #512DA8; font-weight: 500;">
+                                Comment:
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <textarea rows="5" class="form-control" th:field="*{comment}" 
+                                          minlength="30" maxlength="300" required 
+                                          style="border-color: #e0d0ff;" 
+                                          placeholder="Enter detailed review comment (30-300 characters)"></textarea>
+                                <small class="form-text text-muted">
+                                    Minimum 30 characters, maximum 300 characters
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="card-footer d-flex justify-content-center py-3" style="background-color: #f8f0ff; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                        <button type="submit" class="btn btn-lg me-3" 
+                                style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; min-width: 120px; border-radius: 8px;">
+                            <i class="fas fa-save me-2"></i>Save
+                        </button>
+                        <button type="button" class="btn btn-lg btn-outline-secondary" id="buttonCancel" 
+                                style="min-width: 120px; border-radius: 8px;">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div th:replace="modal_fragments :: modal_dialog"></div>
+        <div th:replace="fragments2 :: footer"></div>
+    </div>
+    
+    <script type="text/javascript">
+        moduleURL = "[[@{/reviews}]]";
+    </script>
+    <script th:src="@{/js/common_form.js}"></script>
+    
+    <style>
+        body {
+            background-color: #f9f7ff;
+        }
+        
+        .form-control:focus {
+            border-color: #7D3C98;
+            box-shadow: 0 0 0 0.25rem rgba(108, 52, 131, 0.25);
+        }
+        
+        .btn-outline-secondary {
+            color: #512DA8;
+            border-color: #e0d0ff;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #f8f0ff;
+            color: #7D3C98;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .col-form-label {
+                text-align: left;
+            }
+            
+            .card-footer {
+                flex-direction: column;
+            }
+            
+            .card-footer .btn {
+                width: 100%;
+                margin-bottom: 10px;
+                margin-right: 0 !important;
+            }
+        }
+    </style>
 </body>
-
 </html>

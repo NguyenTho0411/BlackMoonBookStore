@@ -11,8 +11,8 @@ import com.shopme.common.entity.Customer;
 import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.common.exception.ShoppingCartException;
 import com.shopme.customer.CustomerService;
+import com.shopme.promotion.PromotionService;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -22,6 +22,9 @@ public class ShoppingCartRestController {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private PromotionService promotionService;
 	
 	@PostMapping("/cart/add/{bookId}/{quantity}")
 	public String addBookToCart(@PathVariable(name="bookId") Integer bookId, @PathVariable(name="quantity")Integer quantity, HttpServletRequest request) {

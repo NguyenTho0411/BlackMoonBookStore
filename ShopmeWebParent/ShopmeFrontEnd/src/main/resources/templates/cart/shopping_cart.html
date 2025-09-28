@@ -756,7 +756,7 @@
                   <!-- Price Calculation -->
                   <div class="price-calculation">
                     <span class="price-label">Price:</span>
-                    <div th:replace="book_fragment :: book_price"></div>
+<div th:replace="~{book_fragment :: book_price(book=${book})}"></div>
                   </div>
                   
                   <!-- Subtotal -->

@@ -1,4 +1,3 @@
-<!-- questions.html (Full Page) -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: page_head(${pageTitle}, 'none')" />
@@ -8,25 +7,27 @@
   <div th:replace="navigation :: search_nav"></div>
   <div th:replace="breadcrumb :: content"></div>
 
-  <!-- Book Information Section -->
-  <div class="book-header card mb-4 border-0 shadow-sm">
-    <div class="card-body">
+  <!-- Book Information Section - Enhanced with better layout -->
+  <div class="book-header card mb-4 border-0 shadow" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="card-body p-4">
       <div class="row align-items-center">
         <div class="col-auto">
-          <img th:src="@{${book.mainImagePath}}" class="book-cover img-fluid" style="max-width: 180px;">
+          <img th:src="@{${book.mainImagePath}}" class="book-cover img-fluid" style="max-width: 180px; box-shadow: 0 10px 20px rgba(0,0,0,0.12); border-radius: 8px;">
         </div>
         <div class="col">
-          <h2 class="book-title mb-3">[[${book.name}]]</h2>
+          <h2 class="book-title mb-3" style="color: #512DA8; font-weight: 700;">[[${book.name}]]</h2>
           <div class="sort-options">
-            <span class="me-2 text-secondary">Sort by:</span>
+            <span class="me-2 text-secondary fw-medium">Sort by:</span>
             <a th:href="@{'/questions/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=votes&sortDir=desc'}" 
                class="btn btn-sm me-2" 
-               th:classappend="${sortField == 'votes' ? 'btn-primary' : 'btn-outline-primary'}">
+               th:classappend="${sortField == 'votes' ? 'btn-primary' : 'btn-outline-primary'}"
+               style="border-radius: 20px; padding: 5px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
               <i class="fas fa-sort-amount-down me-1"></i> Most Voted
             </a>
             <a th:href="@{'/questions/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=askTime&sortDir=desc'}" 
                class="btn btn-sm" 
-               th:classappend="${sortField == 'askTime' ? 'btn-primary' : 'btn-outline-primary'}">
+               th:classappend="${sortField == 'askTime' ? 'btn-primary' : 'btn-outline-primary'}"
+               style="border-radius: 20px; padding: 5px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
               <i class="fas fa-clock me-1"></i> Most Recent
             </a>
           </div>
@@ -35,14 +36,101 @@
     </div>
   </div>
 
-  <!-- Questions List -->
-  <div th:replace="question/questions_votes :: content"></div>
+  <!-- Questions List - Completely redesigned with cards -->
+  <div class="questions-container">
+    <th:block th:each="question : ${listQuestions}">
+      <div class="card question-card mb-4 border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+        <!-- Question section -->
+        <div class="card-body">
+          <div class="row align-items-start">
+            <!-- Vote controls -->
+				<div class="col-xs ml-2">
+					<a class="linkVoteQuestion fa-thumbs-up"
+						th:classappend="${question.upvotedByCurrentCustomer ? 'fas' : 'far'}"
+						th:id="'linkVoteUp-question-' + ${question.id}"
+						th:questionId="${question.id}"
+					   	th:href="@{'/vote_question/' + ${question.id} + '/up'}"></a>
+				</div>
+				
+				<div class="col-xs ml-2">
+					<span th:id="'voteCount-question-' + ${question.id}">[[${question.votes}]] Votes</span>
+				</div>
+				
+				<div class="col-xs ml-2">
+					<a class="linkVoteQuestion fa-thumbs-down"
+						th:classappend="${question.downvotedByCurrentCustomer ? 'fas' : 'far'}"
+						th:id="'linkVoteDown-question-' + ${question.id}"
+						th:questionId="${question.id}"
+					   	th:href="@{'/vote_question/' + ${question.id} + '/down'}"></a>
+				</div>		
+            
+            <!-- Question content -->
+            <div class="col">
+              <div class="question-label mb-2">
+                <span class="badge rounded-pill bg-primary px-3 py-2" style="font-weight: 500; font-size: 0.85rem;">
+                  <i class="fas fa-question-circle me-1"></i> Question
+                </span>
+              </div>
+              
+              <div class="question-content mb-3" style="font-size: 1.1rem;">
+                [[${question.questionContent}]]
+              </div>
+              
+              <div class="question-meta d-flex align-items-center">
+                <i class="fas fa-user-circle me-2" style="color: #673AB7; font-size: 1.2rem;"></i>
+                <span style="color: #673AB7; font-weight: 500;">[[${question.asker.fullName}]]</span>
+                <span class="mx-2" style="color: #6c757d;">•</span>
+                <i class="far fa-clock me-1" style="color: #6c757d;"></i>
+                <span style="color: #6c757d; font-size: 0.9rem;">
+                  <div th:replace="fragments :: format_time(${question.askTime})"></div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Answer section, if answered -->
+        <th:block th:if="${question.answered == true}">
+          <div class="card-footer answer-section" style="background-color: #f8f5ff; border-top: 1px solid rgba(0,0,0,0.05);">
+            <div class="answer-label mb-2">
+              <span class="badge rounded-pill bg-success px-3 py-2" style="font-weight: 500; font-size: 0.85rem;">
+                <i class="fas fa-check-circle me-1"></i> Answer
+              </span>
+            </div>
+            
+            <div class="answer-content mb-3" style="font-size: 1.1rem;">
+              [[${question.answer}]]
+            </div>
+            
+            <div class="answer-meta d-flex align-items-center">
+              <i class="fas fa-user-circle me-2" style="color: #28a745; font-size: 1.2rem;"></i>
+              <span style="color: #28a745; font-weight: 500;">[[${question.answerer.fullName}]]</span>
+              <span class="mx-2" style="color: #6c757d;">•</span>
+              <i class="far fa-clock me-1" style="color: #6c757d;"></i>
+              <span style="color: #6c757d; font-size: 0.9rem;">
+                <div th:replace="fragments :: format_time(${question.answerTime})"></div>
+              </span>
+            </div>
+          </div>
+        </th:block>
+      </div>
+    </th:block>
+  </div>
+
+  <!-- Empty state if no questions -->
+  <div class="text-center py-5" th:if="${#lists.isEmpty(listQuestions)}">
+    <div class="mb-4">
+      <i class="far fa-comment-dots" style="font-size: 4rem; color: #dee2e6;"></i>
+    </div>
+    <h4 style="color: #6c757d; font-weight: 500;">No questions yet</h4>
+    <p class="text-muted">Be the first to ask a question about this book!</p>
+  </div>
 
   <!-- Pagination -->
-  <div th:replace="fragments2 :: pagination('/questions/' + ${book.alias}, 'questions')"></div>
+  <div th:replace="fragments :: pagination('/questions/' + ${book.alias}, 'questions')"></div>
 
   <!-- Modal Dialog -->
-  <div th:replace="fragments2 :: modal_dialog"></div>
+  <div th:replace="fragments :: modal_dialog"></div>
 
   <!-- Footer -->
   <div th:replace="navigation :: footer_menu"></div>
@@ -55,10 +143,21 @@
   var csrfValue = "[[${_csrf.token}]]";
 
   $(document).ready(function() {
+    // Vote functionality 
     $(".linkVoteQuestion").on("click", function(e) {
       e.preventDefault();
       doVote($(this), "question");
     });
+    
+    // Hover effects for vote buttons
+    $(".vote-btn").hover(
+      function() {
+        $(this).addClass("pulse-animation");
+      },
+      function() {
+        $(this).removeClass("pulse-animation");
+      }
+    );
   });
 </script>
 <script th:src="@{/js/common_modal.js}"></script>
@@ -66,52 +165,92 @@
 
 <!-- Additional CSS for enhanced styling -->
 <style>
+  /* General styles */
+  body {
+    background-color: #f9f5ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Question card styling */
   .question-card {
-    transition: all 0.2s ease;
-    border-left: 4px solid #dee2e6;
+    transition: all 0.3s ease;
+    border-left: 5px solid #673AB7;
+    background-color: #fff;
   }
   
   .question-card:hover {
-    border-left-color: #0d6efd;
-    transform: translateX(3px);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
   }
   
+  /* Vote buttons styling */
   .vote-btn {
     color: #6c757d;
-    transition: all 0.2s;
-    padding: 5px;
+    transition: all 0.3s ease;
+    padding: 8px;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .vote-btn:hover {
-    color: #0d6efd;
-    background-color: rgba(13, 110, 253, 0.1);
+    color: #512DA8;
+    background-color: rgba(81, 45, 168, 0.1);
+    transform: scale(1.2);
   }
   
   .vote-btn.voted {
-    color: #0d6efd;
+    color: #512DA8;
   }
   
-  .answer-section {
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    margin-top: 1rem;
-    border-left: 3px solid #198754;
+  /* Pulse animation for vote buttons */
+  .pulse-animation {
+    animation: pulse 1s infinite;
   }
   
-  .section-divider {
-    height: 1px;
-    background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.05), rgba(0,0,0,0));
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
   
+  /* Book cover enhancements */
   .book-cover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-radius: 4px;
+    transition: all 0.3s ease;
   }
   
-  .sort-options .btn {
-    font-size: 0.85rem;
+  .book-cover:hover {
+    transform: scale(1.05) rotate(2deg);
+  }
+  
+  /* Sort buttons hover effect */
+  .sort-options .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  }
+  
+  /* Empty state styling */
+  .empty-state {
+    padding: 50px 0;
+    text-align: center;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .col-auto.d-flex.flex-column {
+      margin-bottom: 15px;
+    }
+    
+    .question-meta, .answer-meta {
+      flex-wrap: wrap;
+    }
   }
 </style>
 </body>

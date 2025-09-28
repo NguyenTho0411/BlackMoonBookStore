@@ -1,6 +1,7 @@
 package com.shopme.admin.setting;
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,11 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.currency.CurrencyRepository;
-import com.shopme.common.Constants;
 import com.shopme.common.entity.Currency;
 import com.shopme.common.entity.Setting;
 
@@ -40,12 +38,13 @@ public class SettingController {
 		for(Setting setting : listSettings) {
 			model.addAttribute(setting.getKey(), setting.getValue());
 		}
-		model.addAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
+
 		return "setting/setting";
 	}
 	@PostMapping("/settings/save_general")
 	public String saveGeneralSettings(@RequestParam("fileImage") MultipartFile multipartFile,
 			HttpServletRequest request, RedirectAttributes ra) throws IOException {
+		
 		GeneralSettingBag settingBag = service.getGeneralSettings();
 		
 		saveSiteLogo(multipartFile, settingBag);
@@ -64,8 +63,8 @@ public class SettingController {
 			settingBag.updateSiteLogo(value);
 			
 			String uploadDir = "../site-logo";
-			AmazonS3Util.removeFolder(uploadDir);
-			AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+			FileUploadUtil.removeDir(uploadDir);
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}
 	}
 	

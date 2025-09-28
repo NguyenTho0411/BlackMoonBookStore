@@ -7,17 +7,37 @@ import com.shopme.common.entity.SettingBag;
 
 public class GeneralSettingBag extends SettingBag {
 
-	public GeneralSettingBag(List<Setting> listSettings) {
+	private static volatile GeneralSettingBag instance;
+
+	private GeneralSettingBag(List<Setting> listSettings) {
 		super(listSettings);
-		// TODO Auto-generated constructor stub
 	}
-	
+
+	public static GeneralSettingBag getInstance(List<Setting> listSettings) {
+		GeneralSettingBag result = instance;
+		if (result == null) {
+			synchronized (GeneralSettingBag.class) {
+				result = instance;
+				if (result == null) {
+					instance = result = new GeneralSettingBag(listSettings);
+				}
+			}
+		}
+		return result;
+	}
+
+	public static GeneralSettingBag getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException("GeneralSettingBag chưa được khởi tạo.");
+		}
+		return instance;
+	}
+
 	public void updateCurrencySymbol(String value) {
 		super.update("CURRENCY_SYMBOL", value);
 	}
-	
-	public  void updateSiteLogo(String value) {
-		super.update("SITE_LOGO",value);
-	}
 
+	public void updateSiteLogo(String value) {
+		super.update("SITE_LOGO", value);
+	}
 }

@@ -1,3 +1,4 @@
+
 package com.shopme.question;
 
 import java.util.List;
@@ -16,19 +17,20 @@ import com.shopme.common.entity.Book;
 import com.shopme.common.entity.Customer;
 import com.shopme.common.entity.Question;
 import com.shopme.common.exception.BookNotFoundException;
-
+import com.shopme.common.exception.ProductNotFoundException;
 import com.shopme.customer.CustomerService;
 import com.shopme.question.vote.QuestionVoteService;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 public class QuestionController {
 
+	
 	@Autowired private QuestionService questionService;
-	@Autowired private CustomerService customerService;
-
 	
 	@Autowired private BookService bookService;
+	@Autowired private CustomerService customerService;
 	
 	@Autowired private QuestionVoteService voteService;	
 	
@@ -36,10 +38,13 @@ public class QuestionController {
 	public String askQuestion(@PathVariable(name = "bookAlias") String bookAlias) {
 		return "redirect:/b/" + bookAlias + "#qa";
 	}
-	
+	public Customer getAuthenticatedCustomer(HttpServletRequest request) {
+		String email = Utility.getEmailOfAuthenticatedCustomer(request);				
+		return customerService.getCustomerByEmail(email);
+	}
 	@GetMapping("/questions/{bookAlias}") 
 	public String listQuestionsOfProduct(@PathVariable(name = "bookAlias") String bookAlias,
-			Model model, HttpServletRequest request) throws BookNotFoundException{
+			Model model, HttpServletRequest request) throws BookNotFoundException {
 		return listQuestionsOfProductByPage(model, request, bookAlias, 1, "votes", "desc");
 	}
 	
@@ -79,9 +84,9 @@ public class QuestionController {
 		model.addAttribute("endCount", endCount);
 		
 		if (page.getTotalPages() > 1) {
-			model.addAttribute("pageTitle", "Page " + pageNum + " | Questions for book: " + book.getName());
+			model.addAttribute("pageTitle", "Page " + pageNum + " | Questions for product: " + book.getName());
 		} else {
-			model.addAttribute("pageTitle", "Questions for book: " + book.getName());
+			model.addAttribute("pageTitle", "Questions for product: " + book.getName());
 		}		
 		
 		return "book_questions";
@@ -139,8 +144,4 @@ public class QuestionController {
 			return "redirect:/customer/questions";			
 		}
 	}	
-	public Customer getAuthenticatedCustomer(HttpServletRequest request) {
-		String email = Utility.getEmailOfAuthenticatedCustomer(request);				
-		return customerService.getCustomerByEmail(email);
-	}
 }

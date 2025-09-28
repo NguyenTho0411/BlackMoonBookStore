@@ -3,82 +3,208 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-number/2.1.6/jquery.number.min.js"></script>
 
 <body>
-	<div th:fragment="content" th:remove="tag">
-		<div id="bookList">
-
-			<th:block th:each="detail, status : ${order.orderDetails}">
-				<div class="border rounded p-1"
-					th:with="book = ${detail.book}"
-					th:id="'row' + ${status.count}">
-					<input type="hidden" name="detailId" th:value="${detail.id}" /> <input
-						type="hidden" name="bookId" th:value="${book.id}"
-						class="hiddenBookId" />
-
-					<div class="row">
-						<div class="col-1">
-							<div class="divCount">[[${status.count}]]</div>
-							<div>
-								<a class="fas fa-trash icon-dark linkRemove"    href="javascript:void(0)" 
-									th:rowNumber="${status.count}"></a>
-							</div>
-						</div>
-						<div class="col-3">
-							<img th:src="@{${book.mainImagePath}}" class="img-fluid" />
-						</div>
-					</div>
-
-					<div class="row m-2">
-						<b>[[${book.name}]]</b>
-					</div>
-
-					<div class="row m-2">
-						<table>
-							<tr>
-								<td>Product Cost:</td>
-								<td><input type="text" required
-									class="form-control m-1 cost-input" name="bookDetailCost"
-									th:rowNumber="${status.count}" th:value="${detail.bookCost}"
-									style="max-width: 140px" /></td>
-							</tr>
-							<tr>
-								<td>Quantity:</td>
-								<td><input type="number" step="1" min="1" max="5"
-									class="form-control m-1 quantity-input" name="quantity"
-									th:id="'quantity' + ${status.count}"
-									th:rowNumber="${status.count}" th:value="${detail.quantity}"
-									style="max-width: 140px" /></td>
-							</tr>
-							<tr>
-								<td>Unit Price:</td>
-								<td><input type="text" required
-									class="form-control m-1 price-input" name="bookPrice"
-									th:id="'price' + ${status.count}"
-									th:rowNumber="${status.count}" th:value="${detail.unitPrice}"
-									style="max-width: 140px" /></td>
-							</tr>
-							<tr>
-								<td>Subtotal:</td>
-								<td><input type="text" readonly="readonly"
-									class="form-control m-1 subtotal-output" name="bookSubtotal"
-									th:id="'subtotal' + ${status.count}"
-									th:value="${detail.subtotal}" style="max-width: 140px" /></td>
-							</tr>
-							<tr>
-								<td>Shipping Cost:</td>
-								<td><input type="text" required
-									class="form-control m-1 ship-input" name="bookShipCost"
-									th:value="${detail.shippingCost}" style="max-width: 140px" />
-								</td>
-							</tr>
-						</table>
-					</div>
-
-				</div>
-				<div th:id="'blankLine' + ${status.count}" class="row">&nbsp;</div>
-			</th:block>
-
-		</div>
-
-		<a th:href="@{/orders/search_product}" id="linkAddBook"
-			class="btn btn-success">Add a Product</a>
-	</div>
+<div th:fragment="content" th:remove="tag">
+    <div class="card mb-4" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+        <div class="card-header py-3" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+            <h5 class="mb-0">
+                <i class="fas fa-book me-2"></i>Order Items
+            </h5>
+        </div>
+        <div class="card-body">
+            <div id="bookList">
+                <th:block th:each="detail, status : ${order.orderDetails}">
+                    <div class="card mb-3 border-0 shadow-sm" 
+                         style="border-radius: 12px; overflow: hidden;"
+                         th:with="book = ${detail.book}"
+                         th:id="'row' + ${status.count}">
+                        
+                        <input type="hidden" name="detailId" th:value="${detail.id}" />
+                        <input type="hidden" name="bookId" th:value="${book.id}" class="hiddenBookId" />
+                        
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <!-- Item Number and Remove Button -->
+                                <div class="col-md-1 text-center mb-3 mb-md-0">
+                                    <div class="badge rounded-pill mb-2" 
+                                         style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); 
+                                                color: white; font-size: 1rem; padding: 8px 12px;">
+                                        [[${status.count}]]
+                                    </div>
+                                    <div>
+                                        <a class="btn btn-sm link-delete" href="javascript:void(0)"
+                                           th:rowNumber="${status.count}"
+                                           style="background-color: #f8d7da; color: #dc3545; border: none; transition: all 0.3s ease;">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Book Image -->
+                                <div class="col-md-2 text-center mb-3 mb-md-0">
+                                    <div class="img-thumbnail p-2" 
+                                         style="border-color: #e0d0ff; border-radius: 8px; background-color: #f8f0ff;">
+                                        <img th:src="@{${book.mainImagePath}}" class="img-fluid" 
+                                             style="max-height: 120px; object-fit: contain;" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Book Details -->
+                                <div class="col-md-9">
+                                    <h5 class="book-title mb-3" style="color: #512DA8; font-weight: 600;">
+                                        [[${book.name}]]
+                                    </h5>
+                                    
+                                    <div class="row">
+                                        <!-- Product Cost -->
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="form-group">
+                                                <label class="form-label fw-medium text-muted">Product Cost:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"
+                                                          style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                                        <i class="fas fa-tag"></i>
+                                                    </span>
+                                                    <input type="text" required
+                                                           class="form-control cost-input"
+                                                           name="bookDetailCost"
+                                                           th:rowNumber="${status.count}"
+                                                           th:value="${detail.bookCost}"
+                                                           style="border-color: #e0d0ff;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Quantity -->
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="form-group">
+                                                <label class="form-label fw-medium text-muted">Quantity:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"
+                                                          style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                                        <i class="fas fa-cubes"></i>
+                                                    </span>
+                                                    <input type="number" step="1" min="1" max="5"
+                                                           class="form-control quantity-input"
+                                                           name="quantity"
+                                                           th:id="'quantity' + ${status.count}"
+                                                           th:rowNumber="${status.count}"
+                                                           th:value="${detail.quantity}"
+                                                           style="border-color: #e0d0ff;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Unit Price -->
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="form-group">
+                                                <label class="form-label fw-medium text-muted">Unit Price:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"
+                                                          style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                                        <i class="fas fa-dollar-sign"></i>
+                                                    </span>
+                                                    <input type="text" required
+                                                           class="form-control price-input"
+                                                           name="bookPrice"
+                                                           th:id="'price' + ${status.count}"
+                                                           th:rowNumber="${status.count}"
+                                                           th:value="${detail.unitPrice}"
+                                                           style="border-color: #e0d0ff;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Subtotal -->
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="form-group">
+                                                <label class="form-label fw-medium text-muted">Subtotal:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"
+                                                          style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                                        <i class="fas fa-calculator"></i>
+                                                    </span>
+                                                    <input type="text" readonly="readonly"
+                                                           class="form-control subtotal-output"
+                                                           name="bookSubtotal"
+                                                           th:id="'subtotal' + ${status.count}"
+                                                           th:value="${detail.subtotal}"
+                                                           style="border-color: #e0d0ff; background-color: #f8f0ff;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Shipping Cost -->
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="form-group">
+                                                <label class="form-label fw-medium text-muted">Shipping Cost:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"
+                                                          style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                                        <i class="fas fa-shipping-fast"></i>
+                                                    </span>
+                                                    <input type="text" required
+                                                           class="form-control ship-input"
+                                                           name="bookShipCost"
+                                                           th:value="${detail.shippingCost}"
+                                                           style="border-color: #e0d0ff;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a th:href="@{/orders/search_product}" id="linkAddBook"
+                   class="btn btn-success"
+                   style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); 
+                          border: none; padding: 10px 24px; border-radius: 8px;
+                          box-shadow: 0 4px 10px rgba(81, 45, 168, 0.3);
+                          transition: all 0.3s ease;">
+                    <i class="fas fa-plus me-2"></i> Add a Product
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            // Add hover effects for buttons
+            $('.btn').hover(
+                function() {
+                    $(this).css('transform', 'translateY(-3px)');
+                    $(this).css('box-shadow', '0 6px 12px rgba(0,0,0,0.15)');
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0)');
+                    $(this).css('box-shadow', '0 4px 10px rgba(81, 45, 168, 0.3)');
+                }
+            );
+            
+            // Add hover effects for cards
+            $('.card').hover(
+                function() {
+                    $(this).css('transform', 'translateY(-5px)');
+                    $(this).css('box-shadow', '0 8px 15px rgba(0,0,0,0.1)');
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0)');
+                    $(this).css('box-shadow', '0 2px 10px rgba(0,0,0,0.1)');
+                }
+            );
+            
+            // Update delete link class to match design
+            $('.linkRemove').addClass('btn btn-sm')
+                           .css('background-color', '#f8d7da')
+                           .css('color', '#dc3545')
+                           .css('border', 'none')
+                           .css('transition', 'all 0.3s ease');
+        });
+    </script>
+</div>
+</body>
+</html>

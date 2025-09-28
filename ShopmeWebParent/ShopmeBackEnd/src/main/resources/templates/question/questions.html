@@ -79,10 +79,8 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <a class="btn btn-sm me-1" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
-                                           th:href="@{'/questions/detail/' + ${question.id}}" title="View details of this question">
-                                            <i class="fas fa-file-alt"></i>
-                                        </a>
+                 
+                                         <a class="fas fa-file-alt fa-2x icon-green link-detail" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;" th:href="@{'/questions/detail/' + ${question.id}}" title="View details of this question"></a>
                                         <a class="btn btn-sm me-1" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
                                            th:href="@{'/questions/edit/' + ${question.id}}" title="Edit this question">
                                             <i class="fas fa-edit"></i>
@@ -142,10 +140,8 @@
                             </small>
                         </p>
                         <div class="d-flex mt-3">
-                            <a class="btn btn-sm me-2" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
-                               th:href="@{'/questions/detail/' + ${question.id}}" title="View details of this question">
-                                <i class="fas fa-file-alt me-1"></i> Details
-                            </a>
+
+                            <a class="fas fa-file-alt fa-2x icon-green link-detail" th:href="@{'/questions/detail/' + ${question.id}}" title="View details of this question"></a>
                             <a th:if="${question.approved == true}" class="btn btn-sm me-2" 
                                style="background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;"
                                th:href="@{'/questions/' + ${question.id} + '/disapprove'}" title="Disapprove this question">

@@ -1,13 +1,15 @@
 package com.shopme.common.entity;
 
 import java.util.ArrayList;
+
+
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.shopme.common.Constants;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,6 +22,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import com.shopme.common.entity.Promotion;
 
 @Entity
 @Table(name = "books")
@@ -51,8 +54,7 @@ public class Book {
 	private float cost;
 	
 	private float price;
-	@Column(name="discount_percent")
-	private float discountPercent;
+
 	
 	@Column(name ="main_image", nullable= false)
 	private String mainImage;
@@ -166,12 +168,7 @@ public class Book {
 	public void setPrice(float price) {
 		this.price = price;
 	}
-	public float getDiscountPercent() {
-		return discountPercent;
-	}
-	public void setDiscountPercent(float discountPercent) {
-		this.discountPercent = discountPercent;
-	}
+
 	public float getLength() {
 		return length;
 	}
@@ -218,7 +215,7 @@ public class Book {
 	public String getMainImagePath() {
 		if (id == null || mainImage == null) return "/images/image-thumbnail.png";
 		
-		return Constants.S3_BASE_URI +"/book-images/" + this.id + "/" + this.mainImage;
+		return "/book-images/" + this.id + "/" + this.mainImage;
 	}
 	public List<BookDetail> getDetails() {
 		return details;
@@ -245,13 +242,40 @@ public class Book {
 		return false;
 	}
 	@Transient
-	public float getDiscountPrice() {
-		if(discountPercent >0) {
-			return price * ((100 - discountPercent)/100);
-		}
-		return this.price;
+	private List<Promotion> activePromotions = new java.util.ArrayList<>();
+
+	public List<Promotion> getActivePromotions() {
+	    return activePromotions;
 	}
+
+	public void setActivePromotions(List<Promotion> promotions) {
+	    this.activePromotions = promotions;
+
+}
+
+    public float getDiscountPrice() {
+        if (category != null && activePromotions != null) {
+            for (Promotion promo : activePromotions) {
+                if (promo.isActive() && promo.getCategories().contains(category)) {
+                    return price * ((100 - promo.getDiscountPercent()) / 100);
+                }
+            }
+        }
+        return price;
+    }
+
+    public void loadActivePromotions(Set<Promotion> allPromotions) {
+        if (category != null) {
+            for (Promotion promo : allPromotions) {
+                if (promo.isActive() && promo.getCategories().contains(category)) {
+                    if (activePromotions == null) activePromotions = new java.util.ArrayList<>();
+                    activePromotions.add(promo);
+                }
+            }
+        }
+    }
 	
+
 	
 	@Transient
 	public String getShortName() {

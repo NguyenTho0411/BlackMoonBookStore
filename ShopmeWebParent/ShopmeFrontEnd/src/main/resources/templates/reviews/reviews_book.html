@@ -2,79 +2,277 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<head th:replace="fragments :: page_head(${pageTitle}, 'tag')" />
-<link th:href="@{/star-rating/css/star-rating.css}" media="all"
-	rel="stylesheet" type="text/css" />
-<script th:src="@{/star-rating/js/star-rating.js}"
-	type="text/javascript"></script>
-<link th:href="@{/star-rating/themes/krajee-svg/theme.css}" media="all"
-	rel="stylesheet" type="text/css" />
-<script th:src="@{/star-rating/themes/krajee-svg/theme.js}"></script>
+  <head th:replace="fragments :: page_head(${pageTitle}, 'tag')" />
+  <link th:href="@{/star-rating/css/star-rating.css}" media="all" rel="stylesheet" type="text/css" />
+  <script th:src="@{/star-rating/js/star-rating.js}" type="text/javascript"></script>
+  <link th:href="@{/star-rating/themes/krajee-svg/theme.css}" media="all" rel="stylesheet" type="text/css" />
+  <script th:src="@{/star-rating/themes/krajee-svg/theme.js}"></script>
+
 </head>
 
 <body>
-	<div class="container-fluid">
-		<div th:replace="navigation :: header_menu"></div>
-		<div th:replace="navigation :: search_nav"></div>
+  <div class="container-fluid">
+    <div th:replace="navigation :: header_menu"></div>
+    <div th:replace="navigation :: search_nav"></div>
 
-		<div class="row m-2">
-			<div class="col-xs-4">
-				<img th:src="@{${book.mainImagePath}}" width="150">
-			</div>
-			<div class="col-xs-8">
-				<div>
-					<h3>[[${book.name}]]</h3>
-				</div>
+    <div class="container py-4">
+      <!-- Book Details Section -->
+      <div class="book-detail-container row">
+        <div class="col-md-3 col-lg-2 text-center mb-3 mb-md-0">
+          <img th:src="@{${book.mainImagePath}}" class="img-fluid book-image" alt="Book Cover">
+        </div>
+        <div class="col-md-9 col-lg-10">
+          <h2 class="book-title">[[${book.name}]]</h2>
+          
+          <div class="sort-options">
+            <a class="sort-link" th:href="@{'/ratings/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=votes&sortDir=desc'}">
+              <i class="fas fa-sort-amount-down me-1"></i> Most Voted
+            </a>
+            <a class="sort-link" th:href="@{'/ratings/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=reviewTime&sortDir=desc'}">
+              <i class="fas fa-clock me-1"></i> Most Recent
+            </a>
+          </div>
+          
+          <div class="rating-summary row">
+            <div class="col-md-4 d-flex align-items-center">
+              <input type="text" class="product-detail-rating-star" dir="ltr" data-size="md" th:value="${book.averageRating}" />
+            </div>
+            <div class="col-md-8">
+              <div class="mt-2">
+                <h4 class="mb-0"><span id="ratingNumber">[[${book.averageRating}]]</span> out of 5</h4>
+                <p class="text-muted mb-0">Based on [[${book.reviewCount}]] ratings</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-				<div>
-					<a
-						th:href="@{'/ratings/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=votes&sortDir=desc'}">Sort
-						by most voted</a> &nbsp; <a
-						th:href="@{'/ratings/' + ${book.alias} + '/page/' + ${currentPage} + '?sortField=reviewTime&sortDir=desc'}">Sort
-						by most recent</a>
-				</div>
+      
+      <div class="reviews-container">
+        <th:block th:each="review, status : ${listReviews}">
+          <div class="review-card" th:classappend="${status.index == 0 ? 'new-review' : ''}">
+            <div class="review-header">
+              <div class="review-rating">
+                <input type="text" class="product-detail-rating-star" dir="ltr" data-size="xs" th:value="${review.rating}" />
+              </div>
+              
+              <div class="vote-section ms-auto">
+                <a class="vote-btn linkVoteReview fa-thumbs-up"
+                  th:classappend="${review.upvotedByCurrentCustomer ? 'fas' : 'far'}"
+                  th:id="'linkVoteUp-' + ${review.id}" th:reviewId="${review.id}"
+                  th:href="@{'/vote_review/' + ${review.id} + '/up'}"></a>
+                  
+                <span class="vote-count" th:id="'voteCount-' + ${review.id}">
+                  [[${review.votes}]] Votes
+                </span>
+                
+                <a class="vote-btn linkVoteReview fa-thumbs-down"
+                  th:classappend="${review.downvotedByCurrentCustomer ? 'fas' : 'far'}"
+                  th:id="'linkVoteDown-' + ${review.id}" th:reviewId="${review.id}"
+                  th:href="@{'/vote_review/' + ${review.id} + '/down'}"></a>
+              </div>
+            </div>
+            
+            <h4 class="review-headline">[[${review.headline}]]</h4>
+            <p class="review-comment">[[${review.comment}]]</p>
+            
+            <div class="review-footer">
+              <i class="fas fa-user-circle me-1"></i> [[${review.customer.fullName}]]
+              <span class="mx-2">•</span>
+              <i class="far fa-calendar-alt me-1"></i> <span th:replace="fragments :: format_time(${review.reviewTime})"></span>
+            </div>
+          </div>
+        </th:block>
+      </div>
 
-				<div class="row m-1">
-					<div class="col-xs">
-						<input type="text" class="product-detail-rating-star" dir="ltr"
-							data-size="md" th:value="${book.averageRating}" />
-					</div>
-					<div class="col-xs ml-1 mt-3">
-						<span id="ratingNumber">[[${book.averageRating}]]</span> of 5
-					</div>
-				</div>
-				<div class="row m-1 ml-3">
-					<span>[[${book.reviewCount}]] ratings</span>
-				</div>
-			</div>
-		</div>
+      <div th:replace="fragments :: modal_dialog"></div>
+      <div th:replace="fragments :: pagination('/ratings/' + ${book.alias}, 'reviews')"></div>
+    </div>
 
-		<div class="row">
-			<div class="col">
-				<hr />
-			</div>
-		</div>
+    <div th:replace="navigation :: footer_menu"></div>
+  </div>
 
-		<div th:replace="reviews/reviews_votes :: content"></div>
-
-		<div th:replace="fragments :: modal_dialog"></div>
-
-		<div
-			th:replace="fragments :: pagination('/ratings/' + ${book.alias}, 'reviews')"></div>
-
-		<div th:replace="navigation :: footer_menu"></div>
-
-	</div>
-	<script type="text/javascript">
-
-		decimalSeparator = "[[${DECIMAL_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
-		thousandSeparator = "[[${THOUSANDS_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
-	</script>
-	<script th:src="@{/js/common_list.js}"></script>
-	<script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
-	<script type="text/javascript" th:src="@{/js/common_rating.js}"></script>
-	<script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
-	<script type="text/javascript" th:src="@{/js/review_vote.js}"></script>
+  <script type="text/javascript">
+    decimalSeparator = "[[${DECIMAL_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
+    thousandSeparator = "[[${THOUSANDS_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
+  </script>
+  <script th:src="@{/js/common_list.js}"></script>
+  <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common_rating.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
+  <script type="text/javascript" th:src="@{/js/review_vote.js}"></script>
+    <style>
+    /* Enhanced styling for book rating page */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f5ff;
+    }
+    
+    .book-detail-container {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+    
+    .book-detail-container:hover {
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+    
+    .book-image {
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .book-image:hover {
+      transform: scale(1.03);
+    }
+    
+    .book-title {
+      color: #512DA8;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    
+    .rating-summary {
+      background-color: #f5eeff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .sort-options {
+      margin: 20px 0;
+    }
+    
+    .sort-link {
+      background: linear-gradient(135deg, #8E44AD 0%, #4A235A 100%);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-right: 10px;
+      transition: all 0.3s ease;
+      display: inline-block;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .sort-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      color: white;
+    }
+    
+    .review-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border-left: 4px solid #8E44AD;
+    }
+    
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .review-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .review-rating {
+      margin-right: 15px;
+    }
+    
+    .vote-section {
+      display: flex;
+      align-items: center;
+    }
+    
+    .vote-btn {
+      background: none;
+      border: none;
+      color: #673AB7;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 5px;
+    }
+    
+    .vote-btn:hover {
+      transform: scale(1.2);
+      color: #512DA8;
+    }
+    
+    .vote-count {
+      font-weight: 500;
+      color: #555;
+      margin: 0 10px;
+    }
+    
+    .review-headline {
+      font-weight: 600;
+      color: #512DA8;
+      margin: 10px 0;
+      font-size: 1.1rem;
+    }
+    
+    .review-comment {
+      color: #444;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+    
+    .review-footer {
+      font-size: 0.85rem;
+      color: #777;
+      font-style: italic;
+      border-top: 1px dashed #e0e0e0;
+      padding-top: 10px;
+    }
+    
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, rgba(142, 68, 173, 0.2), rgba(142, 68, 173, 0.5), rgba(142, 68, 173, 0.2));
+      margin: 30px 0;
+    }
+    
+    /* Enhanced star rating styling */
+    .rating-container .filled-stars {
+      color: #FFC107 !important;
+      -webkit-text-stroke: 1px #FF9800;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .rating-container .empty-stars {
+      color: #e0e0e0;
+    }
+    
+    .rating-md {
+      font-size: 26px;
+    }
+    
+    .rating-xs {
+      font-size: 20px;
+    }
+    
+    /* Animation for new reviews */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .new-review {
+      animation: fadeIn 0.8s ease forwards;
+    }
+  </style>
 </body>
-
 </html>

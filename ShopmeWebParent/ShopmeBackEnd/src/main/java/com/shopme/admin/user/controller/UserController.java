@@ -1,6 +1,7 @@
 package com.shopme.admin.user.controller;
 
 import java.io.IOException;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.shopme.admin.AmazonS3Util;
+
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.user.UserNotFoundException;
 import com.shopme.admin.user.UserService;
@@ -83,8 +84,8 @@ public class UserController {
 			user.setPhotos(fileName);
 			User savedUser = service.save(user);
 			String uploadDir ="user-photos/" +savedUser.getId();
-			AmazonS3Util.removeFolder(uploadDir);
-			AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());		
+			FileUploadUtil.removeDir(uploadDir);
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}else {
 			if(user.getPhotos().isEmpty()) user.setPhotos(null);
 			service.save(user);
@@ -119,7 +120,7 @@ public class UserController {
 		try {
 			service.delete(id);
 			String userPhotosDir = "user-photos/" + id;
-			AmazonS3Util.removeFolder(userPhotosDir);
+			FileUploadUtil.removeDir(userPhotosDir);
 			redirectAttributes.addFlashAttribute("message", "The user with ID "+id+" has been deleted successfully!");
 		} catch(UserNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());

@@ -1,6 +1,7 @@
 package com.shopme.cart;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,8 +9,11 @@ import org.springframework.stereotype.Service;
 import com.shopme.book.BookRepository;
 import com.shopme.common.entity.Book;
 import com.shopme.common.entity.CartItem;
+import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Customer;
+import com.shopme.common.entity.Promotion;
 import com.shopme.common.exception.ShoppingCartException;
+import com.shopme.promotion.PromotionRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -23,6 +27,11 @@ public class ShoppingCartService {
 	@Autowired 
 	private BookRepository bookRepo;
 	
+	@Autowired
+	private PromotionRepository promotionRepo;
+	
+	@Autowired
+	private PromotionRepository promotionRepository;
 	public Integer addBook(Integer bookId, Integer quantity, Customer customer) throws ShoppingCartException {
 		Integer updatedQuantity = quantity;
 		Book book = new Book(bookId);
@@ -43,18 +52,27 @@ public class ShoppingCartService {
 		cartRepo.save(cartItem);
 		return updatedQuantity;
 	}
-	
+
+
 	public List<CartItem> listCartItems(Customer customer){
 		return cartRepo.findByCustomer(customer);
 	}
 	
-	public float updateQuantity(Integer bookId, Integer quantity, Customer customer) {
-		cartRepo.updateQuantity(quantity, customer.getId(), bookId);
-		Book book = bookRepo.findById(bookId).get();
-		float subtotal = book.getDiscountPrice()*quantity;
-		return subtotal;
-	}
-	
+	 
+    public float updateQuantity(Integer bookId, Integer quantity, Customer customer) {
+        cartRepo.updateQuantity(quantity, customer.getId(), bookId);
+        
+        // Load book
+        Book book = bookRepo.findById(bookId).get();
+        
+        // Load all active promotions once
+        Set<Promotion> allPromotions = promotionRepository.findAllActivePromotions();
+        book.loadActivePromotions(allPromotions);
+        
+        // Calculate discounted subtotal
+        float subtotal = book.getDiscountPrice() * quantity;
+        return subtotal;
+    }
 	
 	public void removeBook(Integer bookId, Customer customer) {
 		cartRepo.deleteByCustomerAndBook(customer.getId(), bookId);

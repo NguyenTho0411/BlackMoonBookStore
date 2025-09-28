@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <script src="https://cdn.jsdelivr.net/sockjs/1.0.2/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/chat.js"></script>
+</head>
+<body>
+    <h2>Chat Room</h2>
+    <input type="text" id="sender" placeholder="Enter your name">
+    <input type="text" id="content" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send</button>
+    <div id="messages"></div>
+</body>
+</html>

@@ -86,4 +86,7 @@ public class BookService {
 		Page<Book> page = repo.searchBooksByName(keyword, pageable);		
 		helper.updateModelAttributes(pageNum, page);
 	}
+	public void updateBooktEnabledStatus(Integer id, boolean enabled) {
+		repo.updateEnabledStatus(id, enabled);
+	}
 }

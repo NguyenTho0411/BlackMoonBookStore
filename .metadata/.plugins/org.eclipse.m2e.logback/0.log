@@ -40,3 +40,22 @@
 2025-04-13 14:19:28,400 [Worker-12: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2025-04-13 14:19:28,409 [Worker-12: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2025-04-13 14:19:28,412 [Worker-12: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeFrontEnd\src\test\resources
+2025-05-18 16:02:18,489 [Worker-5: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2025-05-18 16:02:27,319 [Worker-9: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.shopme:ShopmeBackEnd:0.0.1-SNAPSHOT @ D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeBackEnd\pom.xml.
+2025-05-18 16:02:28,662 [Worker-9: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-05-18 16:02:28,694 [Worker-9: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 101 resources from src\main\resources to target\classes
+2025-05-18 16:02:28,854 [Worker-9: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeBackEnd\src\test\resources
+2025-05-18 16:02:31,948 [Worker-3: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.shopme:ShopmeBackEnd:0.0.1-SNAPSHOT @ D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeBackEnd\pom.xml.
+2025-05-18 16:02:33,039 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-05-18 16:02:33,059 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 153 resources from src\main\resources to target\classes
+2025-05-18 16:02:33,268 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeBackEnd\src\test\resources
+2025-05-18 16:02:36,725 [Worker-3: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.shopme:ShopmeFrontEnd:0.0.1-SNAPSHOT @ D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeFrontEnd\pom.xml.
+2025-05-18 16:02:37,478 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-05-18 16:02:37,499 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-05-18 16:02:37,505 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeFrontEnd\src\test\resources
+2025-05-18 16:02:38,860 [Worker-15: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.shopme:ShopmeFrontEnd:0.0.1-SNAPSHOT @ D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeFrontEnd\pom.xml.
+2025-05-18 16:02:39,772 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 2 resources from src\main\resources to target\classes
+2025-05-18 16:02:39,794 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 92 resources from src\main\resources to target\classes
+2025-05-18 16:02:39,936 [Worker-15: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory D:\UTE\Nam 3\CNPMHDT\ShopmeProject\ShopmeProject\ShopmeWebParent\ShopmeFrontEnd\src\test\resources
+2025-05-20 12:54:14,641 [Worker-6: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2025-09-18 23:15:18,132 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.

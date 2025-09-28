@@ -20,10 +20,13 @@ public interface BookRepository extends JpaRepository<Book, Integer>{
 	public Book findByAlias(String alias);
 	
 	
-	@Query(value = "SELECT * FROM Books WHERE enabled = true AND "
-			+ "MATCH(name, short_description, full_description) AGAINST (?1)", 
-			nativeQuery = true)
+	@Query("SELECT b FROM Book b WHERE b.enabled = true AND " +
+		       "(LOWER(b.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+		       "OR LOWER(b.shortDescription) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+		       "OR LOWER(b.fullDescription) LIKE LOWER(CONCAT('%', :keyword, '%')))")
 	public Page<Book> search(String keyword, Pageable pageable);
+
+
 	@Query("Update Book p SET p.averageRating = COALESCE((SELECT AVG(r.rating) FROM Review r WHERE r.book.id = ?1), 0),"
 			+ " p.reviewCount = (SELECT COUNT(r.id) FROM Review r WHERE r.book.id =?1) "
 			+ "WHERE p.id = ?1")

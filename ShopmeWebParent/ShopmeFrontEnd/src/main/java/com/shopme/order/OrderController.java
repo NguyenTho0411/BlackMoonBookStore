@@ -53,7 +53,7 @@ public class OrderController {
 		model.addAttribute("listOrders", listOrders);
 		model.addAttribute("sortField", sortField);
 		model.addAttribute("sortDir", sortDir);
-		model.addAttribute("keyword", keyword);
+		model.addAttribute("keyword", keyword);	
 		model.addAttribute("moduleURL", "/orders");
 		model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 		model.addAttribute("categoryId", null); // để đảm bảo Thymeleaf không bị thiếu

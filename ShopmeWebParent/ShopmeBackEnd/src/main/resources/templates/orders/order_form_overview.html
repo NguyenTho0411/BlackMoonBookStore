@@ -2,74 +2,207 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-	<div th:fragment="content" th:remove="tag">
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Order ID:</label>
-			<div class="col-sm-10">
-				<input type="text" readonly class="form-control"
-					th:value="${order.id}">
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Customer:</label>
-			<div class="col-sm-10">
-				<input type="text" readonly class="form-control"
-					th:value="${order.customer.fullName}">
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Product Cost:</label>
-			<div class="col-sm-10">
-				<input type="text" th:field="*{productCost}" required
-					class="form-control" />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Subtotal:</label>
-			<div class="col-sm-10">
-				<input type="text" th:field="*{subtotal}" required
-					class="form-control" />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Shipping Cost:</label>
-			<div class="col-sm-10">
-				<input type="text" th:field="*{shippingCost}" required
-					class="form-control" />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Tax:</label>
-			<div class="col-sm-10">
-				<input type="text" th:field="*{tax}" required class="form-control" />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Total:</label>
-			<div class="col-sm-10">
-				<input type="text" th:field="*{total}" required class="form-control" />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Payment Method:</label>
-			<div class="col-sm-10">
-				<select th:field="*{paymentMethod}" class="form-control" required
-					style="max-width: 150px">
-					<option
-						th:each="pm : ${T(com.shopme.common.entity.order.PaymentMethod).values()}"
-						th:value="${pm}" th:text="${pm}" />
-				</select>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Status:</label>
-			<div class="col-sm-10">
-				<select th:field="*{status}" class="form-control" required
-					style="max-width: 150px">
-					<option
-						th:each="os : ${T(com.shopme.common.entity.order.OrderStatus).values()}"
-						th:value="${os}" th:text="${os}" />
-				</select>
-			</div>
-		</div>
-	</div>
+<div th:fragment="content" th:remove="tag">
+    <!-- Enhanced Order Form -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-header py-3" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+            <h5 class="mb-0">
+                <i class="fas fa-edit me-2"></i> Order Details
+            </h5>
+        </div>
+        
+        <div class="card-body p-4">
+            <!-- Order ID Row -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-3 col-md-2 col-form-label fw-medium">Order ID:</label>
+                <div class="col-sm-9 col-md-10">
+                    <input type="text" readonly class="form-control bg-light"
+                        th:value="${order.id}" style="border-color: #e0d0ff;">
+                </div>
+            </div>
+            
+            <!-- Customer Row -->
+            <div class="form-group row mb-3">
+                <label class="col-sm-3 col-md-2 col-form-label fw-medium">Customer:</label>
+                <div class="col-sm-9 col-md-10">
+                    <input type="text" readonly class="form-control bg-light"
+                        th:value="${order.customer.fullName}" style="border-color: #e0d0ff;">
+                </div>
+            </div>
+            
+            <!-- Costs Section -->
+            <div class="card mb-4" style="border-radius: 8px; border-color: #e0d0ff; background-color: #f8f0ff;">
+                <div class="card-header bg-transparent" style="border-bottom-color: #e0d0ff;">
+                    <h6 class="mb-0" style="color: #512DA8;">
+                        <i class="fas fa-money-bill-wave me-2"></i> Order Costs
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <!-- Product Cost Row -->
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Product Cost:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-tag"></i>
+                                </span>
+                                <input type="text" th:field="*{productCost}" required
+                                    class="form-control" style="border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Subtotal Row -->
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Subtotal:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-calculator"></i>
+                                </span>
+                                <input type="text" th:field="*{subtotal}" required
+                                    class="form-control" style="border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Cost Row -->
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Shipping Cost:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </span>
+                                <input type="text" th:field="*{shippingCost}" required
+                                    class="form-control" style="border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tax Row -->
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Tax:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-receipt"></i>
+                                </span>
+                                <input type="text" th:field="*{tax}" required 
+                                    class="form-control" style="border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Row -->
+                    <div class="form-group row mb-0">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Total:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </span>
+                                <input type="text" th:field="*{total}" required 
+                                    class="form-control fw-bold" style="border-color: #e0d0ff;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Details Section -->
+            <div class="card" style="border-radius: 8px; border-color: #e0d0ff; background-color: #f8f0ff;">
+                <div class="card-header bg-transparent" style="border-bottom-color: #e0d0ff;">
+                    <h6 class="mb-0" style="color: #512DA8;">
+                        <i class="fas fa-info-circle me-2"></i> Order Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <!-- Payment Method Row -->
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Payment Method:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-credit-card"></i>
+                                </span>
+                                <select th:field="*{paymentMethod}" class="form-select" required
+                                    style="border-color: #e0d0ff;">
+                                    <option
+                                        th:each="pm : ${T(com.shopme.common.entity.order.PaymentMethod).values()}"
+                                        th:value="${pm}" th:text="${pm}" />
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Row -->
+                    <div class="form-group row mb-0">
+                        <label class="col-sm-3 col-md-2 col-form-label fw-medium">Status:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #f0e5ff; border-color: #e0d0ff;">
+                                    <i class="fas fa-tasks"></i>
+                                </span>
+                                <select th:field="*{status}" class="form-select" required
+                                    style="border-color: #e0d0ff;">
+                                    <option
+                                        th:each="os : ${T(com.shopme.common.entity.order.OrderStatus).values()}"
+                                        th:value="${os}" th:text="${os}" />
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <button type="submit" class="btn btn-primary px-4 py-2" 
+                    style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); border: none; min-width: 120px;">
+                    <i class="fas fa-save me-2"></i> Save
+                </button>
+                <a th:href="@{/orders}" class="btn btn-secondary px-4 py-2" 
+                    style="background-color: #e9ecef; color: #495057; border: none; min-width: 120px;">
+                    <i class="fas fa-arrow-left me-2"></i> Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* Input field focus styles */
+        .form-control:focus, .form-select:focus {
+            border-color: #6C3483;
+            box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);
+        }
+        
+        /* Button hover effects */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Card hover effects */
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        /* Media queries for responsive design */
+        @media (max-width: 768px) {
+            .col-form-label {
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</div>
+</body>
+</html>

@@ -137,7 +137,6 @@
     </div>
     <div th:replace="fragments :: footer"></div>
     
-    <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
     var moduleURL = "[[@{/books}]]";
     
@@ -153,6 +152,19 @@
             $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
         });
     });
+    function showDeleteConfirmModal(link, entityName) {
+        var entityId = link.attr("bookId");
+        
+        // Đặt URL cho nút Yes
+        $("#yesButton").attr("href", link.attr("href"));    
+        
+        // Cập nhật văn bản xác nhận
+        $("#confirmText").text("Are you sure you want to delete this " + entityName + " ID " + entityId + "?");
+        
+        // Mở modal xác nhận
+        var confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+        confirmModal.show();
+    }
 </script>
 
     

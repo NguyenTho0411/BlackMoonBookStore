@@ -30,7 +30,298 @@
   decimalSeparator = "[[${DECIMAL_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
   thousandSeparator = "[[${THOUSANDS_POINT_TYPE == 'COMMA' ? ',' : '.'}]]";
 </script>
-<style>
+
+</head>
+<body>
+    <div class="container-fluid p-0">
+    
+        <!-- Preserving your navigation components as requested -->
+        <div th:replace="navigation :: header_menu"></div>
+        <div th:replace="navigation :: search_nav"></div>
+            
+        <!-- Preserving your enhanced breadcrumb -->
+        <div class="container mt-3">
+            <div class="row">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/}"><i
+                                class="fas fa-home"></i> Home</a></li>
+                        <th:block th:each="parent : ${listCategoryParents}">
+                            <li class="breadcrumb-item"><a
+                                th:href="@{'/c/'+ ${parent.alias}}">[[${parent.name}]]</a></li>
+                        </th:block>
+                        <li class="breadcrumb-item active">[[${book.name}]]</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="container main-container">
+            <div class="row g-4">
+                <!-- Book Images Section -->
+                <div class="col-md-5 text-center">
+                    <!-- Main Image with shadow and hover effect -->
+                    <div class="position-relative mb-4">
+                        <img id="bigImage" th:src="@{${book.mainImagePath}}" 
+                            class="img-fluid" index="0" alt="Book Cover" />
+                    </div>
+
+                    <!-- Thumbnail Images with improved layout -->
+                    <div class="d-flex justify-content-center flex-wrap gap-3">
+                        <!-- Main image as thumbnail -->
+                        <div class="thumbnail-container" style="border: 2px solid #673AB7;">
+                            <img class="image-thumbnail" th:src="@{${book.mainImagePath}}"
+                                height="60" index="0" alt="Thumbnail" />
+                        </div>
+                        <!-- Extra images -->
+                        <th:block th:each="extraImage, status : ${book.images}">
+                            <div class="thumbnail-container">
+                                <img class="image-thumbnail" th:src="@{${extraImage.imagePath}}"
+                                    height="60" th:index="${status.count}" alt="Extra Thumbnail" />
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+
+                <!-- Book Details Section -->
+                <div class="col-md-5">
+                    <div class="book-details">
+                        <h1 class="book-title">[[${book.name}]]</h1>
+                        
+                        <!-- Ratings Section -->
+                        <div class="ratings-container">
+                            <div>
+                                <input type="text" class="product-detail-rating-star" dir="ltr"
+                                    data-size="md" th:value="${book.averageRating}" />
+                            </div>
+                            <div class="ms-3">
+                                <a class="ratings-count" th:href="@{${book.URI} + '#review'}">
+                                    [[${book.reviewCount}]] rating(s)
+                                </a>
+                            </div>
+                                       <div class="ms-3">
+<a th:href="@{${book.URI} + '#qa'}">[[${numberOfAnsweredQuestions}]] answered questions</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Publisher Info -->
+                        <div class="mb-4">
+                            <span class="book-publisher">
+                                <i class="fas fa-building me-2"></i> Publisher: [[${book.publisher.name}]]
+                            </span>
+                        </div>
+
+                      <div class="pricing-section mb-4">
+    <div class="mb-2">
+        <span style="color: #555; font-size: 1.1rem;">List Price:</span>
+
+        <!-- Nếu không giảm giá -->
+        <span th:if="${book.discountPrice == book.price}" 
+              style="font-weight: 600; font-size: 1.3rem; color: #673AB7;">
+            <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+            [[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+            <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+        </span>
+
+        <!-- Nếu có giảm giá: giá gốc gạch ngang -->
+        <span th:if="${book.discountPrice < book.price}" class="original-price text-muted text-decoration-line-through">
+            <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+            [[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+            <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+        </span>
+    </div>
+
+    <!-- Hiển thị giá sau giảm nếu có -->
+    <div th:if="${book.discountPrice < book.price}" class="mb-3">
+        <span style="color: #555; font-size: 1.1rem;">Sale Price:</span> 
+        <span class="discounted-price fw-bold text-danger">
+            <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
+            [[${#numbers.formatDecimal(book.discountPrice, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+            <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
+        </span>
+        <!-- Badge hiển thị phần trăm giảm -->
+        <span class="discount-badge ms-2 badge bg-success">
+            <i class="fas fa-tags me-1"></i>
+            [[${100 - (book.discountPrice * 100 / book.price)}]]% off
+        </span>
+    </div>
+</div>
+
+
+                        <!-- Short Description -->
+                        <div class="short-description" th:utext="${book.shortDescription}"></div>
+                    </div>
+                </div>
+
+                <!-- Action Box (Quantity & Add to Cart) -->
+                <div class="col-md-2">
+                    <div class="action-box">
+                        <!-- Stock Status -->
+                        <div class="mb-4 text-center">
+                            <span th:unless="${book.inStock}" class="stock-badge out-stock">
+                                <i class="fas fa-times-circle me-2"></i> Out of Stock
+                            </span>
+                            <span th:if="${book.inStock}" class="stock-badge in-stock">
+                                <i class="fas fa-check-circle me-2"></i> In Stock
+                            </span>
+                        </div>
+
+                        <!-- Quantity Control and Add to Cart -->
+                        <th:block th:if="${book.inStock}">
+                            <div class="mb-3">
+                                <div th:replace="cart/quantity_control :: quantity_control(1, ${book.id})"></div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="button" id="buttonAdd2Cart" class="btn">
+                                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                </button>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Description Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="description-section">
+                        <h3 class="section-heading">
+                            <i class="fas fa-book-open me-2"></i> Book Description
+                        </h3>
+                        <div class="full-description" th:utext="${book.fullDescription}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Details Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="details-section">
+                        <h3 class="section-heading">
+                            <i class="fas fa-info-circle me-2"></i> Book Details
+                        </h3>
+                        <div class="row">
+                            <th:block th:each="detail : ${book.details}">
+                                <div class="col-md-6 mb-3">
+                                    <div class="book-detail-row">
+                                        <span class="detail-label">[[${detail.name}]]:</span>
+                                        <span>[[${detail.value}]]</span>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="question_answer :: content"></div>
+        <!-- Preserving your review and carousel sections -->
+        <div th:replace="book_top_reviews :: content"></div>
+        <div th:replace="images_carousel :: content"></div>
+
+        <!-- Footer Menu with improved styling -->
+        <div>
+            <nav class="navbar navbar-expand-lg navbar-dark footer-nav">
+                <div class="container">
+                    <button class="navbar-toggler mx-auto" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#bottomNavbar"
+                        style="border: none; padding: 8px;">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="bottomNavbar">
+                        <ul class="navbar-nav mx-auto gap-3">
+                            <li class="nav-item">
+                                <a class="footer-link" href="">
+                                    <i class="fas fa-info-circle me-2 pulse-icon"></i> About Us
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="footer-link" href="">
+                                    <i class="fas fa-shield-alt me-2 pulse-icon"></i> Privacy Notice
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="footer-link" href="">
+                                    <i class="fas fa-exchange-alt me-2 pulse-icon"></i> Returns &amp; Refunds
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Modal Dialog -->
+        <div class="modal fade" id="modalDialog" tabindex="-1"
+            aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Modal Title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">Modal Body</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Copyright -->
+        <div class="text-center py-3 copyright-section">
+            <p class="mb-0"><strong>Blackmoon</strong> - Copyright &copy; Blackmoon Ltd.</p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            bigImage = $("#bigImage");
+
+            $(".image-thumbnail").mouseover(function() {
+                currentImageSource = $(this).attr("src");
+                currentImageIndex = $(this).attr("index");
+
+                // Update big image with smooth transition
+                bigImage.fadeOut(100, function() {
+                    $(this).attr("src", currentImageSource);
+                    $(this).attr("index", currentImageIndex);
+                    $(this).fadeIn(100);
+                });
+
+                // Visual feedback for selected thumbnail
+                $(".thumbnail-container").css("border-color", "#e0e0e0");
+                $(this).parent().css("border-color", "#673AB7");
+            });
+
+            bigImage.on("click", function() {
+                $("#carouselModal").modal("show");
+                imageIndex = parseInt(bigImage.attr("index"));
+                $("#carouselExampleIndicators").carousel(imageIndex);
+            });
+            $(".linkVoteQuestion").on("click", function (e) {
+                e.preventDefault();
+        		doVote($(this), "question");
+            });
+
+
+        });
+    </script>
+    <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common_rating.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/quantity_control.js}"></script>
+    <script type="text/javascript" th:src="@{/js/add_to_cart.js}"></script>
+    <script type="text/javascript" th:src="@{/js/review_vote.js}"></script>
+    <script type="text/javascript" th:src="@{/js/question_post.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common_vote.js}"></script>
+    
+    
+    <style>
 /* Enhanced Base styles for modern appeal */
 body {
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -794,294 +1085,5 @@ body {
     }
 }
 </style>
-</head>
-<body>
-    <div class="container-fluid p-0">
-    
-        <!-- Preserving your navigation components as requested -->
-        <div th:replace="navigation :: header_menu"></div>
-        <div th:replace="navigation :: search_nav"></div>
-            
-        <!-- Preserving your enhanced breadcrumb -->
-        <div class="container mt-3">
-            <div class="row">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a th:href="@{/}"><i
-                                class="fas fa-home"></i> Home</a></li>
-                        <th:block th:each="parent : ${listCategoryParents}">
-                            <li class="breadcrumb-item"><a
-                                th:href="@{'/c/'+ ${parent.alias}}">[[${parent.name}]]</a></li>
-                        </th:block>
-                        <li class="breadcrumb-item active">[[${book.name}]]</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-
-        <div class="container main-container">
-            <div class="row g-4">
-                <!-- Book Images Section -->
-                <div class="col-md-5 text-center">
-                    <!-- Main Image with shadow and hover effect -->
-                    <div class="position-relative mb-4">
-                        <img id="bigImage" th:src="@{${book.mainImagePath}}" 
-                            class="img-fluid" index="0" alt="Book Cover" />
-                    </div>
-
-                    <!-- Thumbnail Images with improved layout -->
-                    <div class="d-flex justify-content-center flex-wrap gap-3">
-                        <!-- Main image as thumbnail -->
-                        <div class="thumbnail-container" style="border: 2px solid #673AB7;">
-                            <img class="image-thumbnail" th:src="@{${book.mainImagePath}}"
-                                height="60" index="0" alt="Thumbnail" />
-                        </div>
-                        <!-- Extra images -->
-                        <th:block th:each="extraImage, status : ${book.images}">
-                            <div class="thumbnail-container">
-                                <img class="image-thumbnail" th:src="@{${extraImage.imagePath}}"
-                                    height="60" th:index="${status.count}" alt="Extra Thumbnail" />
-                            </div>
-                        </th:block>
-                    </div>
-                </div>
-
-                <!-- Book Details Section -->
-                <div class="col-md-5">
-                    <div class="book-details">
-                        <h1 class="book-title">[[${book.name}]]</h1>
-                        
-                        <!-- Ratings Section -->
-                        <div class="ratings-container">
-                            <div>
-                                <input type="text" class="product-detail-rating-star" dir="ltr"
-                                    data-size="md" th:value="${book.averageRating}" />
-                            </div>
-                            <div class="ms-3">
-                                <a class="ratings-count" th:href="@{${book.URI} + '#review'}">
-                                    [[${book.reviewCount}]] rating(s)
-                                </a>
-                            </div>
-                                       <div class="ms-3">
-<a th:href="@{${book.URI} + '#qa'}">[[${numberOfAnsweredQuestions}]] answered questions</a>
-                            </div>
-                        </div>
-                        
-                        <!-- Publisher Info -->
-                        <div class="mb-4">
-                            <span class="book-publisher">
-                                <i class="fas fa-building me-2"></i> Publisher: [[${book.publisher.name}]]
-                            </span>
-                        </div>
-
-                        <!-- Price Information with enhanced styling -->
-                        <div class="pricing-section mb-4">
-                            <div class="mb-2">
-                                <span style="color: #555; font-size: 1.1rem;">List Price:</span>
-
-                                <!-- If no discount -->
-                                <span th:if="${book.discountPercent <= 0}" style="font-weight: 600; font-size: 1.3rem; color: #673AB7;">
-                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-                                    [[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE,
-                                    DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] 
-                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
-                                </span>
-
-                                <!-- If discounted: original price with strikethrough -->
-                                <span th:if="${book.discountPercent > 0}" class="original-price">
-                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-                                    [[${#numbers.formatDecimal(book.price, 1, THOUSANDS_POINT_TYPE,
-                                    DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] 
-                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
-                                </span>
-                            </div>
-
-                            <!-- Show discounted price if available -->
-                            <div th:if="${book.discountPercent > 0}" class="mb-3">
-                                <span style="color: #555; font-size: 1.1rem;">Sale Price:</span> 
-                                <span class="discounted-price">
-                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
-                                    [[${#numbers.formatDecimal(book.discountPrice, 1,
-                                    THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]] 
-                                    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}">[[${CURRENCY_SYMBOL}]]</span>
-                                </span>
-                                <!-- Discount badge -->
-                                <span class="discount-badge">
-                                    <i class="fas fa-tags me-1"></i> [[${book.discountPercent}]]% off
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Short Description -->
-                        <div class="short-description" th:utext="${book.shortDescription}"></div>
-                    </div>
-                </div>
-
-                <!-- Action Box (Quantity & Add to Cart) -->
-                <div class="col-md-2">
-                    <div class="action-box">
-                        <!-- Stock Status -->
-                        <div class="mb-4 text-center">
-                            <span th:unless="${book.inStock}" class="stock-badge out-stock">
-                                <i class="fas fa-times-circle me-2"></i> Out of Stock
-                            </span>
-                            <span th:if="${book.inStock}" class="stock-badge in-stock">
-                                <i class="fas fa-check-circle me-2"></i> In Stock
-                            </span>
-                        </div>
-
-                        <!-- Quantity Control and Add to Cart -->
-                        <th:block th:if="${book.inStock}">
-                            <div class="mb-3">
-                                <div th:replace="cart/quantity_control :: quantity_control(1, ${book.id})"></div>
-                            </div>
-                            
-                            <div class="text-center">
-                                <button type="button" id="buttonAdd2Cart" class="btn">
-                                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                                </button>
-                            </div>
-                        </th:block>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Book Description Section -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="description-section">
-                        <h3 class="section-heading">
-                            <i class="fas fa-book-open me-2"></i> Book Description
-                        </h3>
-                        <div class="full-description" th:utext="${book.fullDescription}"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Book Details Section -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="details-section">
-                        <h3 class="section-heading">
-                            <i class="fas fa-info-circle me-2"></i> Book Details
-                        </h3>
-                        <div class="row">
-                            <th:block th:each="detail : ${book.details}">
-                                <div class="col-md-6 mb-3">
-                                    <div class="book-detail-row">
-                                        <span class="detail-label">[[${detail.name}]]:</span>
-                                        <span>[[${detail.value}]]</span>
-                                    </div>
-                                </div>
-                            </th:block>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div th:replace="question_answer :: content"></div>
-        <!-- Preserving your review and carousel sections -->
-        <div th:replace="book_top_reviews :: content"></div>
-        <div th:replace="images_carousel :: content"></div>
-
-        <!-- Footer Menu with improved styling -->
-        <div>
-            <nav class="navbar navbar-expand-lg navbar-dark footer-nav">
-                <div class="container">
-                    <button class="navbar-toggler mx-auto" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#bottomNavbar"
-                        style="border: none; padding: 8px;">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="bottomNavbar">
-                        <ul class="navbar-nav mx-auto gap-3">
-                            <li class="nav-item">
-                                <a class="footer-link" href="">
-                                    <i class="fas fa-info-circle me-2 pulse-icon"></i> About Us
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="footer-link" href="">
-                                    <i class="fas fa-shield-alt me-2 pulse-icon"></i> Privacy Notice
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="footer-link" href="">
-                                    <i class="fas fa-exchange-alt me-2 pulse-icon"></i> Returns &amp; Refunds
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        
-        <!-- Modal Dialog -->
-        <div class="modal fade" id="modalDialog" tabindex="-1"
-            aria-labelledby="modalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalTitle">Modal Title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="modalBody">Modal Body</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer Copyright -->
-        <div class="text-center py-3 copyright-section">
-            <p class="mb-0"><strong>Blackmoon</strong> - Copyright &copy; Blackmoon Ltd.</p>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-            bigImage = $("#bigImage");
-
-            $(".image-thumbnail").mouseover(function() {
-                currentImageSource = $(this).attr("src");
-                currentImageIndex = $(this).attr("index");
-
-                // Update big image with smooth transition
-                bigImage.fadeOut(100, function() {
-                    $(this).attr("src", currentImageSource);
-                    $(this).attr("index", currentImageIndex);
-                    $(this).fadeIn(100);
-                });
-
-                // Visual feedback for selected thumbnail
-                $(".thumbnail-container").css("border-color", "#e0e0e0");
-                $(this).parent().css("border-color", "#673AB7");
-            });
-
-            bigImage.on("click", function() {
-                $("#carouselModal").modal("show");
-                imageIndex = parseInt(bigImage.attr("index"));
-                $("#carouselExampleIndicators").carousel(imageIndex);
-            });
-            $(".linkVoteQuestion").on("click", function (e) {
-                e.preventDefault();
-        		doVote($(this), "question");
-            });
-
-
-        });
-    </script>
-    <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/common_rating.js}"></script>
-    <script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
-    <script type="text/javascript" th:src="@{/js/quantity_control.js}"></script>
-    <script type="text/javascript" th:src="@{/js/add_to_cart.js}"></script>
-    <script type="text/javascript" th:src="@{/js/review_vote.js}"></script>
-    <script type="text/javascript" th:src="@{/js/question_post.js}"></script>
-    <script type="text/javascript" th:src="@{/js/common_vote.js}"></script>
 </body>
 </html>

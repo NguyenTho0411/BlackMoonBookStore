@@ -1,6 +1,7 @@
 package com.shopme.admin.publisher.controller;
 
 import java.io.IOException;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.admin.publisher.PublisherNotFoundException;
@@ -77,8 +77,7 @@ public class PublisherController {
 			Publisher savedPublisher = publisherService.save(publisher);
 			String uploadDir = "publisher-logos"+ savedPublisher.getId();
 			
-			AmazonS3Util.removeFolder(uploadDir);
-			AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+			FileUploadUtil.removeDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			
 		}else{

@@ -1,73 +1,146 @@
-<div class="modal-header">
-	<h4 class="modal-title">Review Details</h4>
-	<button type="button" class="close" data-dismiss="modal">&times;</button>
+<!-- Review Details Modal Content -->
+<div class="modal-header" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+    <h5 class="modal-title">
+        <i class="fas fa-star me-2"></i> Review Details
+    </h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-<div class="modal-body">
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Review ID:</label>
-		<div class="col-sm-10">
-			<input type="text" readonly class="form-control"
-				th:value="${review.id}" />
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Book:</label>
-		<div class="col-sm-10">
-			<input type="text" readonly class="form-control"
-				th:value="${review.book.name}" />
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Customer:</label>
-		<div class="col-sm-10">
-			<input type="text" readonly class="form-control"
-				th:value="${review.customer.fullName}" />
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Headline:</label>
-		<div class="col-sm-10">
-			<input type="text" readonly class="form-control"
-				th:value="${review.headline}" />
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Rating:</label>
-		<div class="col-sm-10">
-			<input type="text" readonly class="form-control"
-				th:value="${review.rating}" />
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Comment:</label>
-		<div class="col-sm-10">
-			<textarea rows="3" class="form-control" readonly>[[${review.comment}]]</textarea>
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Votes:</label>
-		<div class="col-sm-10">
-			<input type="text" readonly class="form-control"
-				th:value="${review.votes}" />
-		</div>
-	</div>
-
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label">Review Time:</label>
-		<div class="col-sm-10">
-			<span
-				th:text="${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
-		</div>
-	</div>
+<div class="modal-body p-4">
+    <!-- Review ID -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-hashtag me-1"></i> Review ID:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff;">
+                [[${review.id}]]
+            </div>
+        </div>
+    </div>
+    
+    <!-- Book -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-book me-1"></i> Book:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff;">
+                [[${review.book.name}]]
+            </div>
+        </div>
+    </div>
+    
+    <!-- Customer -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-user me-1"></i> Customer:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff;">
+                [[${review.customer.fullName}]]
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rating -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-star me-1"></i> Rating:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext d-flex align-items-center" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff;">
+                <span class="me-2 fw-bold">[[${review.rating}]]</span>
+                <div class="star-rating" th:data-rating="${review.rating}">
+                    <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, 5)}" 
+                       th:style="${i <= review.rating ? 'color: #FFC107' : 'color: #e0e0e0'}"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Headline -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-heading me-1"></i> Headline:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff; font-weight: 500;">
+                [[${review.headline}]]
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comment -->
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-comment me-1"></i> Comment:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 12px; border: 1px solid #e0d0ff; min-height: 100px; white-space: pre-line;">
+                [[${review.comment}]]
+            </div>
+        </div>
+    </div>
+    
+    <!-- Votes -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="fas fa-thumbs-up me-1"></i> Votes:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff;">
+                <span class="badge" style="background-color: #512DA8; padding: 5px 10px; border-radius: 20px;">
+                    [[${review.votes}]] <i class="fas fa-vote-yea ms-1"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Review Time -->
+    <div class="mb-3 row align-items-center">
+        <label class="col-sm-3 col-form-label fw-bold text-end" style="color: #512DA8;">
+            <i class="far fa-clock me-1"></i> Review Time:
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control-plaintext" style="background-color: #f8f0ff; border-radius: 6px; padding: 8px 12px; border: 1px solid #e0d0ff;">
+                <i class="far fa-calendar-alt me-1"></i>
+                [[${#dates.format(review.reviewTime, 'yyyy-MM-dd HH:mm:ss')}]]
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+<div class="modal-footer justify-content-center border-0">
+    <button type="button" class="btn btn-primary px-4 py-2" data-bs-dismiss="modal" 
+            style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); border-radius: 8px; border: none; transition: all 0.3s ease;">
+        <i class="fas fa-times-circle me-2"></i> Close
+    </button>
 </div>
+
+<!-- Additional CSS -->
+<style>
+    .form-control-plaintext {
+        transition: all 0.3s ease;
+    }
+    
+    .form-control-plaintext:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    @media (max-width: 576px) {
+        .col-form-label.text-end {
+            text-align: left !important;
+        }
+    }
+</style>

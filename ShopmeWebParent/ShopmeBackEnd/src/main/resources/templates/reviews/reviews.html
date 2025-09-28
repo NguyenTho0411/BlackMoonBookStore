@@ -87,10 +87,10 @@
                                     </td>
                                     <td>[[${review.reviewTime}]]</td>
                                     <td class="text-center">
-                                        <a class="btn btn-sm me-1" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
-                                           th:href="@{'/reviews/detail/' + ${review.id}}" title="View details of this review">
-                                            <i class="fas fa-file-alt"></i>
-                                        </a>
+<a
+							class="fas fa-file-alt fa-2x icon-green link-detail-review"
+							th:href="@{'/reviews/detail/' + ${review.id}}"
+							title="View details of this review"></a>
                                         <a class="btn btn-sm me-1" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
                                            th:href="@{'/reviews/edit/' + ${review.id}}" title="Edit this review">
                                             <i class="fas fa-edit"></i>
@@ -235,7 +235,6 @@
         <div th:replace="fragments2 :: footer"></div>
     </div>
 
-    <script th:src="@{/js/common_list.js}"></script>
     <script type="text/javascript">
         moduleURL = "[[@{/reviews}]]";
 
@@ -264,6 +263,19 @@
                 linkDetailURL = $(this).attr("href");
                 $(modalId).modal("show").find(".modal-content").load(linkDetailURL);
             });
+        }
+        function showDeleteConfirmModal(link, entityName) {
+            var entityId = link.attr("bookId");
+
+            // Set URL for Yes button
+            $("#yesButton").attr("href", link.attr("href"));
+
+            // Update confirmation text
+            $("#confirmText").text("Are you sure you want to delete this " + entityName + " ID " + entityId + "?");
+
+            // Open confirmation modal
+            var confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+            confirmModal.show();
         }
 
         function handleProductDetailLink() {

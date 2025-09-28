@@ -2,88 +2,203 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-	<div th:fragment="content" th:remove="tag">
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Deliver Days:</label>
-			<div class="col-sm-10">
-				<input type="number" step="1" class="form-control"
-					th:field="*{deliverDays}" required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Expected Deliver Date:</label>
-			<div class="col-sm-10">
-				<input type="date" class="form-control"
-					th:field="*{deliverDateOnForm}" required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">First Name:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{firstName}"
-					required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Last Name:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{lastName}"
-					required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Phone Number:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{phoneNumber}"
-					required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Address Line 1:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{addressLine1}"
-					required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Address Line 2:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{addressLine2}" />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">City:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{city}" required />
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Country:</label>
-			<div class="col-sm-10">
-				<input type="hidden" name="countryName" id="countryName"
-					th:value="${order.country}" /> <select class="form-control"
-					id="country">
-					<option th:each="aCountry : ${listCountries}"
-						th:value="${aCountry.id}"
-						th:selected="${aCountry.name == order.country}">[[${aCountry.name}]]</option>
-				</select>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">State:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{state}"
-					list="listStates" />
-				<datalist id="listStates">
+<div th:fragment="content" th:remove="tag">
+    <div class="card mb-4" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+        <div class="card-header py-3" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+            <h5 class="mb-0"><i class="fas fa-shipping-fast me-2"></i>Shipping Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <!-- Delivery Information -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Deliver Days:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-calendar-day"></i>
+                            </span>
+                            <input type="number" step="1" class="form-control" th:field="*{deliverDays}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Expected Deliver Date:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <input type="date" class="form-control" th:field="*{deliverDateOnForm}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
 
-				</datalist>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label">Postal Code:</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" th:field="*{postalCode}"
-					required />
-			</div>
-		</div>
-	</div>
+                <!-- Customer Information -->
+                <div class="col-12">
+                    <h6 class="mb-3 mt-2" style="color: #512DA8; font-weight: 600; border-bottom: 1px solid #e0d0ff; padding-bottom: 10px;">
+                        <i class="fas fa-user me-2"></i>Customer Details
+                    </h6>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">First Name:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-user-tag"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{firstName}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Last Name:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-user-tag"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{lastName}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Phone Number:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{phoneNumber}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="col-12">
+                    <h6 class="mb-3 mt-2" style="color: #512DA8; font-weight: 600; border-bottom: 1px solid #e0d0ff; padding-bottom: 10px;">
+                        <i class="fas fa-map-marker-alt me-2"></i>Shipping Address
+                    </h6>
+                </div>
+                
+                <div class="col-md-12">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Address Line 1:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-home"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{addressLine1}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Address Line 2:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-building"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{addressLine2}" 
+                                style="border-color: #e0d0ff;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">City:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-city"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{city}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Country:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-globe"></i>
+                            </span>
+                            <input type="hidden" name="countryName" id="countryName" th:value="${order.country}" />
+                            <select class="form-control" id="country" style="border-color: #e0d0ff;">
+                                <option th:each="aCountry : ${listCountries}" 
+                                    th:value="${aCountry.id}"
+                                    th:selected="${aCountry.name == order.country}">[[${aCountry.name}]]</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">State:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-map"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{state}"
+                                list="listStates" style="border-color: #e0d0ff;" />
+                            <datalist id="listStates">
+                                <!-- States will be populated here -->
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-medium">Postal Code:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-mailbox"></i>
+                            </span>
+                            <input type="text" class="form-control" th:field="*{postalCode}"
+                                style="border-color: #e0d0ff;" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form actions could go here if needed -->
+        </div>
+    </div>
+    
+    <style>
+        /* Additional styling */
+        .form-control:focus, .input-group-text:focus {
+            border-color: #6C3483;
+            box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);
+        }
+        
+        .form-label {
+            color: #512DA8;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Transition effects */
+        .input-group {
+            transition: all 0.3s ease;
+        }
+        
+        .input-group:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</div>
+</body>
+</html>

@@ -15,12 +15,14 @@ import com.shopme.category.CategoryService;
 import com.shopme.common.entity.Book;
 import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Customer;
+import com.shopme.common.entity.Promotion;
 import com.shopme.common.entity.Question;
 import com.shopme.common.entity.Review;
 import com.shopme.common.exception.BookNotFoundException;
 import com.shopme.common.exception.CategoryNotFoundException;
 import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.customer.CustomerService;
+import com.shopme.promotion.PromotionService;
 import com.shopme.question.QuestionService;
 import com.shopme.question.vote.QuestionVoteService;
 import com.shopme.review.ReviewService;
@@ -34,7 +36,8 @@ public class BookController {
 	private CategoryService categoryService;
 	@Autowired
 	private BookService bookService;
-	@Autowired private ReviewService reviewService;	
+	@Autowired private ReviewService reviewService;
+	@Autowired private PromotionService promotionService;
 	@Autowired private CustomerService customerService;	
 	@Autowired private QuestionVoteService questionVoteService;
 	@Autowired private ReviewVoteService voteService;	
@@ -52,7 +55,11 @@ public class BookController {
 			List<Category> listCategoryParents = categoryService.getCategoryParents(category);
 			Page<Book> pageBooks = bookService.listByCategory(pageNum, category.getId());
 			List<Book> listBooks = pageBooks.getContent();
-			
+			List<Promotion> promotions = promotionService.getActivePromotions();
+			for (Book book : listBooks) {
+				book.setActivePromotions(promotions);
+			}
+
 			long startCount = (pageNum - 1) * BookService.BOOKS_PER_PAGE + 1;
 			long endCount = startCount + BookService.BOOKS_PER_PAGE - 1;
 			if (endCount > pageBooks.getTotalElements()) {
@@ -84,45 +91,58 @@ public class BookController {
 	@GetMapping("/b/{book_alias}")
 	public String viewProductDetail(@PathVariable("book_alias") String alias, Model model,
 			HttpServletRequest request) throws BookNotFoundException, CustomerNotFoundException {
-			Book book = bookService.getBook(alias);
-			List<Category> listCategoryParents = categoryService.getCategoryParents(book.getCategory());
-			Page<Review> listReviews = reviewService.list3MostVotedReviewsByBook(book);
-			List<Question> listQuestions = questionService.getTop3VotedQuestions(book.getId());
-			Customer customer = getAuthenticatedCustomer(request);
-			if (customer != null) {
-				boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, book.getId());
-				voteService.markReviewsVotedForProductByCustomer(listReviews.getContent(), book.getId(), customer.getId());
-				questionVoteService.markQuestionsVotedForProductByCustomer(listQuestions, book.getId(), customer.getId());
-				if (customerReviewed) {
-					model.addAttribute("customerReviewed", customerReviewed);
-				} else {
-					boolean customerCanReview = reviewService.canCustomerReviewProduct(customer, book.getId());
-					model.addAttribute("customerCanReview", customerCanReview);
-				}
+
+		Book book = bookService.getBook(alias);
+
+		// 🔥 Thêm đoạn này để truyền danh sách promotion đang hoạt động vào Book
+		List<Promotion> promotions = promotionService.getActivePromotions();
+		book.setActivePromotions(promotions);
+
+		List<Category> listCategoryParents = categoryService.getCategoryParents(book.getCategory());
+		Page<Review> listReviews = reviewService.list3MostVotedReviewsByBook(book);
+		List<Question> listQuestions = questionService.getTop3VotedQuestions(book.getId());
+
+		Customer customer = getAuthenticatedCustomer(request);
+		if (customer != null) {
+			boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, book.getId());
+			voteService.markReviewsVotedForProductByCustomer(listReviews.getContent(), book.getId(), customer.getId());
+			questionVoteService.markQuestionsVotedForProductByCustomer(listQuestions, book.getId(), customer.getId());
+
+			if (customerReviewed) {
+				model.addAttribute("customerReviewed", customerReviewed);
+			} else {
+				boolean customerCanReview = reviewService.canCustomerReviewProduct(customer, book.getId());
+				model.addAttribute("customerCanReview", customerCanReview);
 			}
-			int numberOfQuestions = questionService.getNumberOfQuestions(book.getId());
-			int numberOfAnsweredQuestions = questionService.getNumberOfAnsweredQuestions(book.getId());
-			
-			model.addAttribute("listQuestions", listQuestions);			
-			model.addAttribute("numberOfQuestions", numberOfQuestions);
-			model.addAttribute("numberOfAnsweredQuestions", numberOfAnsweredQuestions);
-			model.addAttribute("listCategoryParents", listCategoryParents);
-			model.addAttribute("book", book);
-			model.addAttribute("listReviews", listReviews);
-			model.addAttribute("pageTitle", book.getShortName());
-			
-			return "book_detail";
+		}
+
+		int numberOfQuestions = questionService.getNumberOfQuestions(book.getId());
+		int numberOfAnsweredQuestions = questionService.getNumberOfAnsweredQuestions(book.getId());
+
+		model.addAttribute("listQuestions", listQuestions);
+		model.addAttribute("numberOfQuestions", numberOfQuestions);
+		model.addAttribute("numberOfAnsweredQuestions", numberOfAnsweredQuestions);
+		model.addAttribute("listCategoryParents", listCategoryParents);
+		model.addAttribute("book", book);
+		model.addAttribute("listReviews", listReviews);
+		model.addAttribute("pageTitle", book.getShortName());
+
+		return "book_detail";
 	}
-	
+
 	@GetMapping("/search")
 	public String searchFirstPage(@Param("keyword") String keyword, Model model) {
 		return searchByPage(keyword,1,model);
 	}
 	
 	@GetMapping("/search/page/{pageNum}")
-	public String searchByPage(@Param("keyword") String keyword,@PathVariable("pageNum") int pageNum, Model model) {
+	public String searchByPage(@Param(	"keyword") String keyword,@PathVariable("pageNum") int pageNum, Model model) {
 		Page<Book> pageBooks = bookService.search(keyword, pageNum);
 		List<Book> listResult = pageBooks.getContent();
+		List<Promotion> promotions = promotionService.getActivePromotions();
+		for(Book book : listResult) {
+			book.setActivePromotions(promotions);
+		}
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("listResult", listResult);
 		

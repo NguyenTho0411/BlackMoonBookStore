@@ -88,4 +88,11 @@ public class ShopmeUserDetails implements UserDetails {
 	public User getUser() {
 		return user;
 	}
+	public String getInitial() {
+	    if (user.getFirstName() != null && !user.getFirstName().isEmpty()) {
+	        return user.getFirstName().substring(0, 1).toUpperCase();
+	    }
+	    return "?";
+	}
+
 }

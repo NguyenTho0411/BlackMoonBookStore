@@ -607,7 +607,7 @@
               </a>
 <div class="book-price">
   <!-- Nếu KHÔNG có giảm giá -->
-  <div th:if="${book.discountPercent <= 0}">
+  <div th:if="${book.discountPrice == book.price}">
     <span style="font-weight: 600;">
       <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
       [[${#numbers.formatDecimal(book.price,1,THOUSANDS_POINT_TYPE,DECIMAL_DIGITS,DECIMAL_POINT_TYPE)}]]
@@ -616,7 +616,7 @@
   </div>
 
   <!-- Nếu CÓ giảm giá -->
-  <div th:if="${book.discountPercent > 0}">
+  <div th:if="${book.discountPrice < book.price}">
     <!-- Giá đã giảm -->
     <span class="discount-price" style="color: #E91E63; font-weight: bold;">
       <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}">[[${CURRENCY_SYMBOL}]]</span>
@@ -634,6 +634,7 @@
     </del>
   </div>
 </div>
+
 
             </div>
           </div>

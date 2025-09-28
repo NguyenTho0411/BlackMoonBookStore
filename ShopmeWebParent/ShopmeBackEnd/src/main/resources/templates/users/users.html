@@ -94,18 +94,20 @@
                                     <td>[[${user.firstName}]]</td>
                                     <td>[[${user.lastName}]]</td>
                                     <td><span class="badge rounded-pill" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;">[[${user.roles}]]</span></td>
-                                    <td class="text-center">
-                                        <a th:if="${user.enabled == true}" class="fa-regular fa-circle-check fs-5"
-                                           style="color: #198754; transition: transform 0.2s;" 
-                                           onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
-                                           th:href="@{'users/' + ${user.id} +'/enabled/false'}" 
-                                           title="Disable this user"></a>
-                                        <a th:if="${user.enabled == false}" class="fa-regular fa-circle-xmark fs-5"
-                                           style="color: #6c757d; transition: transform 0.2s;" 
-                                           onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
-                                           th:href="@{'users/' + ${user.id} +'/enabled/true'}" 
-                                           title="Enable this user"></a>
-                                    </td>
+ <td class="text-center">
+    <a th:if="${user.enabled == true}" class="fa-regular fa-circle-check fs-5"
+       style="color: #198754; transition: transform 0.2s;" 
+       onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+       th:href="@{/users/{id}/enabled/false(id=${user.id})}" 
+       title="Disable this user"></a>
+
+    <a th:if="${user.enabled == false}" class="fa-regular fa-circle-xmark fs-5"
+       style="color: #6c757d; transition: transform 0.2s;" 
+       onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"
+       th:href="@{/users/{id}/enabled/true(id=${user.id})}" 
+       title="Enable this user"></a>
+</td>
+
                                     <td class="text-center">
                                         <a class="btn btn-sm" style="background-color: #f8f0ff; color: #512DA8; border: 1px solid #e0d0ff;"
                                            th:href="@{'/users/edit/' + ${user.id}}" title="Edit this user">
@@ -169,7 +171,7 @@
     <div th:replace="modal_fragments :: confirm_modal"></div>
     <div th:replace="fragments :: footer"></div>
     
-    <script th:src="@{/js/common_list.js}"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $(".link-delete").on("click", function(e) {
@@ -182,7 +184,19 @@
                 modal.show();
             });
         });
-        
+        function showDeleteConfirmModal(link, entityName) {
+            var entityId = link.attr("bookId");
+            
+            // Đặt URL cho nút Yes
+            $("#yesButton").attr("href", link.attr("href"));    
+            
+            // Cập nhật văn bản xác nhận
+            $("#confirmText").text("Are you sure you want to delete this " + entityName + " ID " + entityId + "?");
+            
+            // Mở modal xác nhận
+            var confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+            confirmModal.show();
+        }
         function clearFilter() {
             window.location = "[[@{/users}]]";
         }

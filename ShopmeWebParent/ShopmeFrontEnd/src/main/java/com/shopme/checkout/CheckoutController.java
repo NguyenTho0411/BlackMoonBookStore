@@ -19,12 +19,14 @@ import com.shopme.cart.ShoppingCartService;
 import com.shopme.common.entity.Address;
 import com.shopme.common.entity.CartItem;
 import com.shopme.common.entity.Customer;
+import com.shopme.common.entity.Promotion;
 import com.shopme.common.entity.ShippingRate;
 import com.shopme.common.entity.order.Order;
 import com.shopme.common.entity.order.PaymentMethod;
 import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.customer.CustomerService;
 import com.shopme.order.OrderService;
+import com.shopme.promotion.PromotionService;
 import com.shopme.setting.CurrencySettingBag;
 import com.shopme.setting.EmailSettingBag;
 import com.shopme.setting.PaymentSettingBag;
@@ -37,7 +39,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class CheckoutController {
-
+	@Autowired private PromotionService promotionService;
 	
 	@Autowired
 	private CheckoutService checkoutService;
@@ -63,36 +65,44 @@ public class CheckoutController {
 	
 	@GetMapping("/checkout")
 	public String checkout(Model model, HttpServletRequest request) throws CustomerNotFoundException {
-		Customer customer = getAuthenticatedCustomer(request);
+	    Customer customer = getAuthenticatedCustomer(request);
 
-		Address defaultAddress = addressService.getDefaultAddress(customer);
-		ShippingRate shippingRate = null;
-		boolean usePrimaryAddressAsDefault = false;
-		if(defaultAddress != null) {
-			model.addAttribute("shippingAddress", defaultAddress.toString());
-			shippingRate = shipService.getShippingRateForAddress(defaultAddress);
-		}else {
-			model.addAttribute("shippingAddress", customer.toString());
-			shippingRate = shipService.getShippingRateForCustomer(customer);
-		}
-		
-		
-		if(shippingRate == null) {
-			return "redirect:/cart";
-		}
-		PaymentSettingBag paymentSettings = settingService.getPaymentSettings();
-		String paypalClientId = paymentSettings.getClientID();
-		List<CartItem> cartItems = cartService.listCartItems(customer);
-		CheckoutInfo checkoutInfo = checkoutService.prepareCheckout(cartItems, shippingRate);
-		model.addAttribute("customer", customer);
-		String currencyCode = settingService.getCurrencyCode();
-		model.addAttribute("checkoutInfo", checkoutInfo);
-		model.addAttribute("cartItems", cartItems);
-		model.addAttribute("currencyCode", currencyCode);
-		model.addAttribute("paymentSettings", paymentSettings);
-		model.addAttribute("paypalClientId", paypalClientId);
-		return "checkout/checkout";
+	    Address defaultAddress = addressService.getDefaultAddress(customer);
+	    ShippingRate shippingRate = null;
+	    boolean usePrimaryAddressAsDefault = false;
+	    if(defaultAddress != null) {
+	        model.addAttribute("shippingAddress", defaultAddress.toString());
+	        shippingRate = shipService.getShippingRateForAddress(defaultAddress);
+	    } else {
+	        model.addAttribute("shippingAddress", customer.toString());
+	        shippingRate = shipService.getShippingRateForCustomer(customer);
+	    }
+
+	    if(shippingRate == null) {
+	        return "redirect:/cart";
+	    }
+
+	    PaymentSettingBag paymentSettings = settingService.getPaymentSettings();
+	    String paypalClientId = paymentSettings.getClientID();
+	    List<CartItem> cartItems = cartService.listCartItems(customer);
+
+	    // 👇 Gán promotions
+	    List<Promotion> promotions = promotionService.getActivePromotions();
+	    for (CartItem item : cartItems) {
+	        item.getBook().setActivePromotions(promotions);
+	    }
+
+	    CheckoutInfo checkoutInfo = checkoutService.prepareCheckout(cartItems, shippingRate);
+	    model.addAttribute("customer", customer);
+	    String currencyCode = settingService.getCurrencyCode();
+	    model.addAttribute("checkoutInfo", checkoutInfo);
+	    model.addAttribute("cartItems", cartItems);
+	    model.addAttribute("currencyCode", currencyCode);
+	    model.addAttribute("paymentSettings", paymentSettings);
+	    model.addAttribute("paypalClientId", paypalClientId);
+	    return "checkout/checkout";
 	}
+
 	private Customer getAuthenticatedCustomer(HttpServletRequest request) throws CustomerNotFoundException {
 		String email = Utility.getEmailOfAuthenticatedCustomer(request);
 		

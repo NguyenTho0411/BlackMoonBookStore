@@ -1,150 +1,414 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head
-	th:replace="fragments2 :: page_head('Orders - Shopme Admin', 'none')" />
+<head th:replace="fragments2 :: page_head('Orders - Shopme Admin', 'none')" />
 
 <body>
-	<div class="container-fluid">
-		<div th:replace="navigation :: menu"></div>
-		<div>
-			<h2>Manage Orders</h2>
-		</div>
+    <div class="container-fluid p-0">
+        <div th:replace="navigation :: menu"></div>
+        
+        <!-- Page Header with Modern Styling -->
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0" style="color: #512DA8; font-weight: 600;">
+                    <i class="fas fa-shopping-bag me-2"></i>Manage Orders
+                </h2>
+            </div>
 
-		<div th:replace="fragments2 :: search_form_and_message" />
+            <!-- Search Form with better styling -->
+            <div class="card mb-4"
+                style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                <div class="card-body">
+                    <form th:action="@{${moduleURL} + '/page/1'}"
+                        class="d-flex flex-wrap align-items-center"
+                        id="searchForm">
+                        <input type="hidden" name="sortField" th:value="${sortField}" />
+                        <input type="hidden" name="sortDir" th:value="${sortDir}" />
 
-		<div class="full-details">
-			<table
-				class="table table-bordered table-striped table-hover table-responsive-xl">
-				<thead class="thead-dark">
-					<tr>
-						<th th:replace="fragments2 :: column_link('id', 'ID', 'none')" />
-						<th
-							th:replace="fragments2 :: column_link('customer', 'Customer', 'none')" />
-						<th
-							th:replace="fragments2 :: column_link('total', 'Total', 'none')" />
-						<th
-							th:replace="fragments2 :: column_link('orderTime', 'Order Time', 'none')" />
-						<th class="hideable-column"
-							th:replace="fragments2 :: column_link('destination', 'Destination', 'tag')" />
-						<th class="hideable-column"
-							th:replace="fragments2 :: column_link('paymentMethod', 'Payment Method', 'tag')" />
-						<th class="hideable-column"
-							th:replace="fragments2 :: column_link('status', 'Status', 'tag')" />
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="order : ${listOrders}">
-						<td>[[${order.id}]]</td>
-						<td><a class="linkCustomerDetail"
-							th:href="@{'/customers/detail/' + ${order.customer.id}}">
-								[[${order.customer.fullName}]] </a></td>
-						<td>
-							<div th:replace="fragments2 :: format_currency(${order.total})"></div>
-						</td>
-						<td>
-							<div th:replace="fragments2 :: format_time(${order.orderTime})"></div>
-						</td>
-						<td class="hideable-column">[[${order.destination}]]</td>
-						<td class="hideable-column">[[${order.paymentMethod}]]</td>
-						<td class="hideable-column">[[${order.status}]]</td>
+                        <div class="input-group" style="max-width: 400px;">
+                            <span class="input-group-text"
+                                style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-search"></i>
+                            </span> 
+                            <input type="search" name="keyword" th:value="${keyword}"
+                                class="form-control" placeholder="Search orders..." required
+                                style="border-color: #e0d0ff;" />
+                        </div>
 
-						<td><a
-							class="fas fa-file-alt fa-2x icon-green linkOrderDetail"
-							th:href="@{'/orders/detail/' + ${order.id}}"
-							title="View details of this order"></a> &nbsp;
-							<div
-								th:replace="fragments2 :: edit('order', '/orders/edit/' + ${order.id})" />
-							&nbsp;
-							<div
-								th:replace="fragments2 :: delete('order', ${order.id}, '/orders/delete/' + ${order.id}, true)" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+                        <div class="ms-auto mt-2 mt-sm-0">
+                            <button type="submit" class="btn btn-primary me-2"
+                                style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); border: none;">
+                                <i class="fas fa-search me-1"></i> Search
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                onclick="clearFilter()">
+                                <i class="fas fa-times me-1"></i> Clear
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Message display area -->
+                    <div th:if="${message != null}" class="alert alert-success mt-3" role="alert">
+                        [[${message}]]
+                    </div>
+                </div>
+            </div>
 
-		<div class="less-details">
-			<th:block th:each="order : ${listOrders}">
-				<div class="row m-1">
-					<div class="col-2">[[${order.id}]]</div>
-					<div class="col-10">
-						<div>[[${order.customer.fullName}]], [[${order.country}]]</div>
-						<div>
-							<small>[[${order.orderTime}]] - [[${order.status}]]</small>
-						</div>
-						<div>
-							<div th:replace="fragments2 :: format_currency(${order.total})">Total</div>
-							- [[${order.paymentMethod}]]
-						</div>
-						<div>
-							<a class="fas fa-file-alt fa-2x icon-green linkOrderDetail"
-								th:href="@{'/orders/detail/' + ${order.id}}"
-								title="View details of this order"></a> &nbsp;
-							<div
-								th:replace="fragments2 :: edit('order', '/orders/edit/' + ${order.id})" />
-							&nbsp;
-							<div
-								th:replace="fragments2 :: delete('order', ${order.id}, '/orders/delete/' + ${order.id}, true)" />
-						</div>
-					</div>
-				</div>
-				<div>&nbsp;</div>
-			</th:block>
-		</div>
+            <!-- Desktop View: Enhanced Orders Table -->
+            <div class="card full-details"
+                style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead
+                                style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+                                <tr>
+                                    <th th:replace="fragments2 :: column_link('id', 'ID', 'none')" />
+                                    <th th:replace="fragments2 :: column_link('customer', 'Customer', 'none')" />
+                                    <th th:replace="fragments2 :: column_link('total', 'Total', 'none')" />
+                                    <th th:replace="fragments2 :: column_link('orderTime', 'Order Time', 'none')" />
+                                    <th class="hideable-column" th:replace="fragments2 :: column_link('destination', 'Destination', 'tag')" />
+                                    <th class="hideable-column" th:replace="fragments2 :: column_link('paymentMethod', 'Payment Method', 'tag')" />
+                                    <th class="hideable-column" th:replace="fragments2 :: column_link('status', 'Status', 'tag')" />
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="order : ${listOrders}">
+                                    <td>[[${order.id}]]</td>
+                                    <td>
+                                        <a class="linkCustomerDetail text-decoration-none" 
+                                           style="color: #512DA8; font-weight: 500;"
+                                           th:href="@{'/customers/detail/' + ${order.customer.id}}">
+                                            [[${order.customer.fullName}]]
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div th:replace="fragments2 :: format_currency(${order.total})"></div>
+                                    </td>
+                                    <td>
+                                        <div th:replace="fragments2 :: format_time(${order.orderTime})"></div>
+                                    </td>
+                                    <td class="hideable-column">[[${order.destination}]]</td>
+                                    <td class="hideable-column">[[${order.paymentMethod}]]</td>
+                                    <td class="hideable-column">
+                                        <span th:class="'badge'"
+                                            style="padding: 5px 10px; border-radius: 12px; font-weight: 500; font-size: 0.9rem;"
+                                            th:style="${order.status == 'DELIVERED' ? 'background-color: #e6f7e6; color: #198754;' : 
+                                                        (order.status == 'PROCESSING' ? 'background-color: #fff3cd; color: #856404;' : 
+                                                        (order.status == 'SHIPPED' ? 'background-color: #e0f3ff; color: #0c63e4;' : 
+                                                        (order.status == 'PICKED' ? 'background-color: #f8f0ff; color: #6C3483;' : 
+                                                        (order.status == 'RETURNED' ? 'background-color: #f8d7da; color: #dc3545;' : 
+                                                        'background-color: #e9ecef; color: #6c757d;'))))}">
+                                            [[${order.status}]]
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a class="btn btn-sm linkOrderDetail"
+                                                th:href="@{'/orders/detail/' + ${order.id}}"
+                                                title="View details of this order"
+                                                style="background-color: #f8f0ff; color: #512DA8; border: none; transition: all 0.3s ease;">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a>
+                                            <a class="btn btn-sm"
+                                                th:href="@{'/orders/edit/' + ${order.id}}"
+                                                title="Edit this order"
+                                                style="background-color: #e0f3ff; color: #0c63e4; border: none; transition: all 0.3s ease;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-sm link-delete"
+                                                th:href="@{'/orders/delete/' + ${order.id}}"
+                                                th:entityId="${order.id}"
+                                                title="Delete this order"
+                                                style="background-color: #f8d7da; color: #dc3545; border: none; transition: all 0.3s ease;">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-		<div th:replace="fragments2 :: pagination('orders')"></div>
+            <!-- Mobile View: Cards with responsive design -->
+            <div class="less-details mt-4">
+                <div class="row g-3">
+                    <div class="col-12" th:each="order : ${listOrders}">
+                        <div class="card border-0 shadow-sm" 
+                             style="border-radius: 12px; overflow: hidden; transition: all 0.3s ease;">
+                            <div class="card-header py-3"
+                                 style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Order #[[${order.id}]]</span>
+                                    <span class="badge rounded-pill"
+                                          style="background-color: rgba(255,255,255,0.2); font-weight: 500;">
+                                        [[${order.status}]]
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="text-muted">Customer:</span> 
+                                        <span class="fw-medium">[[${order.customer.fullName}]]</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Total:</span>
+                                        <div th:replace="fragments2 :: format_currency(${order.total})" 
+                                              class="fw-medium d-inline-block"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="text-muted">Date:</span>
+                                        <div th:replace="fragments2 :: format_time(${order.orderTime})"
+                                             class="fw-medium d-inline-block"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Payment:</span>
+                                        <span class="fw-medium">[[${order.paymentMethod}]]</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="text-muted">Destination:</span>
+                                        <span class="fw-medium">[[${order.destination}]]</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-center gap-2 mt-3">
+                                    <a class="btn btn-sm linkOrderDetail"
+                                        th:href="@{'/orders/detail/' + ${order.id}}"
+                                        title="View details of this order"
+                                        style="background-color: #f8f0ff; color: #512DA8; border: none; transition: all 0.3s ease;">
+                                        <i class="fas fa-file-alt me-1"></i> Details
+                                    </a>
+                                    <a class="btn btn-sm"
+                                        th:href="@{'/orders/edit/' + ${order.id}}"
+                                        title="Edit this order"
+                                        style="background-color: #e0f3ff; color: #0c63e4; border: none; transition: all 0.3s ease;">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
+                                    <a class="btn btn-sm link-delete"
+                                        th:href="@{'/orders/delete/' + ${order.id}}"
+                                        th:entityId="${order.id}"
+                                        title="Delete this order"
+                                        style="background-color: #f8d7da; color: #dc3545; border: none; transition: all 0.3s ease;">
+                                        <i class="fas fa-trash me-1"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		<div th:replace="modal_fragments :: confirm_modal"></div>
+            <!-- Enhanced Pagination -->
+            <div th:if="${totalPages > 1}" class="mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <!-- First page -->
+                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                            <a th:replace="fragments2 :: page_link(${moduleURL}, 1, 'First')"></a>
+                        </li>
+                        <!-- Previous page -->
+                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                            <a th:replace="fragments2 :: page_link(${moduleURL}, ${currentPage - 1}, 'Previous')"></a>
+                        </li>
+                        <!-- Page numbers -->
+                        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                            th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                            th:style="${currentPage == i ? 'background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);' : ''}">
+                            <a th:replace="fragments2 :: page_link(${moduleURL}, ${i}, ${i})"></a>
+                        </li>
+                        <!-- Next page -->
+                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                            <a th:replace="fragments2 :: page_link(${moduleURL}, ${currentPage + 1}, 'Next')"></a>
+                        </li>
+                        <!-- Last page -->
+                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                            <a th:replace="fragments2 :: page_link(${moduleURL}, ${totalPages}, 'Last')"></a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="text-center m-1" th:if="${totalItems > 0}">
+                    <span class="text-muted">Showing Orders [[${startCount}]] to
+                        [[${endCount}]] of [[${totalItems}]]</span>
+                </div>
+            </div>
 
-		<div class="modal fade" id="customerDetailModal">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content"></div>
-			</div>
-		</div>
+        </div>
 
-		<div class="modal fade" id="orderDetailModal">
-			<div class="modal-dialog modal-xl">
-				<div class="modal-content"></div>
-			</div>
-		</div>
+        <!-- Customer Detail Modal -->
+        <div class="modal fade" id="customerDetailModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" 
+                     style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">
+                    <!-- Modal content will be loaded here -->
+                </div>
+            </div>
+        </div>
 
-		<div th:replace="fragments2 :: footer"></div>
+        <!-- Order Detail Modal -->
+        <div class="modal fade" id="orderDetailModal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content"
+                     style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">
+                    <!-- Modal content will be loaded here -->
+                </div>
+            </div>
+        </div>
 
-	</div>
-	<script th:src="@{/js/common_list.js}"></script>
-	<script type="text/javascript">
-		moduleURL = "[[@{/orders}]]";
+        <!-- Confirm Modal for Delete -->
+        <div th:replace="modal_fragments :: confirm_modal"></div>
 
-		$(document).ready(function () {
-			handleLinkViewCustomerDetails();
-			handleLinkViewOrderDetails();
-			handleLinkDeleteOrder();
-		});
+        <div th:replace="fragments2 :: footer"></div>
+    </div>
 
-		function handleLinkDeleteOrder() {
-			$(".link-delete").on("click", function (e) {
-				e.preventDefault();
-				showDeleteConfirmModal($(this), 'order');
-			});
-		}
+    <script th:src="@{/js/common_list.js}"></script>
+    <script type="text/javascript">
+        moduleURL = "[[@{/orders}]]";
 
-		function handleLinkViewCustomerDetails() {
-			$(".linkCustomerDetail").on("click", function (e) {
-				e.preventDefault();
-				linkDetailURL = $(this).attr("href");
-				$("#customerDetailModal").modal("show").find(".modal-content").load(linkDetailURL);
-			});
-		}
+        $(document).ready(function () {
+            handleLinkViewCustomerDetails();
+            handleLinkViewOrderDetails();
+            handleLinkDeleteOrder();
+            
+            // Add hover effects for buttons
+            $('.btn').hover(
+                function() {
+                    $(this).css('transform', 'translateY(-3px)');
+                    $(this).css('box-shadow', '0 4px 8px rgba(0,0,0,0.15)');
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0)');
+                    $(this).css('box-shadow', 'none');
+                }
+            );
+        });
 
-		function handleLinkViewOrderDetails() {
-			$(".linkOrderDetail").on("click", function (e) {
-				e.preventDefault();
-				linkDetailURL = $(this).attr("href");
-				$("#orderDetailModal").modal("show").find(".modal-content").load(linkDetailURL);
-			});
-		}
-	</script>
+        function handleLinkDeleteOrder() {
+            $(".link-delete").on("click", function (e) {
+                e.preventDefault();
+                showDeleteConfirmModal($(this), 'order');
+            });
+        }
+
+        function handleLinkViewCustomerDetails() {
+            $(".linkCustomerDetail").on("click", function (e) {
+                e.preventDefault();
+                linkDetailURL = $(this).attr("href");
+                $("#customerDetailModal").modal("show").find(".modal-content").load(linkDetailURL);
+            });
+        }
+
+        function handleLinkViewOrderDetails() {
+            $(".linkOrderDetail").on("click", function (e) {
+                e.preventDefault();
+                linkDetailURL = $(this).attr("href");
+                $("#orderDetailModal").modal("show").find(".modal-content").load(linkDetailURL);
+            });
+        }
+        
+        function clearFilter() {
+            window.location = moduleURL;
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f5ff;
+        }
+        
+        /* Button hover effects */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Table styling */
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            border-top: none;
+            border-bottom: none;
+            font-weight: 600;
+            padding: 15px 10px;
+        }
+        
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f0ff;
+        }
+        
+        /* Pagination styling */
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%);
+            border-color: #512DA8;
+        }
+        
+        .page-link {
+            color: #512DA8;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+        
+        .page-link:hover {
+            background-color: #f8f0ff;
+            color: #6C3483;
+        }
+        
+        /* Modal animations */
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out;
+        }
+        
+        .modal.show .modal-dialog {
+            transform: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .full-details {
+                display: none;
+            }
+            
+            .less-details {
+                display: block;
+            }
+        }
+        
+        @media (min-width: 993px) {
+            .full-details {
+                display: block;
+            }
+            
+            .less-details {
+                display: none;
+            }
+        }
+        
+        /* Card hover effects for mobile view */
+        .less-details .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+    </style>
 </body>
-
 </html>

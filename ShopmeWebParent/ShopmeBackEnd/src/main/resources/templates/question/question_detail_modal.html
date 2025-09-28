@@ -1,76 +1,141 @@
-<div class="modal-header">
-	<h4 class="modal-title">Question Details</h4>
-	<button type="button" class="close" data-dismiss="modal">&times;</button>
+<!-- Modal: Question Details -->
+<div class="modal-header" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+    <h5 class="modal-title">
+        <i class="fas fa-question-circle me-2"></i>Question Details
+    </h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-		
-<div class="m-2">
-	<form>
-	  <th:block th:if="${question.approved == false}">
-	  	<div class="m-1 text-center"><span class="text-warning"><b>This question has not been approved.</b></span></div>
-	  </th:block>
-	  <th:block th:if="${question.approved == true}">
-	  	<div class="m-1 text-center"><span class="text-success"><b>This question was approved.</b></span></div>
-	  </th:block>
-	  	  
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Product:</label>
-	    <div class="col-sm-10">
-	      <input type="text" readonly class="form-control" th:value="${question.book.name}">
-	    </div>
-	  </div>
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Question:</label>
-	    <div class="col-sm-10">
-	      <textarea readonly class="form-control" th:text="${question.questionContent}" rows="2"></textarea>
-	    </div>
-	  </div>
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Asked by:</label>
-	    <div class="col-sm-10">
-	      <input type="text" readonly class="form-control" th:value="${question.asker.fullName}">
-	    </div>
-	  </div>	
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Ask Time:</label>
-	    <div class="col-sm-10">
-	      <input type="text" readonly class="form-control" th:value="${question.askTime}">
-	    </div>
-	  </div>
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Votes:</label>
-	    <div class="col-sm-10">
-	      <input type="text" readonly class="form-control" th:value="${question.votes}">
-	    </div>
-	  </div>
-	  	  
-	  <th:block th:if="${question.answered == true}">	    
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Answer:</label>
-	    <div class="col-sm-10">
-	      <textarea readonly class="form-control" th:text="${question.answer}" rows="3"></textarea>
-	    </div>
-	  </div>
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Answered by:</label>
-	    <div class="col-sm-10">
-	      <input type="text" readonly class="form-control" th:value="${question.answerer.fullName}">
-	    </div>
-	  </div>
-	  <div class="form-group row">
-	    <label for="name" class="col-sm-2 col-form-label">Answer Time:</label>
-	    <div class="col-sm-10">
-	      <input type="text" readonly class="form-control" th:value="${question.answerTime}">
-	    </div>
-	  </div>	  
-	  </th:block>
-	  
-	  <th:block th:if="${question.answered == false}">
-	  	<div class="text-center"><span class="text-warning"><b>This question has not been answered.</b></span></div>
-	  </th:block>
-	    
-	</form>
+
+<div class="modal-body p-4">
+    <form>
+        <!-- Approval Status Banner -->
+        <div class="mb-4 text-center p-3" style="border-radius: 8px;" 
+             th:classappend="${question.approved ? 'bg-success bg-opacity-10' : 'bg-warning bg-opacity-10'}">
+            <div th:if="${question.approved == false}" class="d-flex align-items-center justify-content-center">
+                <i class="fas fa-exclamation-circle text-warning me-2" style="font-size: 1.2rem;"></i>
+                <span class="fw-bold text-warning">This question has not been approved</span>
+            </div>
+            <div th:if="${question.approved == true}" class="d-flex align-items-center justify-content-center">
+                <i class="fas fa-check-circle text-success me-2" style="font-size: 1.2rem;"></i>
+                <span class="fw-bold text-success">This question was approved</span>
+            </div>
+        </div>
+
+        <!-- Question Details Section -->
+        <div class="card mb-4" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <div class="card-header" style="background-color: #f8f0ff; border-bottom: none; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                <h6 class="mb-0" style="color: #512DA8;">
+                    <i class="fas fa-info-circle me-2"></i>Question Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #512DA8;">Product:</label>
+                    <div class="col-sm-9">
+                        <input type="text" readonly class="form-control bg-light" th:value="${question.book.name}">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #512DA8;">Question:</label>
+                    <div class="col-sm-9">
+                        <textarea readonly class="form-control bg-light" th:text="${question.questionContent}" rows="3" 
+                                  style="font-style: italic;"></textarea>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #512DA8;">Asked by:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-user" style="color: #512DA8;"></i>
+                            </span>
+                            <input type="text" readonly class="form-control bg-light" th:value="${question.asker.fullName}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #512DA8;">Ask Time:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-calendar-alt" style="color: #512DA8;"></i>
+                            </span>
+                            <input type="text" readonly class="form-control bg-light" th:value="${question.askTime}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #512DA8;">Votes:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #f8f0ff; border-color: #e0d0ff;">
+                                <i class="fas fa-thumbs-up" style="color: #512DA8;"></i>
+                            </span>
+                            <input type="text" readonly class="form-control bg-light" th:value="${question.votes}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Answer Section -->
+        <div th:if="${question.answered == true}" class="card" style="border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <div class="card-header" style="background-color: #e8f5e9; border-bottom: none; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                <h6 class="mb-0" style="color: #2e7d32;">
+                    <i class="fas fa-comment-dots me-2"></i>Answer Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #2e7d32;">Answer:</label>
+                    <div class="col-sm-9">
+                        <textarea readonly class="form-control bg-light" th:text="${question.answer}" rows="4"
+                                  style="border-left: 4px solid #2e7d32;"></textarea>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #2e7d32;">Answered by:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #e8f5e9; border-color: #c8e6c9;">
+                                <i class="fas fa-user-check" style="color: #2e7d32;"></i>
+                            </span>
+                            <input type="text" readonly class="form-control bg-light" th:value="${question.answerer.fullName}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-bold" style="color: #2e7d32;">Answer Time:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #e8f5e9; border-color: #c8e6c9;">
+                                <i class="fas fa-calendar-check" style="color: #2e7d32;"></i>
+                            </span>
+                            <input type="text" readonly class="form-control bg-light" th:value="${question.answerTime}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Answer Notice -->
+        <div th:if="${question.answered == false}" class="text-center p-4 mt-3" 
+             style="background-color: #fff3e0; border-radius: 8px; border-left: 4px solid #ff9800;">
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="fas fa-clock text-warning me-2" style="font-size: 1.2rem;"></i>
+                <span class="fw-bold text-warning">This question has not been answered yet</span>
+            </div>
+        </div>
+    </form>
 </div>
-	
-<div class="modal-footer">
-	<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-</div>	
+
+<div class="modal-footer" style="border-top: 1px solid rgba(0,0,0,0.05); padding: 1rem;">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 6px;">
+        <i class="fas fa-times me-1"></i> Close
+    </button>
+    <a th:if="${question.answered == false}" 
+       th:href="@{'/questions/answer/' + ${question.id}}" 
+       class="btn" style="background: linear-gradient(135deg, #6C3483 0%, #512DA8 100%); color: white; border-radius: 6px;">
+        <i class="fas fa-reply me-1"></i> Add Answer
+    </a>
+</div>

@@ -14,7 +14,150 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles -->
-    <style>
+
+<body>
+   <div th:fragment="content">
+        <div class="container">
+            <!-- Review Section Header -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="description-section">
+                        <h3 id="review" class="section-heading">
+                            <i class="fas fa-star me-2"></i> Customer Reviews
+                        </h3>
+                        
+                        <!-- Rating Summary -->
+                        <div class="ratings-summary">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <input type="text" class="product-detail-rating-star" dir="ltr"
+                                        data-size="md" th:value="${book.averageRating}" />
+                                </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <span class="rating-number" id="ratingNumber">
+                                        [[${#numbers.formatDecimal(book.averageRating, 1, 'POINT', 1, 'POINT')}]]
+                                    </span>
+                                    <span class="of-five ms-2">of 5</span>
+                                </div>
+                                
+                                <div class="col-md-4 ms-auto text-md-end mt-3 mt-md-0">
+                                    <!-- View All Ratings Link -->
+                                    <a th:href="@{'/ratings/' + ${book.alias}}" class="ratings-count">
+                                        <i class="fas fa-list-ul me-2"></i> View all [[${book.reviewCount}]] ratings
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Already Reviewed Message -->
+                        <div th:if="${customerReviewed}" class="alert alert-success p-3 mb-4">
+                            <i class="fas fa-check-circle me-2"></i> You already reviewed this book.
+                        </div>
+                        
+                        <!-- Can Review Message -->
+                        <div th:if="${customerCanReview}" class="alert alert-info p-3 mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-info-circle me-2"></i> You purchased and got this book.
+                                </div>
+                                <a th:href="@{'/write_review/book/' + ${book.id}}" class="write-review-btn">
+                                    <i class="fas fa-pencil-alt me-1"></i> Write Your Review
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Reviews List -->
+                        <div class="reviews-container">
+                            <th:block th:each="review : ${listReviews}">
+                                <div class="review-card">
+                                    <div class="review-header">
+                                        <input type="text" class="product-detail-rating-star" dir="ltr"
+                                            data-size="xs" th:value="${review.rating}" />
+                                            
+                                        <div class="vote-controls">
+                                            <a class="vote-btn linkVoteReview" 
+                                                th:classappend="${review.upvotedByCurrentCustomer ? 'voted' : ''}"
+                                                th:id="'linkVoteUp-' + ${review.id}" 
+                                                th:reviewId="${review.id}"
+                                                th:href="@{'/vote_review/' + ${review.id} + '/up'}">
+                                                <i class="fa-thumbs-up" th:classappend="${review.upvotedByCurrentCustomer ? 'fas' : 'far'}"></i>
+                                            </a>
+                                            
+                                            <span class="vote-count" th:id="'voteCount-' + ${review.id}">
+                                                [[${review.votes}]] Votes
+                                            </span>
+                                            
+                                            <a class="vote-btn linkVoteReview" 
+                                                th:classappend="${review.downvotedByCurrentCustomer ? 'voted' : ''}"
+                                                th:id="'linkVoteDown-' + ${review.id}" 
+                                                th:reviewId="${review.id}"
+                                                th:href="@{'/vote_review/' + ${review.id} + '/down'}">
+                                                <i class="fa-thumbs-down" th:classappend="${review.downvotedByCurrentCustomer ? 'fas' : 'far'}"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="review-headline">[[${review.headline}]]</h5>
+                                    <p class="review-comment">[[${review.comment}]]</p>
+                                    
+                                    <div class="review-meta">
+                                        <i class="far fa-user me-1"></i>
+                                        <span class="fw-medium">[[${review.customer.fullName}]]</span>
+                                        <span class="mx-2">•</span>
+                                        <div th:replace="fragments :: format_time(${review.reviewTime})"></div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (required for some components) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom scripts to initialize star rating -->
+    <script>
+        // This script initializes and styles the star ratings
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any JavaScript components here
+            // Note: The actual star rating functionality would need a proper plugin or custom implementation
+            // This is just a visual representation for the demo
+            
+            const starRatings = document.querySelectorAll('.product-detail-rating-star');
+            starRatings.forEach(function(input) {
+                const value = parseFloat(input.getAttribute('value')) || 0;
+                const size = input.getAttribute('data-size');
+                const parent = input.parentElement;
+                
+                // Create star visualization
+                const starsContainer = document.createElement('div');
+                starsContainer.className = 'stars-container';
+                starsContainer.style.color = '#ff9e00';
+                
+                for (let i = 1; i <= 5; i++) {
+                    const star = document.createElement('i');
+                    
+                    if (i <= Math.floor(value)) {
+                        star.className = 'fas fa-star';
+                    } else if (i - 0.5 <= value) {
+                        star.className = 'fas fa-star-half-alt';
+                    } else {
+                        star.className = 'far fa-star';
+                    }
+                    
+                    star.style.marginRight = '2px';
+                    starsContainer.appendChild(star);
+                }
+                
+                // Replace input with stars
+                parent.replaceChild(starsContainer, input);
+            });
+        });
+    </script>
+        <style>
         :root {
             --primary-color: #4361ee;
             --secondary-color: #3f37c9;
@@ -240,147 +383,5 @@
             }
         }
     </style>
-<body>
-   <div th:fragment="content">
-        <div class="container">
-            <!-- Review Section Header -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="description-section">
-                        <h3 id="review" class="section-heading">
-                            <i class="fas fa-star me-2"></i> Customer Reviews
-                        </h3>
-                        
-                        <!-- Rating Summary -->
-                        <div class="ratings-summary">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <input type="text" class="product-detail-rating-star" dir="ltr"
-                                        data-size="md" th:value="${book.averageRating}" />
-                                </div>
-                                <div class="col-auto d-flex align-items-center">
-                                    <span class="rating-number" id="ratingNumber">
-                                        [[${#numbers.formatDecimal(book.averageRating, 1, 'POINT', 1, 'POINT')}]]
-                                    </span>
-                                    <span class="of-five ms-2">of 5</span>
-                                </div>
-                                
-                                <div class="col-md-4 ms-auto text-md-end mt-3 mt-md-0">
-                                    <!-- View All Ratings Link -->
-                                    <a th:href="@{'/ratings/' + ${book.alias}}" class="ratings-count">
-                                        <i class="fas fa-list-ul me-2"></i> View all [[${book.reviewCount}]] ratings
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Already Reviewed Message -->
-                        <div th:if="${customerReviewed}" class="alert alert-success p-3 mb-4">
-                            <i class="fas fa-check-circle me-2"></i> You already reviewed this book.
-                        </div>
-                        
-                        <!-- Can Review Message -->
-                        <div th:if="${customerCanReview}" class="alert alert-info p-3 mb-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-info-circle me-2"></i> You purchased and got this book.
-                                </div>
-                                <a th:href="@{'/write_review/book/' + ${book.id}}" class="write-review-btn">
-                                    <i class="fas fa-pencil-alt me-1"></i> Write Your Review
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- Reviews List -->
-                        <div class="reviews-container">
-                            <th:block th:each="review : ${listReviews}">
-                                <div class="review-card">
-                                    <div class="review-header">
-                                        <input type="text" class="product-detail-rating-star" dir="ltr"
-                                            data-size="xs" th:value="${review.rating}" />
-                                            
-                                        <div class="vote-controls">
-                                            <a class="vote-btn linkVoteReview" 
-                                                th:classappend="${review.upvotedByCurrentCustomer ? 'voted' : ''}"
-                                                th:id="'linkVoteUp-' + ${review.id}" 
-                                                th:reviewId="${review.id}"
-                                                th:href="@{'/vote_review/' + ${review.id} + '/up'}">
-                                                <i class="fa-thumbs-up" th:classappend="${review.upvotedByCurrentCustomer ? 'fas' : 'far'}"></i>
-                                            </a>
-                                            
-                                            <span class="vote-count" th:id="'voteCount-' + ${review.id}">
-                                                [[${review.votes}]] Votes
-                                            </span>
-                                            
-                                            <a class="vote-btn linkVoteReview" 
-                                                th:classappend="${review.downvotedByCurrentCustomer ? 'voted' : ''}"
-                                                th:id="'linkVoteDown-' + ${review.id}" 
-                                                th:reviewId="${review.id}"
-                                                th:href="@{'/vote_review/' + ${review.id} + '/down'}">
-                                                <i class="fa-thumbs-down" th:classappend="${review.downvotedByCurrentCustomer ? 'fas' : 'far'}"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    
-                                    <h5 class="review-headline">[[${review.headline}]]</h5>
-                                    <p class="review-comment">[[${review.comment}]]</p>
-                                    
-                                    <div class="review-meta">
-                                        <i class="far fa-user me-1"></i>
-                                        <span class="fw-medium">[[${review.customer.fullName}]]</span>
-                                        <span class="mx-2">•</span>
-                                        <div th:replace="fragments :: format_time(${review.reviewTime})"></div>
-                                    </div>
-                                </div>
-                            </th:block>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS (required for some components) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom scripts to initialize star rating -->
-    <script>
-        // This script initializes and styles the star ratings
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize any JavaScript components here
-            // Note: The actual star rating functionality would need a proper plugin or custom implementation
-            // This is just a visual representation for the demo
-            
-            const starRatings = document.querySelectorAll('.product-detail-rating-star');
-            starRatings.forEach(function(input) {
-                const value = parseFloat(input.getAttribute('value')) || 0;
-                const size = input.getAttribute('data-size');
-                const parent = input.parentElement;
-                
-                // Create star visualization
-                const starsContainer = document.createElement('div');
-                starsContainer.className = 'stars-container';
-                starsContainer.style.color = '#ff9e00';
-                
-                for (let i = 1; i <= 5; i++) {
-                    const star = document.createElement('i');
-                    
-                    if (i <= Math.floor(value)) {
-                        star.className = 'fas fa-star';
-                    } else if (i - 0.5 <= value) {
-                        star.className = 'fas fa-star-half-alt';
-                    } else {
-                        star.className = 'far fa-star';
-                    }
-                    
-                    star.style.marginRight = '2px';
-                    starsContainer.appendChild(star);
-                }
-                
-                // Replace input with stars
-                parent.replaceChild(starsContainer, input);
-            });
-        });
-    </script>
 </body>
 </html>

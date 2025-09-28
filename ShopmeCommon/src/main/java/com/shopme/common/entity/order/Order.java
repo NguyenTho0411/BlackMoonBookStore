@@ -13,6 +13,8 @@ import com.shopme.common.entity.AbstractAddress;
 import com.shopme.common.entity.Address;
 import com.shopme.common.entity.Customer;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +29,7 @@ import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "orders")
+@Access(AccessType.FIELD)
 public class Order extends AbstractAddress {
 	
 	@Column(nullable = false, length = 45)
@@ -347,4 +350,32 @@ public class Order extends AbstractAddress {
 		
 		return productNames;
 	}	
+
+	// ✅ KHÔNG KHAI BÁO FIELD state
+	@Transient
+	public OrderState getOrderState() {
+		return switch (this.status) {
+			case PAID -> new PaidState();
+			// Thêm các state khác nếu có
+			default -> null;
+		};
+	}
+
+	@Transient
+	public void nextState() {
+		OrderState current = getOrderState();
+		if (current != null) {
+			current.next(this);
+		}
+	}
+
+	@Transient
+	public void previousState() {
+		OrderState current = getOrderState();
+		if (current != null) {
+			current.previous(this);
+		}
+	}
+
+
 }
